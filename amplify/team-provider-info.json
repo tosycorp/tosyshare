@@ -1,0 +1,23 @@
+{
+    "dev": {
+        "awscloudformation": {
+            "AuthRoleName": "amplify-tosyshare-dev-225227-authRole",
+            "UnauthRoleArn": "arn:aws:iam::383545132830:role/amplify-tosyshare-dev-225227-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::383545132830:role/amplify-tosyshare-dev-225227-authRole",
+            "Region": "eu-west-1",
+            "DeploymentBucketName": "amplify-tosyshare-dev-225227-deployment",
+            "UnauthRoleName": "amplify-tosyshare-dev-225227-unauthRole",
+            "StackName": "amplify-tosyshare-dev-225227",
+            "StackId": "arn:aws:cloudformation:eu-west-1:383545132830:stack/amplify-tosyshare-dev-225227/218fbbd0-af4a-11ea-8e0c-0236eb75a142",
+            "AmplifyAppId": "d1lml5ypkq5yym"
+        },
+        "categories": {
+            "hosting": {
+                "amplifyhosting": {
+                    "appId": "d1lml5ypkq5yym",
+                    "type": "manual"
+                }
+            }
+        }
+    }
+}
