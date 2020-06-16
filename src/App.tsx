@@ -8,7 +8,7 @@
 //       <header className="App-header">
 //         <img src={logo} className="App-logo" alt="logo" />
 //         <p>
-//           Edit <code>src/App.js</code> and save to reload.
+//           Edit <code>src/App.tsx</code> and save to reload.
 //         </p>
 //         <a
 //           className="App-link"
@@ -25,29 +25,36 @@
 
 // export default App;
 
-/* src/App.js */
 import React, { useEffect, useState } from "react";
 import { API, graphqlOperation } from "aws-amplify";
 import { createTodo } from "./graphql/mutations";
 import { listTodos } from "./graphql/queries";
 
+interface ToDo {
+  id: string;
+  name: string;
+  description: string;
+}
+
 const initialState = { name: "", description: "" };
 
 const App = () => {
   const [formState, setFormState] = useState(initialState);
-  const [todos, setTodos] = useState([]);
+  const [todos, setTodos] = useState<ToDo[]>([]);
 
   useEffect(() => {
     fetchTodos();
   }, []);
 
-  function setInput(key, value) {
+  function setInput(key: string, value: string) {
     setFormState({ ...formState, [key]: value });
   }
 
   async function fetchTodos() {
     try {
-      const todoData = await API.graphql(graphqlOperation(listTodos));
+      const todoData = (await API.graphql(graphqlOperation(listTodos))) as {
+        data: { listTodos: { items: ToDo[] } };
+      };
       const todos = todoData.data.listTodos.items;
       setTodos(todos);
     } catch (err) {
@@ -58,7 +65,7 @@ const App = () => {
   async function addTodo() {
     try {
       if (!formState.name || !formState.description) return;
-      const todo = { ...formState };
+      const todo = { id: '', ...formState };
       setTodos([...todos, todo]);
       setFormState(initialState);
       await API.graphql(graphqlOperation(createTodo, { input: todo }));
@@ -101,7 +108,7 @@ const styles = {
     margin: "0 auto",
     display: "flex",
     flex: 1,
-    flexDirection: "column",
+    flexDirection: 'column' as 'column',
     justifyContent: "center",
     padding: 20,
   },
@@ -113,7 +120,7 @@ const styles = {
     padding: 8,
     fontSize: 18,
   },
-  todoName: { fontSize: 20, fontWeight: "bold" },
+  todoName: { fontSize: 20, fontWeight: 'bold' as 'bold' },
   todoDescription: { marginBottom: 0 },
   button: {
     backgroundColor: "black",
