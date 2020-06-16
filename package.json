@@ -2,6 +2,23 @@
   "name": "tosyshare",
   "version": "0.1.0",
   "description": "Share anything across devices",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tosycorp/tosyshare.git"
+  },
+  "author": "Tosy Corp",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tosycorp/tosyshare/issues"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "format": "prettier --write src/**/*.{js,jsx,ts,tsx}",
+    "lint": "eslint --fix src/**/*.{js,jsx,ts,tsx}"
+  },
   "dependencies": {
     "@aws-amplify/ui-react": "^0.2.8",
     "@testing-library/jest-dom": "^4.2.4",
@@ -17,11 +34,12 @@
     "react-scripts": "3.4.1",
     "typescript": "^3.7.5"
   },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+  "devDependencies": {
+    "eslint": "^7.2.0",
+    "eslint-config-airbnb-typescript-prettier": "^2.1.1",
+    "husky": "^4.2.5",
+    "lint-staged": "^10.2.10",
+    "prettier": "^2.0.5"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -38,13 +56,15 @@
       "last 1 safari version"
     ]
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/tosycorp/tosyshare.git"
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   },
-  "author": "Tosy Corp",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/tosycorp/tosyshare/issues"
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "npm run lint",
+      "npm run format"
+    ]
   }
 }

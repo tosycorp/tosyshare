@@ -1,0 +1,16 @@
+{
+  "extends": ["airbnb-typescript-prettier"],
+  "overrides": [
+    {
+      "files": [
+        "**/*.spec.ts",
+        "**/*.test.ts",
+        "**/*.spec.tsx",
+        "**/*.test.tsx"
+      ],
+      "env": {
+        "jest": true
+      }
+    }
+  ]
+}
