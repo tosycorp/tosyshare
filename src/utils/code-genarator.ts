@@ -29,20 +29,20 @@ const fetchConnections = async () => {
 
 const addConnection = async (input: any) => {
   try {
-    const result = await API.graphql(
+    const connection = await API.graphql(
       graphqlOperation(createConnection, { input })
     );
-    return result;
+    return (connection as any).data.createConnection;
   } catch (err) {
     console.log('error creating addConnection:', err);
     return err;
   }
 };
 
-const addConnector = async () => {
+const addConnector = async (input: any) => {
   try {
     const connector = await API.graphql(
-      graphqlOperation(createConnector, { input: {} })
+      graphqlOperation(createConnector, { input })
     );
     return (connector as any).data.createConnector;
   } catch (err) {
@@ -52,19 +52,20 @@ const addConnector = async () => {
 };
 
 const generateCode = async () => {
-  const code = Math.floor(Math.random() * 1000000);
+  const code = Math.floor(100000 + Math.random() * 900000);
   const connections = await fetchConnections();
   const connection = connections?.find((con: any) => con.code === code);
   if (connection) {
     // ToDo
   } else {
-    const connector = await addConnector();
     const newConnection = await addConnection({
       code,
       isUsed: false,
-      connectors: [{ id: connector.id }],
     });
-    console.log(newConnection);
+    const connector = await addConnector({
+      connectorConnectionId: newConnection.id,
+    });
+    console.log(connector);
   }
 
   return code;

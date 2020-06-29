@@ -76,6 +76,13 @@ export const onCreateConnection = /* GraphQL */ `
       connectors {
         items {
           id
+          connection {
+            id
+            code
+            isUsed
+            createdAt
+            updatedAt
+          }
           createdAt
           updatedAt
         }
@@ -95,6 +102,13 @@ export const onUpdateConnection = /* GraphQL */ `
       connectors {
         items {
           id
+          connection {
+            id
+            code
+            isUsed
+            createdAt
+            updatedAt
+          }
           createdAt
           updatedAt
         }
@@ -114,6 +128,13 @@ export const onDeleteConnection = /* GraphQL */ `
       connectors {
         items {
           id
+          connection {
+            id
+            code
+            isUsed
+            createdAt
+            updatedAt
+          }
           createdAt
           updatedAt
         }
@@ -133,6 +154,11 @@ export const onCreateConnector = /* GraphQL */ `
         code
         isUsed
         connectors {
+          items {
+            id
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         createdAt
@@ -152,6 +178,11 @@ export const onUpdateConnector = /* GraphQL */ `
         code
         isUsed
         connectors {
+          items {
+            id
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         createdAt
@@ -171,6 +202,11 @@ export const onDeleteConnector = /* GraphQL */ `
         code
         isUsed
         connectors {
+          items {
+            id
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         createdAt

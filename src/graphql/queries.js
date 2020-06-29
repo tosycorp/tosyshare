@@ -68,6 +68,13 @@ export const getConnection = /* GraphQL */ `
       connectors {
         items {
           id
+          connection {
+            id
+            code
+            isUsed
+            createdAt
+            updatedAt
+          }
           createdAt
           updatedAt
         }
@@ -90,6 +97,11 @@ export const listConnections = /* GraphQL */ `
         code
         isUsed
         connectors {
+          items {
+            id
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         createdAt
@@ -108,6 +120,11 @@ export const getConnector = /* GraphQL */ `
         code
         isUsed
         connectors {
+          items {
+            id
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         createdAt
@@ -131,6 +148,9 @@ export const listConnectors = /* GraphQL */ `
           id
           code
           isUsed
+          connectors {
+            nextToken
+          }
           createdAt
           updatedAt
         }

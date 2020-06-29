@@ -14,10 +14,10 @@ type Connection @model {
   id: ID!
   code: Int!
   isUsed: Boolean
-  connectors: [Connector] @connection(fields: ["id"])
+  connectors: [Connector] @connection(name: "ConnectionConnectors")
 }
 
 type Connector @model {
   id: ID!
-  connection: Connection
+  connection: Connection @connection(name: "ConnectionConnectors")
 }

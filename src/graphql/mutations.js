@@ -97,6 +97,13 @@ export const createConnection = /* GraphQL */ `
       connectors {
         items {
           id
+          connection {
+            id
+            code
+            isUsed
+            createdAt
+            updatedAt
+          }
           createdAt
           updatedAt
         }
@@ -119,6 +126,13 @@ export const updateConnection = /* GraphQL */ `
       connectors {
         items {
           id
+          connection {
+            id
+            code
+            isUsed
+            createdAt
+            updatedAt
+          }
           createdAt
           updatedAt
         }
@@ -141,6 +155,13 @@ export const deleteConnection = /* GraphQL */ `
       connectors {
         items {
           id
+          connection {
+            id
+            code
+            isUsed
+            createdAt
+            updatedAt
+          }
           createdAt
           updatedAt
         }
@@ -163,6 +184,11 @@ export const createConnector = /* GraphQL */ `
         code
         isUsed
         connectors {
+          items {
+            id
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         createdAt
@@ -185,6 +211,11 @@ export const updateConnector = /* GraphQL */ `
         code
         isUsed
         connectors {
+          items {
+            id
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         createdAt
@@ -207,6 +238,11 @@ export const deleteConnector = /* GraphQL */ `
         code
         isUsed
         connectors {
+          items {
+            id
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         createdAt
