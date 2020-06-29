@@ -3,3 +3,21 @@ type Todo @model {
   name: String!
   description: String
 }
+
+type Car @model {
+  id: ID!
+  name: String!
+  model: String
+}
+
+type Connection @model {
+  id: ID!
+  code: Int!
+  isUsed: Boolean
+  connectors: [Connector] @connection(fields: ["id"])
+}
+
+type Connector @model {
+  id: ID!
+  connection: Connection
+}

@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { API, graphqlOperation } from 'aws-amplify';
-import { createTodo } from './graphql/mutations';
-import { listTodos } from './graphql/queries';
+import React from 'react';
+// import { API, graphqlOperation } from 'aws-amplify';
+// import { createTodo } from './graphql/mutations';
+// import { listTodos, getConnection } from './graphql/queries';
+// import { onCreateTodo } from './graphql/subscriptions';
+import Layout from './components/Layout';
+// import { Connection, generateCode } from './utils/code-genarator';
 
 interface ToDo {
-  id: string;
+  id?: string;
   name: string;
   description: string;
 }
@@ -38,47 +41,54 @@ const styles = {
   },
 };
 
-const initialState = { name: '', description: '' };
+// const initialState = { name: '', description: '' };
+// const initialState = { code: '' };
 
 const App = () => {
-  const [formState, setFormState] = useState(initialState);
-  const [todos, setTodos] = useState<ToDo[]>([]);
+  // const [connection, setConnection] = useState(initialState);
 
-  async function fetchTodos() {
-    try {
-      const todoData = (await API.graphql(graphqlOperation(listTodos))) as {
-        data: { listTodos: { items: ToDo[] } };
-      };
-      const todoItems = todoData.data.listTodos.items;
-      setTodos(todoItems);
-    } catch (err) {
-      console.log('error fetching todos');
-    }
-  }
+  // (API.graphql(graphqlOperation(onCreateTodo)) as any).subscribe({
+  //   next: (asd: any) => {
+  //     console.log(asd, 'todo created');
+  //   },
+  // });
 
-  useEffect(() => {
-    fetchTodos();
-  }, []);
+  // async function fetchTodos() {
+  //   try {
+  //     const todoData = (await API.graphql(graphqlOperation(listTodos))) as {
+  //       data: { listTodos: { items: ToDo[] } };
+  //     };
+  //     const todoItems = todoData.data.listTodos.items;
+  //     setTodos(todoItems);
+  //   } catch (err) {
+  //     console.log('error fetching todos');
+  //   }
+  // }
 
-  function setInput(key: string, value: string) {
-    setFormState({ ...formState, [key]: value });
-  }
+  // useEffect(async () => {
+  //   setConnection({ code: await generateCode() });
+  // }, []);
 
-  async function addTodo() {
-    try {
-      if (!formState.name || !formState.description) return;
-      const todo = { id: '', ...formState };
-      setTodos([...todos, todo]);
-      setFormState(initialState);
-      await API.graphql(graphqlOperation(createTodo, { input: todo }));
-    } catch (err) {
-      console.log('error creating todo:', err);
-    }
-  }
+  // function setInput(key: string, value: string) {
+  //   setFormState({ ...formState, [key]: value });
+  // }
+
+  // async function addTodo() {
+  //   try {
+  //     if (!formState.name || !formState.description) return;
+  //     const todo = { ...formState };
+  //     setTodos([...todos, todo]);
+  //     setFormState(initialState);
+  //     await API.graphql(graphqlOperation(createTodo, { input: todo }));
+  //   } catch (err) {
+  //     console.log('error creating todo:', err);
+  //   }
+  // }
 
   return (
     <div style={styles.container}>
-      <h2>Amplify Todos</h2>
+      <Layout />
+      {/* <h2>Amplify Todos</h2>
       <input
         onChange={(event) => setInput('name', event.target.value)}
         style={styles.input}
@@ -99,7 +109,7 @@ const App = () => {
           <p style={styles.todoName}>{todo.name}</p>
           <p style={styles.todoDescription}>{todo.description}</p>
         </div>
-      ))}
+      ))} */}
     </div>
   );
 };
