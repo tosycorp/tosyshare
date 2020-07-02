@@ -8,27 +8,28 @@ let subscription: ZenObservable.Subscription;
 let subscriber: ZenObservable.SubscriptionObserver<Message>;
 
 export const listenMessages = (connectionId: string) => {
-    return new Observable<Message>((subs) => {
-        subscriber = subs;
-        const onCreateMessageWrapper = () => {
-            return API.graphql(graphqlOperation(onCreateMessage)) as Observable<({ value: ({ data: { onCreateMessage: Message } }) })>;
-        };
+  return new Observable<Message>((subs) => {
+    subscriber = subs;
+    const onCreateMessageWrapper = () => {
+      return API.graphql(graphqlOperation(onCreateMessage)) as Observable<{
+        value: { data: { onCreateMessage: Message } };
+      }>;
+    };
 
-        subscription = onCreateMessageWrapper()
-            .subscribe({
-                next: ({ value }) => {
-                    const message = value.data.onCreateMessage;
+    subscription = onCreateMessageWrapper().subscribe({
+      next: ({ value }) => {
+        const message = value.data.onCreateMessage;
 
-                    if (message.connection.id === connectionId) {
-                        subs.next(message);
-                    }
-                }
-            });
+        if (message.connection.id === connectionId) {
+          subs.next(message);
+        }
+      },
     });
+  });
 };
 
 export const stopListenMessages = () => {
-    subscriber.complete();
-    // Stop receiving data updates from the subscription
-    subscription.unsubscribe();
-}
+  subscriber.complete();
+  // Stop receiving data updates from the subscription
+  subscription.unsubscribe();
+};

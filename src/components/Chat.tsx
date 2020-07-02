@@ -14,40 +14,54 @@ type ChatProps = {
 class Chat extends React.Component<ChatProps, ChatState> {
   constructor(props: ChatProps) {
     super(props);
-    this.state = { ...this.state, messages: [] };
+    this.state = { message: '', messages: [] };
   }
 
   public async componentDidMount() {
-    listenMessages(this.props.connected.connectionId)
-      .subscribe((m: Message) => this.setState({ ...this.state, messages: [...this.state.messages, m] }));
+    const { connected } = this.props;
+    listenMessages(connected.connectionId).subscribe((m: Message) => {
+      let { messages } = this.state;
+      messages = [...messages, m];
+      this.setState({ messages });
+    });
   }
 
-  private messageChange(e: React.ChangeEvent<HTMLInputElement>) {
-    this.setState({ ...this.state, message: e.target.value });
-  }
+  messageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ message: e.target.value });
+  };
 
-  private send() {
-    saveMessage(this.state.message, this.props.connected);
-  }
+  send = () => {
+    const { message } = this.state;
+    const { connected } = this.props;
+    saveMessage(message, connected);
+  };
 
   public render() {
+    const { messages } = this.state;
+    const { connected } = this.props;
     return (
       <div>
         <h1>Chat Started</h1>
-        <span>
-          ConnectionId: {this.props.connected.connectionId}
-        </span>
-        <br></br>
-        <span>
-          ConnectorId: {this.props.connected.connectorId}
-        </span>
+        <span>ConnectionId: {connected.connectionId}</span>
+        <br />
+        <span>ConnectorId: {connected.connectorId}</span>
 
         <h2>Messages</h2>
-        {this.state.messages?.map((m) => <div><br></br><span>{m.value} ({m.connector.id})</span></div>)}
+        {messages?.map((m, index) => (
+          <div key={index}>
+            <br />
+            <span>
+              {m.value} ({m.connector.id})
+            </span>
+          </div>
+        ))}
 
-        <br></br>
+        <br />
 
-        <input onChange={this.messageChange.bind(this)}></input><button onClick={this.send.bind(this)}>SEND</button>
+        <input onChange={this.messageChange} />
+        <button type="button" onClick={this.send}>
+          SEND
+        </button>
       </div>
     );
   }

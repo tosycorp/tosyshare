@@ -10,15 +10,28 @@ type LayoutProps = {};
 class Layout extends React.Component<LayoutProps, LayoutState> {
   constructor(props: LayoutProps) {
     super(props);
-    this.state = { ...this.state };
+    this.state = { connected: null };
   }
 
-  private onConnected(connected: Connected) {
-    this.setState({ ...this.state, connected });
+  componentDidMount() {
+    const { connected } = this.state;
+    if (!connected) {
+      this.onConnected(connected);
+    }
   }
 
-  public render() {
-    return !this.state.connected ? <Init onConnected={this.onConnected.bind(this)} ></Init> : <Chat connected={this.state.connected}></Chat>;
+  onConnected = (connected: Connected) => {
+    this.setState({ connected });
+  };
+
+  render() {
+    const { connected } = this.state;
+
+    return !connected ? (
+      <Init onConnected={this.onConnected} />
+    ) : (
+      <Chat connected={connected} />
+    );
   }
 }
 

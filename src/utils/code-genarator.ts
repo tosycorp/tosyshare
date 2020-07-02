@@ -14,10 +14,14 @@ export interface Connector {
 }
 
 const fetchConnectionByCodeWrapper = async (code: number) => {
-  return await API.graphql(graphqlOperation(getConnectionsByCode, { code })) as ({ data: { GetConnectionsByCode: { items: Connection[] } } });
-}
+  return (await API.graphql(
+    graphqlOperation(getConnectionsByCode, { code })
+  )) as { data: { GetConnectionsByCode: { items: Connection[] } } };
+};
 
-export const fetchConnectionByCode = async (code: number): Promise<Connection> => {
+export const fetchConnectionByCode = async (
+  code: number
+): Promise<Connection> => {
   try {
     const connectionsData = await fetchConnectionByCodeWrapper(code);
     return connectionsData.data.GetConnectionsByCode.items[0];
@@ -28,7 +32,9 @@ export const fetchConnectionByCode = async (code: number): Promise<Connection> =
 };
 
 const addConnectionWrapper = async (input: { code: number }) => {
-  return await API.graphql(graphqlOperation(createConnection, { input })) as ({ data: { createConnection: Connection } });
+  return (await API.graphql(graphqlOperation(createConnection, { input }))) as {
+    data: { createConnection: Connection };
+  };
 };
 
 const addConnection = async (code: number): Promise<Connection> => {
@@ -41,13 +47,19 @@ const addConnection = async (code: number): Promise<Connection> => {
   }
 };
 
-const addConnectorWrapper = async (input: { connectorConnectionId: string }) => {
-  return await API.graphql(graphqlOperation(createConnector, { input })) as ({ data: { createConnector: Connector } });
+const addConnectorWrapper = async (input: {
+  connectorConnectionId: string;
+}) => {
+  return (await API.graphql(graphqlOperation(createConnector, { input }))) as {
+    data: { createConnector: Connector };
+  };
 };
 
 const addConnector = async (connectionId: string): Promise<Connector> => {
   try {
-    const connector = await addConnectorWrapper({ connectorConnectionId: connectionId });
+    const connector = await addConnectorWrapper({
+      connectorConnectionId: connectionId,
+    });
     return connector.data.createConnector;
   } catch (err) {
     console.log('error creating addConnector:', err);
@@ -55,15 +67,19 @@ const addConnector = async (connectionId: string): Promise<Connector> => {
   }
 };
 
-export const generateCode = async (): Promise<{ code: number, connector: Connector, connection: Connection }> => {
+export const generateCode = async (): Promise<{
+  code: number;
+  connector: Connector;
+  connection: Connection;
+}> => {
   const code = Math.floor(100000 + Math.random() * 900000);
   let connection = await fetchConnectionByCode(code);
   if (connection) {
-    return await generateCode();
-  } else {
-    connection = await addConnection(code);
-    const connector = await addConnector(connection.id);
-    console.log(connector);
-    return { code, connector, connection };
+    await generateCode();
   }
+  connection = await addConnection(code);
+  const connector = await addConnector(connection.id);
+  console.log(connector);
+
+  return { code, connector, connection };
 };
