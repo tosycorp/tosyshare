@@ -12,5 +12,5 @@ export const enterCode = async (code: number, connector: Connector): Promise<Con
         return await API.graphql(graphqlOperation(updateConnector, { input })) as ({ data: { updateConnector: Connector } });
     };
 
-    return await (await updateConnectorWrapper({ id: connector.id, connectorConnectionId: connection.id })).data.updateConnector;
+    return (await updateConnectorWrapper({ id: connector.id, connectorConnectionId: connection.id })).data.updateConnector;
 };

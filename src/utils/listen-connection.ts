@@ -13,8 +13,9 @@ export const listenConnection = (connectionId: string) => {
         const subscription = onUpdateConnectorWrapper()
             .subscribe({
                 next: ({ value }) => {
+                    const connector = value.data.onUpdateConnector;
 
-                    if (value.data.onUpdateConnector.connection.id === connectionId) {
+                    if (connector.connection.id === connectionId) {
                         subscriber.next();
                         subscriber.complete();
                         // Stop receiving data updates from the subscription

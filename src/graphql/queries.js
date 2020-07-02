@@ -98,6 +98,83 @@ export const listConnectors = /* GraphQL */ `
     }
   }
 `;
+export const getMessage = /* GraphQL */ `
+  query GetMessage($id: ID!) {
+    getMessage(id: $id) {
+      id
+      type
+      value
+      connection {
+        id
+        code
+        connectors {
+          items {
+            id
+            createdAt
+            updatedAt
+          }
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      connector {
+        id
+        connection {
+          id
+          code
+          connectors {
+            nextToken
+          }
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listMessages = /* GraphQL */ `
+  query ListMessages(
+    $filter: ModelMessageFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listMessages(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        type
+        value
+        connection {
+          id
+          code
+          connectors {
+            nextToken
+          }
+          createdAt
+          updatedAt
+        }
+        connector {
+          id
+          connection {
+            id
+            code
+            createdAt
+            updatedAt
+          }
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getConnectionsByCode = /* GraphQL */ `
   query GetConnectionsByCode(
     $code: Int

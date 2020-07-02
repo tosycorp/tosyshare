@@ -9,3 +9,16 @@ type Connector @model {
   id: ID!
   connection: Connection @connection(name: "ConnectionConnectors")
 }
+
+enum MessageType {
+  STRING
+  FILE
+}
+
+type Message @model {
+  id: ID!
+  type: MessageType!
+  value: String!
+  connection: Connection! @connection
+  connector: Connector! @connection
+}
