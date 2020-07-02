@@ -1,90 +1,6 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const createTodo = /* GraphQL */ `
-  mutation CreateTodo(
-    $input: CreateTodoInput!
-    $condition: ModelTodoConditionInput
-  ) {
-    createTodo(input: $input, condition: $condition) {
-      id
-      name
-      description
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateTodo = /* GraphQL */ `
-  mutation UpdateTodo(
-    $input: UpdateTodoInput!
-    $condition: ModelTodoConditionInput
-  ) {
-    updateTodo(input: $input, condition: $condition) {
-      id
-      name
-      description
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteTodo = /* GraphQL */ `
-  mutation DeleteTodo(
-    $input: DeleteTodoInput!
-    $condition: ModelTodoConditionInput
-  ) {
-    deleteTodo(input: $input, condition: $condition) {
-      id
-      name
-      description
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createCar = /* GraphQL */ `
-  mutation CreateCar(
-    $input: CreateCarInput!
-    $condition: ModelCarConditionInput
-  ) {
-    createCar(input: $input, condition: $condition) {
-      id
-      name
-      model
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateCar = /* GraphQL */ `
-  mutation UpdateCar(
-    $input: UpdateCarInput!
-    $condition: ModelCarConditionInput
-  ) {
-    updateCar(input: $input, condition: $condition) {
-      id
-      name
-      model
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteCar = /* GraphQL */ `
-  mutation DeleteCar(
-    $input: DeleteCarInput!
-    $condition: ModelCarConditionInput
-  ) {
-    deleteCar(input: $input, condition: $condition) {
-      id
-      name
-      model
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const createConnection = /* GraphQL */ `
   mutation CreateConnection(
     $input: CreateConnectionInput!
@@ -93,14 +9,12 @@ export const createConnection = /* GraphQL */ `
     createConnection(input: $input, condition: $condition) {
       id
       code
-      isUsed
       connectors {
         items {
           id
           connection {
             id
             code
-            isUsed
             createdAt
             updatedAt
           }
@@ -122,14 +36,12 @@ export const updateConnection = /* GraphQL */ `
     updateConnection(input: $input, condition: $condition) {
       id
       code
-      isUsed
       connectors {
         items {
           id
           connection {
             id
             code
-            isUsed
             createdAt
             updatedAt
           }
@@ -151,14 +63,12 @@ export const deleteConnection = /* GraphQL */ `
     deleteConnection(input: $input, condition: $condition) {
       id
       code
-      isUsed
       connectors {
         items {
           id
           connection {
             id
             code
-            isUsed
             createdAt
             updatedAt
           }
@@ -182,7 +92,6 @@ export const createConnector = /* GraphQL */ `
       connection {
         id
         code
-        isUsed
         connectors {
           items {
             id
@@ -209,7 +118,6 @@ export const updateConnector = /* GraphQL */ `
       connection {
         id
         code
-        isUsed
         connectors {
           items {
             id
@@ -236,7 +144,6 @@ export const deleteConnector = /* GraphQL */ `
       connection {
         id
         code
-        isUsed
         connectors {
           items {
             id

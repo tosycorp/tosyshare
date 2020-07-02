@@ -1,20 +1,20 @@
 {
     "dev": {
         "awscloudformation": {
-            "AuthRoleName": "amplify-tosyshare-dev-225227-authRole",
-            "UnauthRoleArn": "arn:aws:iam::383545132830:role/amplify-tosyshare-dev-225227-unauthRole",
-            "AuthRoleArn": "arn:aws:iam::383545132830:role/amplify-tosyshare-dev-225227-authRole",
+            "AuthRoleName": "amplify-tosyshare-dev-214301-authRole",
+            "UnauthRoleArn": "arn:aws:iam::383545132830:role/amplify-tosyshare-dev-214301-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::383545132830:role/amplify-tosyshare-dev-214301-authRole",
             "Region": "eu-west-1",
-            "DeploymentBucketName": "amplify-tosyshare-dev-225227-deployment",
-            "UnauthRoleName": "amplify-tosyshare-dev-225227-unauthRole",
-            "StackName": "amplify-tosyshare-dev-225227",
-            "StackId": "arn:aws:cloudformation:eu-west-1:383545132830:stack/amplify-tosyshare-dev-225227/218fbbd0-af4a-11ea-8e0c-0236eb75a142",
-            "AmplifyAppId": "d1lml5ypkq5yym"
+            "DeploymentBucketName": "amplify-tosyshare-dev-214301-deployment",
+            "UnauthRoleName": "amplify-tosyshare-dev-214301-unauthRole",
+            "StackName": "amplify-tosyshare-dev-214301",
+            "StackId": "arn:aws:cloudformation:eu-west-1:383545132830:stack/amplify-tosyshare-dev-214301/e98049a0-bb09-11ea-b302-0ace5b4cd800",
+            "AmplifyAppId": "d27a89su3ed8iz"
         },
         "categories": {
             "hosting": {
                 "amplifyhosting": {
-                    "appId": "d1lml5ypkq5yym",
+                    "appId": "d27a89su3ed8iz",
                     "type": "manual"
                 }
             }

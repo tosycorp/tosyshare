@@ -1,19 +1,7 @@
-type Todo @model {
-  id: ID!
-  name: String!
-  description: String
-}
-
-type Car @model {
-  id: ID!
-  name: String!
-  model: String
-}
-
-type Connection @model {
+type Connection @model
+  @key(name: "ByCode", fields: ["code"], queryField: "GetConnectionsByCode") {
   id: ID!
   code: Int!
-  isUsed: Boolean
   connectors: [Connector] @connection(name: "ConnectionConnectors")
 }
 

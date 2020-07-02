@@ -1,77 +1,17 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const getTodo = /* GraphQL */ `
-  query GetTodo($id: ID!) {
-    getTodo(id: $id) {
-      id
-      name
-      description
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listTodos = /* GraphQL */ `
-  query ListTodos(
-    $filter: ModelTodoFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listTodos(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        name
-        description
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getCar = /* GraphQL */ `
-  query GetCar($id: ID!) {
-    getCar(id: $id) {
-      id
-      name
-      model
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listCars = /* GraphQL */ `
-  query ListCars(
-    $filter: ModelCarFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listCars(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        name
-        model
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
 export const getConnection = /* GraphQL */ `
   query GetConnection($id: ID!) {
     getConnection(id: $id) {
       id
       code
-      isUsed
       connectors {
         items {
           id
           connection {
             id
             code
-            isUsed
             createdAt
             updatedAt
           }
@@ -95,7 +35,6 @@ export const listConnections = /* GraphQL */ `
       items {
         id
         code
-        isUsed
         connectors {
           items {
             id
@@ -118,7 +57,6 @@ export const getConnector = /* GraphQL */ `
       connection {
         id
         code
-        isUsed
         connectors {
           items {
             id
@@ -147,12 +85,44 @@ export const listConnectors = /* GraphQL */ `
         connection {
           id
           code
-          isUsed
           connectors {
             nextToken
           }
           createdAt
           updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getConnectionsByCode = /* GraphQL */ `
+  query GetConnectionsByCode(
+    $code: Int
+    $sortDirection: ModelSortDirection
+    $filter: ModelConnectionFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    GetConnectionsByCode(
+      code: $code
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        code
+        connectors {
+          items {
+            id
+            createdAt
+            updatedAt
+          }
+          nextToken
         }
         createdAt
         updatedAt
