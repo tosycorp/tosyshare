@@ -1,17 +1,17 @@
 import { API, graphqlOperation } from 'aws-amplify';
+import { Observable, Subscribable, Subscription, Subscriber } from 'rxjs';
 import { onCreateMessage } from '../graphql/subscriptions';
 
-import { Observable, ZenObservable } from 'zen-observable-ts';
 import { Message } from './save-message';
 
-let subscription: ZenObservable.Subscription;
-let subscriber: ZenObservable.SubscriptionObserver<Message>;
+let subscription: Subscription;
+let subscriber: Subscriber<Message>;
 
 export const listenMessages = (connectionId: string) => {
   return new Observable<Message>((subs) => {
     subscriber = subs;
     const onCreateMessageWrapper = () => {
-      return API.graphql(graphqlOperation(onCreateMessage)) as Observable<{
+      return API.graphql(graphqlOperation(onCreateMessage)) as Subscribable<{
         value: { data: { onCreateMessage: Message } };
       }>;
     };
@@ -24,7 +24,7 @@ export const listenMessages = (connectionId: string) => {
           subs.next(message);
         }
       },
-    });
+    }) as Subscription;
   });
 };
 

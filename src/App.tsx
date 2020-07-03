@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Container, Navbar } from 'react-bootstrap';
-import Layout from './components/Layout';
 import 'bootstrap/dist/css/bootstrap.min.css';
+
+const Layout = React.lazy(() => import('./components/Layout'));
 
 const App = () => {
   return (
@@ -11,7 +12,9 @@ const App = () => {
           <Navbar.Brand>TOSY SHARE</Navbar.Brand>
         </Container>
       </Navbar>
-      <Layout />
+      <Suspense fallback="Loading...">
+        <Layout />
+      </Suspense>
     </Container>
   );
 };

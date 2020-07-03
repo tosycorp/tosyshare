@@ -1,5 +1,5 @@
 import React from 'react';
-import { ZenObservable } from 'zen-observable-ts';
+import { Subscription } from 'rxjs';
 import {
   Row,
   Col,
@@ -9,8 +9,8 @@ import {
   Form,
 } from 'react-bootstrap';
 import { generateCode, Connector } from '../utils/code-genarator';
-import { enterCode } from '../utils/enter-code';
-import { listenConnection } from '../utils/listen-connection';
+import enterCode from '../utils/enter-code';
+import listenConnection from '../utils/listen-connection';
 
 export interface Connected {
   connectionId: string;
@@ -27,7 +27,7 @@ type InitProps = {
 };
 
 class Init extends React.Component<InitProps, InitState> {
-  private listenConnectionSub: ZenObservable.Subscription = null;
+  private listenConnectionSub: Subscription = null;
 
   constructor(props: InitProps) {
     super(props);

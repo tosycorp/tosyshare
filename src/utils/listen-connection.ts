@@ -1,13 +1,12 @@
 import { API, graphqlOperation } from 'aws-amplify';
+import { Observable, Subscribable } from 'rxjs';
 import { onUpdateConnector } from '../graphql/subscriptions';
 import { Connector } from './code-genarator';
 
-import { Observable } from 'zen-observable-ts';
-
-export const listenConnection = (connectionId: string) => {
+export default (connectionId: string) => {
   return new Observable<void>((subscriber) => {
     const onUpdateConnectorWrapper = () => {
-      return API.graphql(graphqlOperation(onUpdateConnector)) as Observable<{
+      return API.graphql(graphqlOperation(onUpdateConnector)) as Subscribable<{
         value: { data: { onUpdateConnector: Connector } };
       }>;
     };
