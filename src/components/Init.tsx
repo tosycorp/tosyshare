@@ -1,5 +1,13 @@
 import React from 'react';
 import { ZenObservable } from 'zen-observable-ts';
+import {
+  Row,
+  Col,
+  FormControl,
+  InputGroup,
+  Button,
+  Form,
+} from 'react-bootstrap';
 import { generateCode, Connector } from '../utils/code-genarator';
 import { enterCode } from '../utils/enter-code';
 import { listenConnection } from '../utils/listen-connection';
@@ -79,14 +87,38 @@ class Init extends React.Component<InitProps, InitState> {
   public render() {
     const { generatedCode } = this.state;
     return (
-      <div>
-        <h1>Generated Code: {generatedCode}</h1>
-        <h1>Enter Code: </h1>
-        <input onChange={this.codeChange} />
-        <button type="button" onClick={this.enterCode}>
-          JOIN
-        </button>
-      </div>
+      <>
+        <Row className="justify-content-md-center">
+          <Col md={8}>
+            <Form.Group as={Row} controlId="formHorizontalEmail">
+              <Form.Label column="lg" md={6}>
+                Generated Code:
+              </Form.Label>
+              <Form.Label column="lg" md={6}>
+                {generatedCode}
+              </Form.Label>
+            </Form.Group>
+          </Col>
+        </Row>
+        <Row className="justify-content-md-center">
+          <Col md={8}>
+            <InputGroup className="mb-3">
+              <FormControl
+                size="lg"
+                placeholder="Enter Code"
+                aria-label="Enter Code"
+                aria-describedby="basic-addon2"
+                onChange={this.codeChange}
+              />
+              <InputGroup.Append>
+                <Button variant="outline-secondary" onClick={this.enterCode}>
+                  JOIN
+                </Button>
+              </InputGroup.Append>
+            </InputGroup>
+          </Col>
+        </Row>
+      </>
     );
   }
 }

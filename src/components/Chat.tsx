@@ -1,4 +1,13 @@
 import React from 'react';
+import {
+  Row,
+  Col,
+  InputGroup,
+  Button,
+  FormControl,
+  Alert,
+  Form,
+} from 'react-bootstrap';
 import { listenMessages } from '../utils/listen-messages';
 import { Message, saveMessage } from '../utils/save-message';
 import { Connected } from './Init';
@@ -34,35 +43,84 @@ class Chat extends React.Component<ChatProps, ChatState> {
     const { message } = this.state;
     const { connected } = this.props;
     saveMessage(message, connected);
+    this.setState({ message: '' });
   };
 
   public render() {
-    const { messages } = this.state;
+    const { messages, message } = this.state;
     const { connected } = this.props;
     return (
-      <div>
-        <h1>Chat Started</h1>
-        <span>ConnectionId: {connected.connectionId}</span>
-        <br />
-        <span>ConnectorId: {connected.connectorId}</span>
-
-        <h2>Messages</h2>
+      <>
+        <Row className="justify-content-md-center">
+          <Col md={8}>
+            <Alert variant="dark">Chat Started</Alert>
+          </Col>
+        </Row>
+        <Row className="justify-content-md-center">
+          <Col md={8}>
+            <Form.Group as={Row}>
+              <Form.Label column="lg" md={3}>
+                ConnectionId:
+              </Form.Label>
+              <Form.Label column="lg" md={9}>
+                {connected.connectionId}
+              </Form.Label>
+            </Form.Group>
+          </Col>
+        </Row>
+        <Row className="justify-content-md-center">
+          <Col md={8}>
+            <Form.Group as={Row}>
+              <Form.Label column="lg" md={3}>
+                ConnectorId:
+              </Form.Label>
+              <Form.Label column="lg" md={9}>
+                {connected.connectorId}
+              </Form.Label>
+            </Form.Group>
+          </Col>
+        </Row>
+        <Row className="justify-content-md-center">
+          <Col md={8}>
+            <Alert variant="dark">Messages</Alert>
+          </Col>
+        </Row>
         {messages?.map((m, index) => (
-          <div key={index}>
-            <br />
-            <span>
-              {m.value} ({m.connector.id})
-            </span>
-          </div>
+          <Row
+            className={
+              connected.connectorId === m.connector.id
+                ? 'justify-content-md-end'
+                : 'justify-content-md-start'
+            }
+          >
+            <Col md={6}>
+              <Alert key={index} variant="primary">
+                <p>
+                  {m.value} ({m.connector.id})
+                </p>
+              </Alert>
+            </Col>
+          </Row>
         ))}
-
-        <br />
-
-        <input onChange={this.messageChange} />
-        <button type="button" onClick={this.send}>
-          SEND
-        </button>
-      </div>
+        <Row className="justify-content-md-center">
+          <Col md={8}>
+            <InputGroup className="mb-3">
+              <FormControl
+                size="lg"
+                as="textarea"
+                aria-describedby="basic-addon2"
+                value={message}
+                onChange={this.messageChange}
+              />
+              <InputGroup.Append>
+                <Button variant="outline-secondary" onClick={this.send}>
+                  SEND
+                </Button>
+              </InputGroup.Append>
+            </InputGroup>
+          </Col>
+        </Row>
+      </>
     );
   }
 }

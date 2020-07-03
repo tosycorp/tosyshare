@@ -1,29 +1,18 @@
 import React from 'react';
+import { Container, Navbar } from 'react-bootstrap';
 import Layout from './components/Layout';
-
-interface ToDo {
-  id?: string;
-  name: string;
-  description: string;
-}
-
-const styles = {
-  container: {
-    width: 400,
-    margin: '0 auto',
-    display: 'flex',
-    flex: 1,
-    flexDirection: 'column' as 'column',
-    justifyContent: 'center',
-    padding: 20,
-  },
-};
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const App = () => {
   return (
-    <div style={styles.container}>
+    <Container>
+      <Navbar variant="dark" bg="dark">
+        <Container>
+          <Navbar.Brand>TOSY SHARE</Navbar.Brand>
+        </Container>
+      </Navbar>
       <Layout />
-    </div>
+    </Container>
   );
 };
 

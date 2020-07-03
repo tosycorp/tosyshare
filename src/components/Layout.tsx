@@ -13,13 +13,6 @@ class Layout extends React.Component<LayoutProps, LayoutState> {
     this.state = { connected: null };
   }
 
-  componentDidMount() {
-    const { connected } = this.state;
-    if (!connected) {
-      this.onConnected(connected);
-    }
-  }
-
   onConnected = (connected: Connected) => {
     this.setState({ connected });
   };
