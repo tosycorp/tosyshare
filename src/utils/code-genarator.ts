@@ -26,7 +26,7 @@ export const fetchConnectionByCode = async (
     const connectionsData = await fetchConnectionByCodeWrapper(code);
     return connectionsData.data.GetConnectionsByCode.items[0];
   } catch (err) {
-    console.log('error fetching fetchConnection:', err);
+    console.error('error fetching fetchConnection:', err);
     return null;
   }
 };
@@ -42,7 +42,7 @@ const addConnection = async (code: number): Promise<Connection> => {
     const connection = await addConnectionWrapper({ code });
     return connection.data.createConnection;
   } catch (err) {
-    console.log('error creating addConnection:', err);
+    console.error('error creating addConnection:', err);
     return err;
   }
 };
@@ -62,7 +62,7 @@ const addConnector = async (connectionId: string): Promise<Connector> => {
     });
     return connector.data.createConnector;
   } catch (err) {
-    console.log('error creating addConnector:', err);
+    console.error('error creating addConnector:', err);
     return err;
   }
 };
@@ -79,7 +79,9 @@ export const generateCode = async (): Promise<{
   }
   connection = await addConnection(code);
   const connector = await addConnector(connection.id);
-  console.log(connector);
+  // TODO: To be removed
+  // eslint-disable-next-line no-console
+  console.log('Generated connector: ', connector);
 
   return { code, connector, connection };
 };

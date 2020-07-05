@@ -11,6 +11,7 @@ import {
 import { generateCode, Connector } from '../utils/code-genarator';
 import enterCode from '../utils/enter-code';
 import listenConnection from '../utils/listen-connection';
+import QR from './QR';
 
 export interface Connected {
   connectionId: string;
@@ -88,6 +89,11 @@ class Init extends React.Component<InitProps, InitState> {
     const { generatedCode } = this.state;
     return (
       <>
+        <Row className="justify-content-md-center">
+          <Col md="auto">
+            {generatedCode ? <QR text={generatedCode.toString()} /> : null}
+          </Col>
+        </Row>
         <Row className="justify-content-md-center">
           <Col md={8}>
             <Form.Group as={Row} controlId="formHorizontalEmail">

@@ -1,7 +1,9 @@
 {
   "extends": ["airbnb-typescript-prettier"],
   "rules": {
-    "@typescript-eslint/no-explicit-any": "off"
+    "@typescript-eslint/no-explicit-any": "off",
+    "lines-between-class-members": ["error", "always", { "exceptAfterSingleLine": true }],
+    "no-console": ["error", { "allow": ["error"] }]
   },
   "overrides": [
     {
