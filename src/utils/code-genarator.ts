@@ -73,15 +73,15 @@ export const generateCode = async (): Promise<{
   connection: Connection;
 }> => {
   const code = Math.floor(100000 + Math.random() * 900000);
+
   let connection = await fetchConnectionByCode(code);
+  // If connection with code already generated before, generate another one.
   if (connection) {
-    await generateCode();
+    return generateCode();
   }
+
   connection = await addConnection(code);
   const connector = await addConnector(connection.id);
-  // TODO: To be removed
-  // eslint-disable-next-line no-console
-  console.log('Generated connector: ', connector);
 
   return { code, connector, connection };
 };
