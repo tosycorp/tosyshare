@@ -9,12 +9,9 @@ type QRProps = {
 };
 
 class QR extends React.Component<QRProps, QRState> {
-  private img: React.RefObject<HTMLImageElement>;
-
   constructor(props: QRProps) {
     super(props);
     this.state = { dataURL: null };
-    this.img = React.createRef<HTMLImageElement>();
   }
 
   async componentDidMount() {
@@ -24,7 +21,7 @@ class QR extends React.Component<QRProps, QRState> {
 
   render() {
     const { dataURL } = this.state;
-    return dataURL ? <img ref={this.img} alt="QR Code" src={dataURL} /> : null;
+    return dataURL ? <img alt="QR Code" src={dataURL} /> : null;
   }
 }
 
