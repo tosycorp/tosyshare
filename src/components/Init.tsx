@@ -1,17 +1,13 @@
 import React from 'react';
 import { Subscription } from 'rxjs';
-import {
-  Row,
-  Col,
-  FormControl,
-  InputGroup,
-  Button,
-  Form,
-} from 'react-bootstrap';
+import { Row, Col, Button, Spinner } from 'react-bootstrap';
 import { generateCode, Connector } from '../utils/code-genarator';
 import enterCode from '../utils/enter-code';
 import listenConnection from '../utils/listen-connection';
+import InputBox from './InputBox';
 import QR from './QR';
+import LabelGroup from './LabelGroup';
+import QRReader from './QRReader';
 
 export interface Connected {
   connectionId: string;
@@ -22,6 +18,7 @@ type InitState = {
   generatedCode: number;
   enteredCode?: number;
   connector: Connector;
+  readQR: boolean;
 };
 type InitProps = {
   onConnected?: (data: Connected) => void;
@@ -32,7 +29,12 @@ class Init extends React.Component<InitProps, InitState> {
 
   constructor(props: InitProps) {
     super(props);
-    this.state = { connector: null, enteredCode: null, generatedCode: null };
+    this.state = {
+      connector: null,
+      enteredCode: null,
+      generatedCode: null,
+      readQR: false,
+    };
   }
 
   async componentDidMount() {
@@ -85,43 +87,51 @@ class Init extends React.Component<InitProps, InitState> {
     }
   };
 
+  onQRCodeReadClick = () => {
+    this.setState({ readQR: true });
+  };
+
   public render() {
-    const { generatedCode } = this.state;
+    const { generatedCode, readQR } = this.state;
     return (
       <>
-        <Row className="justify-content-md-center">
-          <Col md="auto">
-            {generatedCode ? <QR text={generatedCode.toString()} /> : null}
+        <Row className="justify-content-center">
+          <Col className="text-center align-self-center" md={6}>
+            {generatedCode ? (
+              <QR text={generatedCode.toString()} />
+            ) : (
+              <Spinner animation="border" />
+            )}
+          </Col>
+          <Col
+            className="justify-content-center text-center align-self-center"
+            style={{ display: 'flex' }}
+            md={6}
+          >
+            {readQR ? (
+              <QRReader />
+            ) : (
+              <Button variant="link" size="lg" onClick={this.onQRCodeReadClick}>
+                Read QR Code
+              </Button>
+            )}
           </Col>
         </Row>
-        <Row className="justify-content-md-center">
-          <Col md={8}>
-            <Form.Group as={Row} controlId="formHorizontalEmail">
-              <Form.Label column="lg" md={6}>
-                Generated Code:
-              </Form.Label>
-              <Form.Label column="lg" md={6}>
-                {generatedCode}
-              </Form.Label>
-            </Form.Group>
+        <Row className="justify-content-center">
+          <Col>
+            <LabelGroup
+              firstLabel="Generated Code:"
+              secondLabel={generatedCode ? generatedCode.toString() : null}
+            />
           </Col>
         </Row>
-        <Row className="justify-content-md-center">
-          <Col md={8}>
-            <InputGroup className="mb-3">
-              <FormControl
-                size="lg"
-                placeholder="Enter Code"
-                aria-label="Enter Code"
-                aria-describedby="basic-addon2"
-                onChange={this.codeChange}
-              />
-              <InputGroup.Append>
-                <Button variant="outline-secondary" onClick={this.enterCode}>
-                  JOIN
-                </Button>
-              </InputGroup.Append>
-            </InputGroup>
+        <Row className="justify-content-center">
+          <Col>
+            <InputBox
+              changeHandler={this.codeChange}
+              clickHandler={this.enterCode}
+              buttonText="JOIN"
+            />
           </Col>
         </Row>
       </>

@@ -1,15 +1,9 @@
 import React from 'react';
-import {
-  Row,
-  Col,
-  InputGroup,
-  Button,
-  FormControl,
-  Alert,
-  Form,
-} from 'react-bootstrap';
+import { Row, Col, Alert } from 'react-bootstrap';
 import { listenMessages } from '../utils/listen-messages';
 import { Message, saveMessage } from '../utils/save-message';
+import InputBox from './InputBox';
+import LabelGroup from './LabelGroup';
 import { Connected } from './Init';
 
 type ChatState = {
@@ -46,42 +40,44 @@ class Chat extends React.Component<ChatProps, ChatState> {
     this.setState({ message: '' });
   };
 
+  // static renderLabelGroup(firstLabel: string, secondLabel: string) {
+  //   return (
+  //     <Row className="justify-content-md-center">
+  //       <Col md={8}>
+  //         <LabelGroup firstLabel={firstLabel} secondLabel={secondLabel} />
+  //       </Col>
+  //     </Row>
+  //   );
+  // }
+
   public render() {
     const { messages, message } = this.state;
     const { connected } = this.props;
     return (
       <>
         <Row className="justify-content-md-center">
-          <Col md={8}>
+          <Col className="text-center">
             <Alert variant="dark">Chat Started</Alert>
           </Col>
         </Row>
         <Row className="justify-content-md-center">
-          <Col md={8}>
-            <Form.Group as={Row}>
-              <Form.Label column="lg" md={3}>
-                ConnectionId:
-              </Form.Label>
-              <Form.Label column="lg" md={9}>
-                {connected.connectionId}
-              </Form.Label>
-            </Form.Group>
+          <Col>
+            <LabelGroup
+              firstLabel="ConnectionId:"
+              secondLabel={connected.connectionId}
+            />
           </Col>
         </Row>
         <Row className="justify-content-md-center">
-          <Col md={8}>
-            <Form.Group as={Row}>
-              <Form.Label column="lg" md={3}>
-                ConnectorId:
-              </Form.Label>
-              <Form.Label column="lg" md={9}>
-                {connected.connectorId}
-              </Form.Label>
-            </Form.Group>
+          <Col>
+            <LabelGroup
+              firstLabel="ConnectorId:"
+              secondLabel={connected.connectorId}
+            />
           </Col>
         </Row>
         <Row className="justify-content-md-center">
-          <Col md={8}>
+          <Col className="text-center">
             <Alert variant="dark">Messages</Alert>
           </Col>
         </Row>
@@ -93,8 +89,16 @@ class Chat extends React.Component<ChatProps, ChatState> {
                 : 'justify-content-md-start'
             }
           >
-            <Col md={6}>
-              <Alert key={index} variant="primary">
+            <Col md={9}>
+              <Alert
+                style={{ overflowWrap: 'break-word' }}
+                key={index}
+                variant={
+                  connected.connectorId === m.connector.id
+                    ? 'primary'
+                    : 'secondary'
+                }
+              >
                 <p>
                   {m.value} ({m.connector.id})
                 </p>
@@ -103,21 +107,13 @@ class Chat extends React.Component<ChatProps, ChatState> {
           </Row>
         ))}
         <Row className="justify-content-md-center">
-          <Col md={8}>
-            <InputGroup className="mb-3">
-              <FormControl
-                size="lg"
-                as="textarea"
-                aria-describedby="basic-addon2"
-                value={message}
-                onChange={this.messageChange}
-              />
-              <InputGroup.Append>
-                <Button variant="outline-secondary" onClick={this.send}>
-                  SEND
-                </Button>
-              </InputGroup.Append>
-            </InputGroup>
+          <Col>
+            <InputBox
+              changeHandler={this.messageChange}
+              clickHandler={this.send}
+              buttonText="SEND"
+              inputValue={message}
+            />
           </Col>
         </Row>
       </>

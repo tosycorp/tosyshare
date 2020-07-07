@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { Container, Navbar } from 'react-bootstrap';
+import { Container, Navbar, Row, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Layout = React.lazy(() => import('./components/Layout'));
@@ -7,14 +7,22 @@ const Layout = React.lazy(() => import('./components/Layout'));
 const App = () => {
   return (
     <Container>
-      <Navbar variant="dark" bg="dark">
-        <Container>
-          <Navbar.Brand>TOSY SHARE</Navbar.Brand>
-        </Container>
-      </Navbar>
-      <Suspense fallback="Loading...">
-        <Layout />
-      </Suspense>
+      <Row className="justify-content-center mt-1 mb-1">
+        <Col md={8}>
+          <Navbar variant="dark" bg="primary" expand>
+            <Container>
+              <Navbar.Brand>TOSY SHARE</Navbar.Brand>
+            </Container>
+          </Navbar>
+        </Col>
+      </Row>
+      <Row className="justify-content-center">
+        <Col md={8}>
+          <Suspense fallback="Loading...">
+            <Layout />
+          </Suspense>
+        </Col>
+      </Row>
     </Container>
   );
 };
