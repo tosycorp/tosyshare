@@ -91,6 +91,11 @@ class Init extends React.Component<InitProps, InitState> {
     this.setState({ readQR: true });
   };
 
+  onQRRead = (code: number) => {
+    this.setState({ enteredCode: code });
+    this.enterCode();
+  };
+
   public render() {
     const { generatedCode, readQR } = this.state;
     return (
@@ -109,7 +114,7 @@ class Init extends React.Component<InitProps, InitState> {
             md={6}
           >
             {readQR ? (
-              <QRReader />
+              <QRReader onRead={this.onQRRead} />
             ) : (
               <Button variant="link" size="lg" onClick={this.onQRCodeReadClick}>
                 Read QR Code

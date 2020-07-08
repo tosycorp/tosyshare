@@ -1,12 +1,25 @@
 import React from 'react';
 import QrReader from 'react-qr-reader';
 
-class QRReader extends React.Component {
+type QRReaderProps = {
+  onRead: (data: number) => void;
+};
+class QRReader extends React.Component<QRReaderProps, {}> {
   handleScan = (data: string) => {
+    // eslint-disable-next-line no-console
     console.log(data);
+
+    const { onRead } = this.props;
+    if (data) {
+      const dataAsNumber = parseInt(data, 10);
+      if (!Number.isNaN(dataAsNumber)) {
+        onRead(dataAsNumber);
+      }
+    }
   };
 
   handleError = (err: string) => {
+    // eslint-disable-next-line no-console
     console.log(err);
   };
 
