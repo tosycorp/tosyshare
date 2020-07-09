@@ -77,10 +77,17 @@ class Init extends React.Component<InitProps, InitState> {
 
   codeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
-    const code = parseInt(e.target.value, 10);
-    if (!Number.isNaN(code)) {
-      if (val.length <= 6) {
-        this.setState({ enteredCode: code, buttonDisabled: val.length !== 6 });
+    if (!val) {
+      this.setState({ enteredCode: null });
+    } else {
+      const code = parseInt(e.target.value, 10);
+      if (!Number.isNaN(code)) {
+        if (val.length <= 6) {
+          this.setState({
+            enteredCode: code,
+            buttonDisabled: val.length !== 6,
+          });
+        }
       }
     }
   };
@@ -108,16 +115,14 @@ class Init extends React.Component<InitProps, InitState> {
           <>
             <Row className="justify-content-center">
               <Col className="text-center align-self-center" md={8}>
-                <QR
-                  text={generatedCode ? generatedCode.toString() : 'tosycorp'}
-                />
+                <QR text={generatedCode ? generatedCode.toString() : null} />
               </Col>
             </Row>
             <Row className="justify-content-center">
-              <Col className="text-right align-self-center" md={4}>
-                <h4>or use</h4>
-              </Col>
-              <Col className="text-left align-self-center" md={4}>
+              <Col className="text-center align-self-center">or use</Col>
+            </Row>
+            <Row className="justify-content-center">
+              <Col className="text-center align-self-center">
                 {generatedCode ? (
                   <h4>{generatedCode.toString()}</h4>
                 ) : (
