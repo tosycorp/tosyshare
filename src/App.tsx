@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react';
 import { Container, Navbar, Row, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './App.css';
 
 const Layout = React.lazy(() => import('./components/Layout'));
 

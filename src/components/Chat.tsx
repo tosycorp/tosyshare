@@ -3,7 +3,6 @@ import { Row, Col, Alert } from 'react-bootstrap';
 import { listenMessages } from '../utils/listen-messages';
 import { Message, saveMessage } from '../utils/save-message';
 import InputBox from './InputBox';
-import LabelGroup from './LabelGroup';
 import { Connected } from './Init';
 
 type ChatState = {
@@ -40,16 +39,6 @@ class Chat extends React.Component<ChatProps, ChatState> {
     this.setState({ message: '' });
   };
 
-  // static renderLabelGroup(firstLabel: string, secondLabel: string) {
-  //   return (
-  //     <Row className="justify-content-md-center">
-  //       <Col md={8}>
-  //         <LabelGroup firstLabel={firstLabel} secondLabel={secondLabel} />
-  //       </Col>
-  //     </Row>
-  //   );
-  // }
-
   public render() {
     const { messages, message } = this.state;
     const { connected } = this.props;
@@ -58,27 +47,6 @@ class Chat extends React.Component<ChatProps, ChatState> {
         <Row className="justify-content-md-center">
           <Col className="text-center">
             <Alert variant="dark">Chat Started</Alert>
-          </Col>
-        </Row>
-        <Row className="justify-content-md-center">
-          <Col>
-            <LabelGroup
-              firstLabel="ConnectionId:"
-              secondLabel={connected.connectionId}
-            />
-          </Col>
-        </Row>
-        <Row className="justify-content-md-center">
-          <Col>
-            <LabelGroup
-              firstLabel="ConnectorId:"
-              secondLabel={connected.connectorId}
-            />
-          </Col>
-        </Row>
-        <Row className="justify-content-md-center">
-          <Col className="text-center">
-            <Alert variant="dark">Messages</Alert>
           </Col>
         </Row>
         {messages?.map((m, index) => (
@@ -99,9 +67,7 @@ class Chat extends React.Component<ChatProps, ChatState> {
                     : 'secondary'
                 }
               >
-                <p>
-                  {m.value} ({m.connector.id})
-                </p>
+                <p>{m.value}</p>
               </Alert>
             </Col>
           </Row>

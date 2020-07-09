@@ -6,7 +6,6 @@ import enterCode from '../utils/enter-code';
 import listenConnection from '../utils/listen-connection';
 import InputBox from './InputBox';
 import QR from './QR';
-import LabelGroup from './LabelGroup';
 import QRReader from './QRReader';
 
 export interface Connected {
@@ -19,6 +18,7 @@ type InitState = {
   enteredCode?: number;
   connector: Connector;
   readQR: boolean;
+  buttonDisabled: boolean;
 };
 type InitProps = {
   onConnected?: (data: Connected) => void;
@@ -34,6 +34,7 @@ class Init extends React.Component<InitProps, InitState> {
       enteredCode: null,
       generatedCode: null,
       readQR: false,
+      buttonDisabled: true,
     };
   }
 
@@ -75,9 +76,12 @@ class Init extends React.Component<InitProps, InitState> {
   };
 
   codeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
     const code = parseInt(e.target.value, 10);
     if (!Number.isNaN(code)) {
-      this.setState({ enteredCode: code });
+      if (val.length <= 6) {
+        this.setState({ enteredCode: code, buttonDisabled: val.length !== 6 });
+      }
     }
   };
 
@@ -97,45 +101,61 @@ class Init extends React.Component<InitProps, InitState> {
   };
 
   public render() {
-    const { generatedCode, readQR } = this.state;
+    const { generatedCode, readQR, buttonDisabled, enteredCode } = this.state;
     return (
       <>
-        <Row className="justify-content-center">
-          <Col className="text-center align-self-center" md={6}>
-            {generatedCode ? (
-              <QR text={generatedCode.toString()} />
-            ) : (
-              <Spinner animation="border" />
-            )}
-          </Col>
+        {!readQR && (
+          <>
+            <Row className="justify-content-center">
+              <Col className="text-center align-self-center" md={8}>
+                <QR
+                  text={generatedCode ? generatedCode.toString() : 'tosycorp'}
+                />
+              </Col>
+            </Row>
+            <Row className="justify-content-center">
+              <Col className="text-right align-self-center" md={4}>
+                <h4>or use</h4>
+              </Col>
+              <Col className="text-left align-self-center" md={4}>
+                {generatedCode ? (
+                  <h4>{generatedCode.toString()}</h4>
+                ) : (
+                  <Spinner animation="border" />
+                )}
+              </Col>
+            </Row>
+          </>
+        )}
+        <Row className="justify-content-center mt-3">
           <Col
             className="justify-content-center text-center align-self-center"
             style={{ display: 'flex' }}
-            md={6}
+            md={4}
           >
             {readQR ? (
               <QRReader onRead={this.onQRRead} />
             ) : (
-              <Button variant="link" size="lg" onClick={this.onQRCodeReadClick}>
-                Read QR Code
+              <Button
+                className="btn-block"
+                variant="outline-primary"
+                size="lg"
+                onClick={this.onQRCodeReadClick}
+              >
+                Scan QR Code
               </Button>
             )}
           </Col>
         </Row>
-        <Row className="justify-content-center">
-          <Col>
-            <LabelGroup
-              firstLabel="Generated Code:"
-              secondLabel={generatedCode ? generatedCode.toString() : null}
-            />
-          </Col>
-        </Row>
-        <Row className="justify-content-center">
-          <Col>
+        <Row className="justify-content-center mt-2">
+          <Col md={4}>
             <InputBox
               changeHandler={this.codeChange}
               clickHandler={this.enterCode}
               buttonText="JOIN"
+              inputType="number"
+              buttonDisabled={buttonDisabled}
+              inputValue={enteredCode && enteredCode.toString()}
             />
           </Col>
         </Row>
