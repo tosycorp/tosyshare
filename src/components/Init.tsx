@@ -11,6 +11,7 @@ import QRReader from './QRReader';
 export interface Connected {
   connectionId: string;
   connectorId: string;
+  code: number;
 }
 
 type InitState = {
@@ -56,6 +57,7 @@ class Init extends React.Component<InitProps, InitState> {
     const data = {
       connectionId: connector.connection.id,
       connectorId: connector.id,
+      code: connector.connection.code,
     };
     const { onConnected } = this.props;
     onConnected(data);

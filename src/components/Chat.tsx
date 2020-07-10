@@ -42,17 +42,18 @@ class Chat extends React.Component<ChatProps, ChatState> {
   public render() {
     const { messages, message } = this.state;
     const { connected } = this.props;
+    const { code, connectorId } = connected;
     return (
       <>
         <Row className="justify-content-md-center">
           <Col className="text-center">
-            <Alert variant="dark">Chat Started</Alert>
+            <Alert variant="dark">Chat Started (Code: {code})</Alert>
           </Col>
         </Row>
         {messages?.map((m, index) => (
           <Row
             className={
-              connected.connectorId === m.connector.id
+              connectorId === m.connector.id
                 ? 'justify-content-md-end'
                 : 'justify-content-md-start'
             }
@@ -62,9 +63,7 @@ class Chat extends React.Component<ChatProps, ChatState> {
                 style={{ overflowWrap: 'break-word' }}
                 key={index}
                 variant={
-                  connected.connectorId === m.connector.id
-                    ? 'primary'
-                    : 'secondary'
+                  connectorId === m.connector.id ? 'primary' : 'secondary'
                 }
               >
                 <p>{m.value}</p>
