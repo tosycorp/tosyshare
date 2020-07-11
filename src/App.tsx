@@ -11,7 +11,7 @@ const App = () => {
       <Row className="justify-content-center mt-1 mb-1">
         <Col md={8}>
           <Navbar variant="dark" bg="primary" expand>
-            <Container>
+            <Container className="justify-content-center">
               <Navbar.Brand>TOSY SHARE</Navbar.Brand>
             </Container>
           </Navbar>

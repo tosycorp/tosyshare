@@ -159,6 +159,7 @@ class Init extends React.Component<InitProps, InitState> {
             <InputBox
               changeHandler={this.codeChange}
               clickHandler={this.enterCode}
+              inputPlaceholder="Enter Code"
               buttonText="JOIN"
               inputType="number"
               buttonDisabled={buttonDisabled}

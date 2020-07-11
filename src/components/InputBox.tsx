@@ -8,6 +8,7 @@ type InputBoxProps = {
   inputValue?: string;
   inputType?: string;
   buttonDisabled?: boolean;
+  inputPlaceholder?: string;
 };
 
 class InputBox extends React.Component<InputBoxProps> {
@@ -16,6 +17,13 @@ class InputBox extends React.Component<InputBoxProps> {
     this.state = { ...this.state };
   }
 
+  handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      const { clickHandler } = this.props;
+      clickHandler();
+    }
+  };
+
   render() {
     const {
       changeHandler,
@@ -23,6 +31,7 @@ class InputBox extends React.Component<InputBoxProps> {
       buttonText,
       inputValue,
       inputType,
+      inputPlaceholder,
       buttonDisabled,
     } = this.props;
     return (
@@ -31,10 +40,10 @@ class InputBox extends React.Component<InputBoxProps> {
           <FormControl
             style={{ borderColor: '#007bff' }}
             size="lg"
-            placeholder="Enter Code"
-            aria-label="Enter Code"
+            placeholder={inputPlaceholder || ''}
             aria-describedby="basic-addon2"
             onChange={changeHandler}
+            onKeyDown={this.handleInputKeyDown}
             value={inputValue || ''}
             type={inputType || 'text'}
           />
