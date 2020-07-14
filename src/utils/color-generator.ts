@@ -1,21 +1,38 @@
-import { AlertProps } from 'react-bootstrap';
+type Variant =
+  | 'primary'
+  | 'secondary'
+  | 'success'
+  | 'danger'
+  | 'warning'
+  | 'info'
+  | 'dark'
+  | 'light';
 
-const colors: AlertProps['variant'][] = [
+const colors: Variant[] = [
   'primary',
   'secondary',
   'success',
   'danger',
   'warning',
   'info',
+  'dark',
+  'light',
 ];
 
-let availableColors: AlertProps['variant'][];
-export default () => {
-  if (!availableColors || !availableColors.length) {
-    availableColors = [...colors];
-  }
-  const randomColorIndex = Math.floor(Math.random() * availableColors.length);
-  const randomColor = availableColors.splice(randomColorIndex, 1);
+const colorMap: { [key: string]: Variant } = {};
 
-  return randomColor[0];
+export default (id: string): Variant => {
+  if (colorMap[id]) {
+    return colorMap[id];
+  }
+
+  // Return last color if there is no more available color
+  if (colors.length === 1) {
+    return colors[0];
+  }
+
+  const selectedColor = colors.shift();
+  colorMap[id] = selectedColor;
+
+  return selectedColor;
 };

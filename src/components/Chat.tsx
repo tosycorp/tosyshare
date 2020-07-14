@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col, Alert, AlertProps, Container } from 'react-bootstrap';
+import { Row, Col, Alert, Container } from 'react-bootstrap';
 import { listenMessages } from '../utils/listen-messages';
 import { Message, saveMessage } from '../utils/save-message';
 import InputBox from './InputBox';
@@ -13,11 +13,6 @@ type ChatState = {
 type ChatProps = {
   connected: Connected;
 };
-type ConnectorConfigs = {
-  color: Record<string, AlertProps['variant']>;
-};
-
-const colors: ConnectorConfigs['color'] = {};
 
 class Chat extends React.Component<ChatProps, ChatState> {
   constructor(props: ChatProps) {
@@ -33,15 +28,6 @@ class Chat extends React.Component<ChatProps, ChatState> {
       this.setState({ messages });
     });
   }
-
-  getColor = (id: string): AlertProps['variant'] => {
-    if (colors[id]) {
-      return colors[id];
-    }
-    const color = getColor();
-    colors[id] = color;
-    return colors[id];
-  };
 
   messageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ message: e.target.value });
@@ -78,7 +64,7 @@ class Chat extends React.Component<ChatProps, ChatState> {
               <Alert
                 style={{ overflowWrap: 'break-word' }}
                 key={`alert_${index}`}
-                variant={this.getColor(m.connector.id)}
+                variant={getColor(m.connector.id)}
               >
                 <p>{m.value}</p>
               </Alert>
