@@ -1,4 +1,5 @@
 import React from 'react';
+import autosize from 'autosize';
 import { FormControl, InputGroup, Button } from 'react-bootstrap';
 
 type InputBoxProps = {
@@ -12,13 +13,18 @@ type InputBoxProps = {
 };
 
 class InputBox extends React.Component<InputBoxProps> {
+  private stepInput: React.RefObject<HTMLTextAreaElement>;
   constructor(props: InputBoxProps) {
     super(props);
-    this.state = { ...this.state };
+    this.stepInput = React.createRef();
   }
 
-  handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
+  componentDidMount() {
+    autosize(this.stepInput.current);
+  }
+
+  handleInputKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
       const { clickHandler } = this.props;
       clickHandler();
     }
@@ -38,14 +44,22 @@ class InputBox extends React.Component<InputBoxProps> {
       <>
         <InputGroup className="mb-3">
           <FormControl
-            style={{ borderColor: '#007bff' }}
+            as="textarea"
+            ref={this.stepInput}
+            style={{
+              borderColor: '#007bff',
+              maxHeight: '100px',
+              resize: 'none',
+            }}
             size="lg"
+            autoFocus
             placeholder={inputPlaceholder || ''}
             aria-describedby="basic-addon2"
             onChange={changeHandler}
             onKeyDown={this.handleInputKeyDown}
             value={inputValue || ''}
             type={inputType || 'text'}
+            rows={1}
           />
           <InputGroup.Append>
             <Button
