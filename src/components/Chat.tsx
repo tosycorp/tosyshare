@@ -1,26 +1,24 @@
 import React from 'react';
 import { Row, Col, Alert, Container } from 'react-bootstrap';
-import CopyToClipboard from 'copy-to-clipboard';
 import { listenMessages } from '../utils/listen-messages';
 import { Message, saveMessage } from '../utils/save-message';
 import InputBox from './InputBox';
 import { Connected } from './Init';
+import CopyText from './CopyText';
 import getColor from '../utils/color-generator';
 
 type ChatState = {
   message: string;
   messages: Message[];
-  showCopiedText: boolean;
 };
 type ChatProps = {
   connected: Connected;
 };
 
 class Chat extends React.Component<ChatProps, ChatState> {
-  private timer: NodeJS.Timeout;
   constructor(props: ChatProps) {
     super(props);
-    this.state = { message: '', messages: [], showCopiedText: false };
+    this.state = { message: '', messages: [] };
   }
 
   public async componentDidMount() {
@@ -43,18 +41,8 @@ class Chat extends React.Component<ChatProps, ChatState> {
     this.setState({ message: '' });
   };
 
-  onCodeClick = () => {
-    const { connected } = this.props;
-    CopyToClipboard(connected.code.toString());
-    this.setState({ showCopiedText: true });
-    clearTimeout(this.timer);
-    this.timer = setTimeout(() => {
-      this.setState({ showCopiedText: false });
-    }, 500);
-  };
-
   public render() {
-    const { messages, message, showCopiedText } = this.state;
+    const { messages, message } = this.state;
     const { connected } = this.props;
     const { code, connectorId } = connected;
     return (
@@ -64,11 +52,7 @@ class Chat extends React.Component<ChatProps, ChatState> {
             <Row className="justify-content-center">
               <Col className="text-center">
                 <Alert variant="dark">
-                  Chat Started (Code:{' '}
-                  <b onClick={this.onCodeClick} role="presentation">
-                    {showCopiedText ? 'Copied!' : code}
-                  </b>
-                  )
+                  Chat Started (Code: <CopyText text={code.toString()} />)
                 </Alert>
               </Col>
             </Row>

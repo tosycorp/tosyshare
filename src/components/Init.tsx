@@ -1,13 +1,13 @@
 import React from 'react';
 import { Subscription } from 'rxjs';
 import { Row, Col, Button, Spinner } from 'react-bootstrap';
-import CopyToClipboard from 'copy-to-clipboard';
 import { generateCode, Connector } from '../utils/code-genarator';
 import enterCode from '../utils/enter-code';
 import listenConnection from '../utils/listen-connection';
 import InputBox from './InputBox';
 import QR from './QR';
 import QRReader from './QRReader';
+import CopyText from './CopyText';
 
 export interface Connected {
   connectionId: string;
@@ -21,7 +21,6 @@ type InitState = {
   connector: Connector;
   readQR: boolean;
   buttonDisabled: boolean;
-  showCoppiedText: boolean;
 };
 type InitProps = {
   onConnected?: (data: Connected) => void;
@@ -29,7 +28,6 @@ type InitProps = {
 
 class Init extends React.Component<InitProps, InitState> {
   private listenConnectionSub: Subscription = null;
-  private timer: NodeJS.Timeout;
 
   constructor(props: InitProps) {
     super(props);
@@ -39,7 +37,6 @@ class Init extends React.Component<InitProps, InitState> {
       generatedCode: null,
       readQR: false,
       buttonDisabled: true,
-      showCoppiedText: false,
     };
   }
 
@@ -113,24 +110,8 @@ class Init extends React.Component<InitProps, InitState> {
     this.enterCode();
   };
 
-  onGeneratedCodeClick = () => {
-    const { generatedCode } = this.state;
-    CopyToClipboard(generatedCode.toString());
-    this.setState({ showCoppiedText: true });
-    clearTimeout(this.timer);
-    this.timer = setTimeout(() => {
-      this.setState({ showCoppiedText: false });
-    }, 500);
-  };
-
-  public render() {
-    const {
-      generatedCode,
-      readQR,
-      buttonDisabled,
-      enteredCode,
-      showCoppiedText,
-    } = this.state;
+  render() {
+    const { generatedCode, readQR, buttonDisabled, enteredCode } = this.state;
     return (
       <>
         {!readQR && (
@@ -146,8 +127,8 @@ class Init extends React.Component<InitProps, InitState> {
             <Row className="justify-content-center">
               <Col className="text-center align-self-center">
                 {generatedCode ? (
-                  <h3 onClick={this.onGeneratedCodeClick} role="presentation">
-                    {showCoppiedText ? 'Coppied!' : generatedCode.toString()}
+                  <h3>
+                    <CopyText text={generatedCode.toString()} />
                   </h3>
                 ) : (
                   <Spinner animation="border" />
