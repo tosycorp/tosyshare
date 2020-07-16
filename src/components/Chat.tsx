@@ -16,19 +16,32 @@ type ChatProps = {
 };
 
 class Chat extends React.Component<ChatProps, ChatState> {
+  messagesEndRef: React.RefObject<HTMLDivElement> = React.createRef();
+
   constructor(props: ChatProps) {
     super(props);
     this.state = { message: '', messages: [] };
   }
 
-  public async componentDidMount() {
+  async componentDidMount() {
     const { connected } = this.props;
     listenMessages(connected.connectionId).subscribe((m: Message) => {
       let { messages } = this.state;
       messages = [...messages, m];
       this.setState({ messages });
     });
+    this.scrollToBottom();
   }
+
+  componentDidUpdate() {
+    this.scrollToBottom();
+  }
+
+  scrollToBottom = () => {
+    if (this.messagesEndRef.current) {
+      this.messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   messageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ message: e.target.value });
@@ -67,6 +80,7 @@ class Chat extends React.Component<ChatProps, ChatState> {
               >
                 <Col key={`col_${index}`} md={9} sm={9} xs={9}>
                   <Alert
+                    ref={this.messagesEndRef}
                     key={`alert_${index}`}
                     style={{ overflowWrap: 'break-word' }}
                     variant={getColor(m.connector.id)}
