@@ -1,5 +1,4 @@
 import React from 'react';
-import autosize from 'autosize';
 import { FormControl, InputGroup, Button } from 'react-bootstrap';
 
 type InputBoxProps = {
@@ -13,18 +12,20 @@ type InputBoxProps = {
 };
 
 class InputBox extends React.Component<InputBoxProps> {
-  private stepInput: React.RefObject<HTMLTextAreaElement>;
-  constructor(props: InputBoxProps) {
-    super(props);
-    this.stepInput = React.createRef();
-  }
+  private input: React.RefObject<HTMLTextAreaElement> = React.createRef();
 
-  componentDidMount() {
-    autosize(this.stepInput.current);
+  componentDidUpdate() {
+    this.input.current.focus();
+    this.input.current.style.height = '0';
+    this.input.current.style.height = `${
+      this.input.current.scrollHeight + 2
+    }px`;
+    this.input.current.scrollTop = this.input.current.scrollHeight;
   }
 
   handleInputKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
       const { clickHandler } = this.props;
       clickHandler();
     }
@@ -45,10 +46,10 @@ class InputBox extends React.Component<InputBoxProps> {
         <InputGroup className="mb-3">
           <FormControl
             as="textarea"
-            ref={this.stepInput}
+            ref={this.input}
             style={{
               borderColor: '#007bff',
-              maxHeight: '100px',
+              maxHeight: '108px',
               resize: 'none',
             }}
             size="lg"

@@ -44,14 +44,19 @@ class Chat extends React.Component<ChatProps, ChatState> {
   };
 
   messageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ message: e.target.value });
+    const message = e.target.value;
+    if (message !== '\n') {
+      this.setState({ message });
+    }
   };
 
   send = () => {
     const { message } = this.state;
-    const { connected } = this.props;
-    saveMessage(message, connected);
-    this.setState({ message: '' });
+    if (message && message !== '\n') {
+      const { connected } = this.props;
+      saveMessage(message, connected);
+      this.setState({ message: '' });
+    }
   };
 
   public render() {
