@@ -1,4 +1,4 @@
-import { API, graphqlOperation } from 'aws-amplify';
+import { Auth, API, graphqlOperation } from 'aws-amplify';
 import { getConnectionsByCode } from '../graphql/queries';
 import { createConnection, createConnector } from '../graphql/mutations';
 
@@ -49,6 +49,7 @@ const addConnection = async (code: number): Promise<Connection> => {
 
 const addConnectorWrapper = async (input: {
   connectorConnectionId: string;
+  identityId: string;
 }) => {
   return (await API.graphql(graphqlOperation(createConnector, { input }))) as {
     data: { createConnector: Connector };
@@ -57,8 +58,11 @@ const addConnectorWrapper = async (input: {
 
 const addConnector = async (connectionId: string): Promise<Connector> => {
   try {
+    const { identityId } = await Auth.currentCredentials();
+
     const connector = await addConnectorWrapper({
       connectorConnectionId: connectionId,
+      identityId,
     });
     return connector.data.createConnector;
   } catch (err) {

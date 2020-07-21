@@ -15,3 +15,6 @@ prod (amplify: prod)<br>
 git checkout prod<br>
 amplify env checkout prod<br>
 amplify init
+
+VSCode(Windows) amplify Unauthorized Error fix:
+on cmd: Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Unrestricted

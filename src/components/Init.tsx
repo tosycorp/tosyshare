@@ -53,13 +53,15 @@ class Init extends React.Component<InitProps, InitState> {
     });
   }
 
-  onConnected = () => {
+  onConnected = async () => {
     const { connector } = this.state;
+    const connectorId = connector.id;
     const data = {
       connectionId: connector.connection.id,
-      connectorId: connector.id,
+      connectorId,
       code: connector.connection.code,
     };
+
     const { onConnected } = this.props;
     onConnected(data);
   };

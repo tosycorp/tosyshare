@@ -7,6 +7,7 @@ type Connection @model
 
 type Connector @model {
   id: ID!
+  identityId: String!
   connection: Connection @connection(name: "ConnectionConnectors")
 }
 

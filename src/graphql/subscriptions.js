@@ -9,6 +9,7 @@ export const onCreateConnection = /* GraphQL */ `
       connectors {
         items {
           id
+          identityId
           connection {
             id
             code
@@ -33,6 +34,7 @@ export const onUpdateConnection = /* GraphQL */ `
       connectors {
         items {
           id
+          identityId
           connection {
             id
             code
@@ -57,6 +59,7 @@ export const onDeleteConnection = /* GraphQL */ `
       connectors {
         items {
           id
+          identityId
           connection {
             id
             code
@@ -77,12 +80,14 @@ export const onCreateConnector = /* GraphQL */ `
   subscription OnCreateConnector {
     onCreateConnector {
       id
+      identityId
       connection {
         id
         code
         connectors {
           items {
             id
+            identityId
             createdAt
             updatedAt
           }
@@ -100,12 +105,14 @@ export const onUpdateConnector = /* GraphQL */ `
   subscription OnUpdateConnector {
     onUpdateConnector {
       id
+      identityId
       connection {
         id
         code
         connectors {
           items {
             id
+            identityId
             createdAt
             updatedAt
           }
@@ -123,12 +130,14 @@ export const onDeleteConnector = /* GraphQL */ `
   subscription OnDeleteConnector {
     onDeleteConnector {
       id
+      identityId
       connection {
         id
         code
         connectors {
           items {
             id
+            identityId
             createdAt
             updatedAt
           }
@@ -154,6 +163,7 @@ export const onCreateMessage = /* GraphQL */ `
         connectors {
           items {
             id
+            identityId
             createdAt
             updatedAt
           }
@@ -164,6 +174,7 @@ export const onCreateMessage = /* GraphQL */ `
       }
       connector {
         id
+        identityId
         connection {
           id
           code
@@ -193,6 +204,7 @@ export const onUpdateMessage = /* GraphQL */ `
         connectors {
           items {
             id
+            identityId
             createdAt
             updatedAt
           }
@@ -203,6 +215,7 @@ export const onUpdateMessage = /* GraphQL */ `
       }
       connector {
         id
+        identityId
         connection {
           id
           code
@@ -232,6 +245,7 @@ export const onDeleteMessage = /* GraphQL */ `
         connectors {
           items {
             id
+            identityId
             createdAt
             updatedAt
           }
@@ -242,6 +256,7 @@ export const onDeleteMessage = /* GraphQL */ `
       }
       connector {
         id
+        identityId
         connection {
           id
           code
