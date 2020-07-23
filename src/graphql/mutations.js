@@ -19,6 +19,7 @@ export const createConnection = /* GraphQL */ `
             createdAt
             updatedAt
           }
+          connectorConnectionId
           createdAt
           updatedAt
         }
@@ -47,6 +48,7 @@ export const updateConnection = /* GraphQL */ `
             createdAt
             updatedAt
           }
+          connectorConnectionId
           createdAt
           updatedAt
         }
@@ -75,6 +77,7 @@ export const deleteConnection = /* GraphQL */ `
             createdAt
             updatedAt
           }
+          connectorConnectionId
           createdAt
           updatedAt
         }
@@ -100,6 +103,7 @@ export const createConnector = /* GraphQL */ `
           items {
             id
             identityId
+            connectorConnectionId
             createdAt
             updatedAt
           }
@@ -108,6 +112,7 @@ export const createConnector = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      connectorConnectionId
       createdAt
       updatedAt
     }
@@ -128,6 +133,7 @@ export const updateConnector = /* GraphQL */ `
           items {
             id
             identityId
+            connectorConnectionId
             createdAt
             updatedAt
           }
@@ -136,6 +142,7 @@ export const updateConnector = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      connectorConnectionId
       createdAt
       updatedAt
     }
@@ -156,6 +163,7 @@ export const deleteConnector = /* GraphQL */ `
           items {
             id
             identityId
+            connectorConnectionId
             createdAt
             updatedAt
           }
@@ -164,6 +172,7 @@ export const deleteConnector = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      connectorConnectionId
       createdAt
       updatedAt
     }
@@ -185,6 +194,7 @@ export const createMessage = /* GraphQL */ `
           items {
             id
             identityId
+            connectorConnectionId
             createdAt
             updatedAt
           }
@@ -205,6 +215,7 @@ export const createMessage = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        connectorConnectionId
         createdAt
         updatedAt
       }
@@ -230,6 +241,7 @@ export const updateMessage = /* GraphQL */ `
           items {
             id
             identityId
+            connectorConnectionId
             createdAt
             updatedAt
           }
@@ -250,6 +262,7 @@ export const updateMessage = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        connectorConnectionId
         createdAt
         updatedAt
       }
@@ -275,6 +288,7 @@ export const deleteMessage = /* GraphQL */ `
           items {
             id
             identityId
+            connectorConnectionId
             createdAt
             updatedAt
           }
@@ -295,6 +309,7 @@ export const deleteMessage = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        connectorConnectionId
         createdAt
         updatedAt
       }

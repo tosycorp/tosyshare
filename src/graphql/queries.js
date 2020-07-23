@@ -16,6 +16,7 @@ export const getConnection = /* GraphQL */ `
             createdAt
             updatedAt
           }
+          connectorConnectionId
           createdAt
           updatedAt
         }
@@ -40,6 +41,7 @@ export const listConnections = /* GraphQL */ `
           items {
             id
             identityId
+            connectorConnectionId
             createdAt
             updatedAt
           }
@@ -64,6 +66,7 @@ export const getConnector = /* GraphQL */ `
           items {
             id
             identityId
+            connectorConnectionId
             createdAt
             updatedAt
           }
@@ -72,6 +75,7 @@ export const getConnector = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      connectorConnectionId
       createdAt
       updatedAt
     }
@@ -96,6 +100,7 @@ export const listConnectors = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        connectorConnectionId
         createdAt
         updatedAt
       }
@@ -116,6 +121,7 @@ export const getMessage = /* GraphQL */ `
           items {
             id
             identityId
+            connectorConnectionId
             createdAt
             updatedAt
           }
@@ -136,6 +142,7 @@ export const getMessage = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        connectorConnectionId
         createdAt
         updatedAt
       }
@@ -174,6 +181,7 @@ export const listMessages = /* GraphQL */ `
             createdAt
             updatedAt
           }
+          connectorConnectionId
           createdAt
           updatedAt
         }
@@ -207,6 +215,7 @@ export const getConnectionsByCode = /* GraphQL */ `
           items {
             id
             identityId
+            connectorConnectionId
             createdAt
             updatedAt
           }

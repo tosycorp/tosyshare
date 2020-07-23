@@ -9,6 +9,7 @@ type Connector @model {
   id: ID!
   identityId: String!
   connection: Connection @connection(name: "ConnectionConnectors")
+  connectorConnectionId: ID!
 }
 
 enum MessageType {
@@ -28,4 +29,6 @@ type Message @model {
 type Subscription {
   onMessageByConnectionId(messageConnectionId: ID!): Message
     @aws_subscribe(mutations: ["createMessage"])
+  onConnectorByConnectionId(connectorConnectionId: ID!): Connector
+    @aws_subscribe(mutations: ["updateConnector"])
 }

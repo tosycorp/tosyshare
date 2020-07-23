@@ -14,6 +14,7 @@ export const onMessageByConnectionId = /* GraphQL */ `
           items {
             id
             identityId
+            connectorConnectionId
             createdAt
             updatedAt
           }
@@ -34,10 +35,38 @@ export const onMessageByConnectionId = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        connectorConnectionId
         createdAt
         updatedAt
       }
       messageConnectionId
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onConnectorByConnectionId = /* GraphQL */ `
+  subscription OnConnectorByConnectionId($connectorConnectionId: ID!) {
+    onConnectorByConnectionId(connectorConnectionId: $connectorConnectionId) {
+      id
+      identityId
+      connection {
+        id
+        code
+        connectors {
+          items {
+            id
+            identityId
+            connectorConnectionId
+            createdAt
+            updatedAt
+          }
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      connectorConnectionId
       createdAt
       updatedAt
     }
@@ -58,6 +87,7 @@ export const onCreateConnection = /* GraphQL */ `
             createdAt
             updatedAt
           }
+          connectorConnectionId
           createdAt
           updatedAt
         }
@@ -83,6 +113,7 @@ export const onUpdateConnection = /* GraphQL */ `
             createdAt
             updatedAt
           }
+          connectorConnectionId
           createdAt
           updatedAt
         }
@@ -108,6 +139,7 @@ export const onDeleteConnection = /* GraphQL */ `
             createdAt
             updatedAt
           }
+          connectorConnectionId
           createdAt
           updatedAt
         }
@@ -130,6 +162,7 @@ export const onCreateConnector = /* GraphQL */ `
           items {
             id
             identityId
+            connectorConnectionId
             createdAt
             updatedAt
           }
@@ -138,6 +171,7 @@ export const onCreateConnector = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      connectorConnectionId
       createdAt
       updatedAt
     }
@@ -155,6 +189,7 @@ export const onUpdateConnector = /* GraphQL */ `
           items {
             id
             identityId
+            connectorConnectionId
             createdAt
             updatedAt
           }
@@ -163,6 +198,7 @@ export const onUpdateConnector = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      connectorConnectionId
       createdAt
       updatedAt
     }
@@ -180,6 +216,7 @@ export const onDeleteConnector = /* GraphQL */ `
           items {
             id
             identityId
+            connectorConnectionId
             createdAt
             updatedAt
           }
@@ -188,6 +225,7 @@ export const onDeleteConnector = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      connectorConnectionId
       createdAt
       updatedAt
     }
@@ -206,6 +244,7 @@ export const onCreateMessage = /* GraphQL */ `
           items {
             id
             identityId
+            connectorConnectionId
             createdAt
             updatedAt
           }
@@ -226,6 +265,7 @@ export const onCreateMessage = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        connectorConnectionId
         createdAt
         updatedAt
       }
@@ -248,6 +288,7 @@ export const onUpdateMessage = /* GraphQL */ `
           items {
             id
             identityId
+            connectorConnectionId
             createdAt
             updatedAt
           }
@@ -268,6 +309,7 @@ export const onUpdateMessage = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        connectorConnectionId
         createdAt
         updatedAt
       }
@@ -290,6 +332,7 @@ export const onDeleteMessage = /* GraphQL */ `
           items {
             id
             identityId
+            connectorConnectionId
             createdAt
             updatedAt
           }
@@ -310,6 +353,7 @@ export const onDeleteMessage = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        connectorConnectionId
         createdAt
         updatedAt
       }
