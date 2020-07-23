@@ -139,6 +139,7 @@ export const getMessage = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      messageConnectionId
       createdAt
       updatedAt
     }
@@ -176,6 +177,7 @@ export const listMessages = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        messageConnectionId
         createdAt
         updatedAt
       }

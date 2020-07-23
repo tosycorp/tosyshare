@@ -1,6 +1,6 @@
-import { API, graphqlOperation } from 'aws-amplify';
+import { API } from 'aws-amplify';
 import { Observable, Subscribable, Subscription, Subscriber } from 'rxjs';
-import { onCreateMessage } from '../graphql/subscriptions';
+import { onMessageByConnectionId } from '../graphql/subscriptions';
 
 import { Message } from './save-message';
 
@@ -10,20 +10,19 @@ let subscriber: Subscriber<Message>;
 export const listenMessages = (connectionId: string) => {
   return new Observable<Message>((subs) => {
     subscriber = subs;
-    const onCreateMessageWrapper = () => {
-      return API.graphql(graphqlOperation(onCreateMessage)) as Subscribable<{
-        value: { data: { onCreateMessage: Message } };
+    const onMessageByConnectionIdWrapper = () => {
+      return API.graphql({
+        query: onMessageByConnectionId,
+        variables: {
+          messageConnectionId: connectionId,
+        },
+      }) as Subscribable<{
+        value: { data: { onMessageByConnectionId: Message } };
       }>;
     };
 
-    subscription = onCreateMessageWrapper().subscribe({
-      next: ({ value }) => {
-        const message = value.data.onCreateMessage;
-
-        if (message.connection.id === connectionId) {
-          subs.next(message);
-        }
-      },
+    subscription = onMessageByConnectionIdWrapper().subscribe({
+      next: ({ value }) => subs.next(value.data.onMessageByConnectionId),
     }) as Subscription;
   });
 };

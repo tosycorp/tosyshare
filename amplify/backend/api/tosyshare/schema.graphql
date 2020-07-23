@@ -22,4 +22,10 @@ type Message @model {
   value: String!
   connection: Connection! @connection
   connector: Connector! @connection
+  messageConnectionId: ID!
+}
+
+type Subscription {
+  onMessageByConnectionId(messageConnectionId: ID!): Message
+    @aws_subscribe(mutations: ["createMessage"])
 }

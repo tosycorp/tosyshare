@@ -208,6 +208,7 @@ export const createMessage = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      messageConnectionId
       createdAt
       updatedAt
     }
@@ -252,6 +253,7 @@ export const updateMessage = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      messageConnectionId
       createdAt
       updatedAt
     }
@@ -296,6 +298,7 @@ export const deleteMessage = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      messageConnectionId
       createdAt
       updatedAt
     }

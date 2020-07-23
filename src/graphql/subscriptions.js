@@ -1,6 +1,48 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const onMessageByConnectionId = /* GraphQL */ `
+  subscription OnMessageByConnectionId($messageConnectionId: ID!) {
+    onMessageByConnectionId(messageConnectionId: $messageConnectionId) {
+      id
+      type
+      value
+      connection {
+        id
+        code
+        connectors {
+          items {
+            id
+            identityId
+            createdAt
+            updatedAt
+          }
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      connector {
+        id
+        identityId
+        connection {
+          id
+          code
+          connectors {
+            nextToken
+          }
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      messageConnectionId
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateConnection = /* GraphQL */ `
   subscription OnCreateConnection {
     onCreateConnection {
@@ -187,6 +229,7 @@ export const onCreateMessage = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      messageConnectionId
       createdAt
       updatedAt
     }
@@ -228,6 +271,7 @@ export const onUpdateMessage = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      messageConnectionId
       createdAt
       updatedAt
     }
@@ -269,6 +313,7 @@ export const onDeleteMessage = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      messageConnectionId
       createdAt
       updatedAt
     }
