@@ -1,35 +1,7 @@
 import { Auth, API, graphqlOperation } from 'aws-amplify';
-import { getConnectionsByCode } from '../graphql/queries';
 import { createConnection, createConnector } from '../graphql/mutations';
-
-export interface Connection {
-  id: string;
-  code: number;
-  connectors: Connector[];
-}
-
-export interface Connector {
-  id: string;
-  connection?: Connection;
-}
-
-const fetchConnectionByCodeWrapper = async (code: number) => {
-  return (await API.graphql(
-    graphqlOperation(getConnectionsByCode, { code })
-  )) as { data: { GetConnectionsByCode: { items: Connection[] } } };
-};
-
-export const fetchConnectionByCode = async (
-  code: number
-): Promise<Connection> => {
-  try {
-    const connectionsData = await fetchConnectionByCodeWrapper(code);
-    return connectionsData.data.GetConnectionsByCode.items[0];
-  } catch (err) {
-    console.error('error fetching fetchConnection:', err);
-    return null;
-  }
-};
+import getConnectionByCode from './get-connection-by-code';
+import { Connection, Connector } from '../types';
 
 const addConnectionWrapper = async (input: { code: number }) => {
   return (await API.graphql(graphqlOperation(createConnection, { input }))) as {
@@ -71,14 +43,14 @@ const addConnector = async (connectionId: string): Promise<Connector> => {
   }
 };
 
-export const generateCode = async (): Promise<{
+const generateCode = async (): Promise<{
   code: number;
   connector: Connector;
   connection: Connection;
 }> => {
   const code = Math.floor(100000 + Math.random() * 900000);
 
-  let connection = await fetchConnectionByCode(code);
+  let connection = await getConnectionByCode(code);
   // If connection with code already generated before, generate another one.
   if (connection) {
     return generateCode();
@@ -89,3 +61,5 @@ export const generateCode = async (): Promise<{
 
   return { code, connector, connection };
 };
+
+export default generateCode;

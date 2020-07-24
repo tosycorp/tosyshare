@@ -1,11 +1,11 @@
 import React from 'react';
 import { Row, Col, Alert, Container } from 'react-bootstrap';
 import { listenMessages } from '../utils/listen-messages';
-import { Message, saveMessage } from '../utils/save-message';
+import saveMessage from '../utils/save-message';
 import InputBox from './InputBox';
-import { Connected } from './Init';
 import CopyText from './CopyText';
-import getColor from '../utils/color-generator';
+import generateColor from '../utils/generate-color';
+import { Message, Connected } from '../types';
 
 type ChatState = {
   message: string;
@@ -16,7 +16,7 @@ type ChatProps = {
 };
 
 class Chat extends React.Component<ChatProps, ChatState> {
-  messagesEndRef: React.RefObject<HTMLDivElement> = React.createRef();
+  private messagesEndRef: React.RefObject<HTMLDivElement> = React.createRef();
 
   constructor(props: ChatProps) {
     super(props);
@@ -26,11 +26,9 @@ class Chat extends React.Component<ChatProps, ChatState> {
   async componentDidMount() {
     const { connected } = this.props;
     listenMessages(connected.connectionId).subscribe((m: Message) => {
-      let { messages } = this.state;
-      messages = [...messages, m];
-      this.setState({ messages });
+      const { messages } = this.state;
+      this.setState({ messages: [...messages, m] });
     });
-    this.scrollToBottom();
   }
 
   componentDidUpdate() {
@@ -59,6 +57,10 @@ class Chat extends React.Component<ChatProps, ChatState> {
     }
   };
 
+  isLastMessage = (messages: Message[], index: number) => {
+    return messages.length - 1 === index;
+  };
+
   public render() {
     const { messages, message } = this.state;
     const { connected } = this.props;
@@ -85,10 +87,14 @@ class Chat extends React.Component<ChatProps, ChatState> {
               >
                 <Col key={`col_${index}`} md={9} sm={9} xs={9}>
                   <Alert
-                    ref={this.messagesEndRef}
+                    ref={
+                      this.isLastMessage(messages, index)
+                        ? this.messagesEndRef
+                        : null
+                    }
                     key={`alert_${index}`}
                     style={{ overflowWrap: 'break-word' }}
-                    variant={getColor(m.connector.id)}
+                    variant={generateColor(m.connector.id)}
                   >
                     {m.value}
                   </Alert>

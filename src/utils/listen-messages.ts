@@ -1,8 +1,7 @@
 import { API } from 'aws-amplify';
 import { Observable, Subscribable, Subscription, Subscriber } from 'rxjs';
 import { onMessageByConnectionId } from '../graphql/subscriptions';
-
-import { Message } from './save-message';
+import { Message } from '../types';
 
 let subscription: Subscription;
 let subscriber: Subscriber<Message>;

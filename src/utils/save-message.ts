@@ -1,17 +1,8 @@
 import { API, graphqlOperation } from 'aws-amplify';
 import { createMessage } from '../graphql/mutations';
-import { Connector, Connection } from './code-genarator';
-import { Connected } from '../components/Init';
+import { Message, Connected } from '../types';
 
-export interface Message {
-  id: string;
-  type: 'STRING' | 'FILE';
-  value: string;
-  connection: Connection;
-  connector: Connector;
-}
-
-export const saveMessage = async (
+const saveMessage = async (
   value: string,
   connected: Connected
 ): Promise<Message> => {
@@ -35,3 +26,5 @@ export const saveMessage = async (
     })
   ).data.createMessage;
 };
+
+export default saveMessage;

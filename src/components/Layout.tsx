@@ -1,6 +1,7 @@
 import React from 'react';
-import Init, { Connected } from './Init';
+import Init from './Init';
 import Chat from './Chat';
+import { Connected } from '../types';
 
 type LayoutState = {
   connected: Connected;

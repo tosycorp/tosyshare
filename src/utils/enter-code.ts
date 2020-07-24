@@ -1,12 +1,13 @@
 import { API, graphqlOperation } from 'aws-amplify';
 import { updateConnector } from '../graphql/mutations';
-import { fetchConnectionByCode, Connector } from './code-genarator';
+import getConnectionByCode from './get-connection-by-code';
+import { Connector } from '../types';
 
-export default async (
+const enterCode = async (
   code: number,
   connector: Connector
 ): Promise<Connector> => {
-  const connection = await fetchConnectionByCode(code);
+  const connection = await getConnectionByCode(code);
   if (!connection) {
     return null;
   }
@@ -27,3 +28,5 @@ export default async (
     })
   ).data.updateConnector;
 };
+
+export default enterCode;

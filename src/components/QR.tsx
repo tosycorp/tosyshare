@@ -1,6 +1,6 @@
 import React from 'react';
 import { Image } from 'react-bootstrap';
-import generateQR from '../utils/qr-genarator';
+import generateQR from '../utils/generate-qr';
 
 type QRState = {
   dataURL: string;

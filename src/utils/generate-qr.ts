@@ -1,6 +1,6 @@
 import QRCode from 'qrcode';
 
-export default (text: string) => {
+const generateQr = (text: string) => {
   try {
     return QRCode.toDataURL(text, { width: 300 });
   } catch (err) {
@@ -8,3 +8,5 @@ export default (text: string) => {
   }
   return null;
 };
+
+export default generateQr;

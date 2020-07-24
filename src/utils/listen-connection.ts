@@ -1,9 +1,9 @@
 import { API } from 'aws-amplify';
 import { Observable, Subscribable } from 'rxjs';
 import { onConnectorByConnectionId } from '../graphql/subscriptions';
-import { Connector } from './code-genarator';
+import { Connector } from '../types';
 
-export default (connectionId: string) => {
+const listenConnection = (connectionId: string) => {
   return new Observable<void>((subscriber) => {
     const onConnectorByConnectionIdWrapper = () => {
       return API.graphql({
@@ -26,3 +26,5 @@ export default (connectionId: string) => {
     });
   });
 };
+
+export default listenConnection;

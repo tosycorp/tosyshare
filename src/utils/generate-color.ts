@@ -21,7 +21,7 @@ const colors: Variant[] = [
 
 const colorMap: { [key: string]: Variant } = {};
 
-export default (id: string): Variant => {
+const generateColor = (id: string): Variant => {
   if (colorMap[id]) {
     return colorMap[id];
   }
@@ -36,3 +36,5 @@ export default (id: string): Variant => {
 
   return selectedColor;
 };
+
+export default generateColor;

@@ -1,19 +1,14 @@
 import React from 'react';
 import { Subscription } from 'rxjs';
 import { Row, Col, Button, Spinner } from 'react-bootstrap';
-import { generateCode, Connector } from '../utils/code-genarator';
+import generateCode from '../utils/generate-code';
 import enterCode from '../utils/enter-code';
 import listenConnection from '../utils/listen-connection';
 import InputBox from './InputBox';
 import QR from './QR';
 import QRReader from './QRReader';
 import CopyText from './CopyText';
-
-export interface Connected {
-  connectionId: string;
-  connectorId: string;
-  code: number;
-}
+import { Connector, Connected } from '../types';
 
 type InitState = {
   generatedCode: number;
@@ -47,13 +42,14 @@ class Init extends React.Component<InitProps, InitState> {
       connector,
     });
 
-    this.listenConnectionSub = listenConnection(connection.id).subscribe(() => {
-      this.unsubscribeListenConnection();
-      this.onConnected();
-    });
+    this.listenConnectionSub = listenConnection(connection.id).subscribe(() =>
+      this.onConnected()
+    );
   }
 
   onConnected = async () => {
+    this.unsubscribeListenConnection();
+
     const { connector } = this.state;
     const connectorId = connector.id;
     const data = {
@@ -74,8 +70,6 @@ class Init extends React.Component<InitProps, InitState> {
     const updatedConnector = await enterCode(enteredCode, connector);
     if (updatedConnector) {
       this.setState({ connector: updatedConnector });
-
-      this.unsubscribeListenConnection();
       this.onConnected();
     }
   };
