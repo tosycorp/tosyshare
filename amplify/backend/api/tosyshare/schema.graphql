@@ -1,11 +1,13 @@
 type Connection @model
+  @auth(rules: [{ allow: public, operations: [read, create] }])
   @key(name: "ByCode", fields: ["code"], queryField: "GetConnectionsByCode") {
   id: ID!
   code: Int!
   connectors: [Connector] @connection(name: "ConnectionConnectors")
 }
 
-type Connector @model {
+type Connector @model
+  @auth(rules: [{ allow: public, operations: [create, update] }]) {
   id: ID!
   identityId: String!
   connection: Connection @connection(name: "ConnectionConnectors")
@@ -17,7 +19,8 @@ enum MessageType {
   FILE
 }
 
-type Message @model {
+type Message @model
+  @auth(rules: [{ allow: public, operations: [read, create] }]) {
   id: ID!
   type: MessageType!
   value: String!
