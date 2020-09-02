@@ -7,6 +7,7 @@ export interface Connection {
 export interface Connector {
   id: string;
   connection?: Connection;
+  identityId: string;
 }
 
 export interface Connected {
@@ -17,7 +18,7 @@ export interface Connected {
 
 export interface Message {
   id: string;
-  type: 'STRING' | 'FILE';
+  type: 'STRING' | 'JSON';
   value: string;
   connection: Connection;
   connector: Connector;

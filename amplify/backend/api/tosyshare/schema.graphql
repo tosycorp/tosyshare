@@ -16,7 +16,7 @@ type Connector @model
 
 enum MessageType {
   STRING
-  FILE
+  JSON
 }
 
 type Message @model

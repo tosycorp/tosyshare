@@ -2,13 +2,19 @@ import React from 'react';
 import { Row, Col, Alert, Container } from 'react-bootstrap';
 import { listenMessages } from '../utils/listen-messages';
 import saveMessage from '../utils/save-message';
-import InputBox from './InputBox';
+import InputBox, { UploadOptions } from './InputBox';
 import CopyText from './CopyText';
 import generateColor from '../utils/generate-color';
 import { Message, Connected } from '../types';
 
+type JSONMessage = {
+  url: string;
+  fileName: string;
+};
+
 type ChatState = {
   message: string;
+  messageType: 'STRING' | 'JSON';
   messages: Message[];
 };
 type ChatProps = {
@@ -20,7 +26,7 @@ class Chat extends React.Component<ChatProps, ChatState> {
 
   constructor(props: ChatProps) {
     super(props);
-    this.state = { message: '', messages: [] };
+    this.state = { message: '', messages: [], messageType: 'STRING' };
   }
 
   async componentDidMount() {
@@ -44,15 +50,15 @@ class Chat extends React.Component<ChatProps, ChatState> {
   messageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const message = e.target.value;
     if (message !== '\n') {
-      this.setState({ message });
+      this.setState({ message, messageType: 'STRING' });
     }
   };
 
   send = () => {
-    const { message } = this.state;
+    const { message, messageType } = this.state;
     if (message && message !== '\n') {
       const { connected } = this.props;
-      saveMessage(message, connected);
+      saveMessage(message, connected, messageType);
       this.setState({ message: '' });
     }
   };
@@ -65,6 +71,25 @@ class Chat extends React.Component<ChatProps, ChatState> {
     const { messages, message } = this.state;
     const { connected } = this.props;
     const { code, connectorId } = connected;
+
+    const uploadHandler: (obj: { file: File; key: string }) => void = (val) => {
+      const { file, key } = val;
+
+      const messageS: JSONMessage = {
+        url: `https://tosyshare33f3b4cb0e3045bba147150ad29e916a214301-dev.s3-eu-west-1.amazonaws.com/public/${key}`,
+        fileName: file.name,
+      };
+      this.setState({ message: JSON.stringify(messageS), messageType: 'JSON' });
+      this.send();
+    };
+    const uploadOptions: UploadOptions = { uploadHandler, connected };
+
+    const prepareLinkMessage = (obj: JSONMessage) => (
+      <a target="_blank" rel="noopener noreferrer" href={obj.url}>
+        {obj.fileName}
+      </a>
+    );
+
     return (
       <>
         <Row style={{ maxHeight: 'calc(100vh - 200px)', overflowY: 'auto' }}>
@@ -96,7 +121,9 @@ class Chat extends React.Component<ChatProps, ChatState> {
                     style={{ overflowWrap: 'break-word' }}
                     variant={generateColor(m.connector.id)}
                   >
-                    {m.value}
+                    {m.type === 'JSON'
+                      ? prepareLinkMessage(JSON.parse(m.value))
+                      : m.value}
                   </Alert>
                 </Col>
               </Row>
@@ -111,6 +138,7 @@ class Chat extends React.Component<ChatProps, ChatState> {
                 clickHandler={this.send}
                 buttonText="SEND"
                 inputValue={message}
+                uploadOptions={uploadOptions}
               />
             </Col>
           </Row>

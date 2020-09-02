@@ -1,6 +1,14 @@
 import React from 'react';
 import { FormControl, InputGroup, Button } from 'react-bootstrap';
 
+import Upload from './Upload';
+import { Connected } from '../types';
+
+export type UploadOptions = {
+  uploadHandler: (obj: { file: File; key: string }) => void;
+  connected: Connected;
+};
+
 type InputBoxProps = {
   changeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void;
   clickHandler: () => void;
@@ -9,6 +17,7 @@ type InputBoxProps = {
   inputType?: string;
   buttonDisabled?: boolean;
   inputPlaceholder?: string;
+  uploadOptions?: UploadOptions;
 };
 
 class InputBox extends React.Component<InputBoxProps> {
@@ -40,6 +49,7 @@ class InputBox extends React.Component<InputBoxProps> {
       inputType,
       inputPlaceholder,
       buttonDisabled,
+      uploadOptions,
     } = this.props;
     return (
       <>
@@ -63,6 +73,12 @@ class InputBox extends React.Component<InputBoxProps> {
             rows={1}
           />
           <InputGroup.Append>
+            {uploadOptions && (
+              <Upload
+                connected={uploadOptions.connected}
+                onUploadDone={uploadOptions.uploadHandler}
+              />
+            )}
             <Button
               variant="primary"
               onClick={clickHandler}

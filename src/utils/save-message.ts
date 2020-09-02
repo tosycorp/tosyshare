@@ -4,7 +4,8 @@ import { Message, Connected } from '../types';
 
 const saveMessage = async (
   value: string,
-  connected: Connected
+  connected: Connected,
+  type: 'STRING' | 'JSON'
 ): Promise<Message> => {
   const createMessageWrapper = async (input: {
     type: string;
@@ -19,7 +20,7 @@ const saveMessage = async (
 
   return (
     await createMessageWrapper({
-      type: 'STRING',
+      type,
       value,
       messageConnectionId: connected.connectionId,
       messageConnectorId: connected.connectorId,
