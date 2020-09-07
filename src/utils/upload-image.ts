@@ -3,13 +3,18 @@ import { Connected } from '../types';
 
 let imageCount = 0;
 
-const uploadImage = async (file: File, connected: Connected) => {
+const uploadImage = async (
+  file: File,
+  connected: Connected,
+  progressCallback: (progress: ProgressEvent) => void
+) => {
   return new Promise<{ key: string }>((res, rej) => {
     const { connectionId, connectorId } = connected;
     Storage.put(`${connectionId}/${connectorId}_${imageCount}.png`, file, {
       // level: 'protected',
       contentType: 'image/png',
       ACL: 'public-read',
+      progressCallback,
     })
       .then((result) => {
         imageCount += 1;

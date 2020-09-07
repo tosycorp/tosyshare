@@ -7,6 +7,7 @@ import { Connected } from '../types';
 export type UploadOptions = {
   uploadHandler: (obj: { file: File; key: string }) => void;
   connected: Connected;
+  uploadProgressHandler: (progress: number) => void;
 };
 
 type InputBoxProps = {
@@ -77,6 +78,7 @@ class InputBox extends React.Component<InputBoxProps> {
               <Upload
                 connected={uploadOptions.connected}
                 onUploadDone={uploadOptions.uploadHandler}
+                onUploadProgress={uploadOptions.uploadProgressHandler}
               />
             )}
             <Button

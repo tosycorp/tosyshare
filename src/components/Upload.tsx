@@ -6,8 +6,9 @@ import { Connected } from '../types';
 
 type UploadState = {};
 type UploadProps = {
-  connected: Connected;
   onUploadDone: (obj: { file: File; key: string }) => void;
+  connected: Connected;
+  onUploadProgress: (progress: number) => void;
 };
 
 class Upload extends React.Component<UploadProps, UploadState> {
@@ -15,13 +16,21 @@ class Upload extends React.Component<UploadProps, UploadState> {
     const file = e.target.files[0];
     const { connected, onUploadDone } = this.props;
 
-    const uploaded = await uploadImage(file, connected);
+    const uploaded = await uploadImage(file, connected, this.progressCallback);
     if (onUploadDone) {
       onUploadDone({ file, ...uploaded });
     }
     // eslint-disable-next-line no-console
     console.log(`File uploaded.`, uploaded);
   }
+
+  progressCallback = (progress: ProgressEvent) => {
+    const progresss = (progress.loaded / progress.total) * 100;
+    const { onUploadProgress } = this.props;
+    if (onUploadProgress) {
+      onUploadProgress(progresss);
+    }
+  };
 
   render() {
     let fileInputRef: HTMLInputElement;
