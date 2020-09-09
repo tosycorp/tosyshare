@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col, Alert, Container, ProgressBar } from 'react-bootstrap';
+import { Row, Col, Alert, Container } from 'react-bootstrap';
 import { listenMessages } from '../utils/listen-messages';
 import saveMessage from '../utils/save-message';
 import InputBox, { UploadOptions } from './InputBox';
@@ -16,7 +16,6 @@ type ChatState = {
   message: string;
   messageType: 'STRING' | 'JSON';
   messages: Message[];
-  uploadProgress: number;
 };
 type ChatProps = {
   connected: Connected;
@@ -31,7 +30,6 @@ class Chat extends React.Component<ChatProps, ChatState> {
       message: '',
       messages: [],
       messageType: 'STRING',
-      uploadProgress: null,
     };
   }
 
@@ -74,7 +72,7 @@ class Chat extends React.Component<ChatProps, ChatState> {
   };
 
   public render() {
-    const { messages, message, uploadProgress } = this.state;
+    const { messages, message } = this.state;
     const { connected } = this.props;
     const { code, connectorId } = connected;
 
@@ -87,21 +85,13 @@ class Chat extends React.Component<ChatProps, ChatState> {
       this.setState({
         message: JSON.stringify(messageS),
         messageType: 'JSON',
-        uploadProgress: null,
       });
       this.send();
-    };
-
-    const uploadProgressHandler: (progress: number) => void = (val) => {
-      this.setState({
-        uploadProgress: val,
-      });
     };
 
     const uploadOptions: UploadOptions = {
       uploadHandler,
       connected,
-      uploadProgressHandler,
     };
 
     const prepareLinkMessage = (obj: JSONMessage) => (
@@ -109,21 +99,6 @@ class Chat extends React.Component<ChatProps, ChatState> {
         {obj.fileName}
       </a>
     );
-
-    let inputOrProgressBar;
-    if (uploadProgress) {
-      inputOrProgressBar = <ProgressBar now={uploadProgress} />;
-    } else {
-      inputOrProgressBar = (
-        <InputBox
-          changeHandler={this.messageChange}
-          clickHandler={this.send}
-          buttonText="SEND"
-          inputValue={message}
-          uploadOptions={uploadOptions}
-        />
-      );
-    }
 
     return (
       <>
@@ -167,7 +142,15 @@ class Chat extends React.Component<ChatProps, ChatState> {
         </Row>
         <Container className="fixed-bottom">
           <Row className="justify-content-center">
-            <Col md={8}>{inputOrProgressBar}</Col>
+            <Col md={8}>
+              <InputBox
+                changeHandler={this.messageChange}
+                clickHandler={this.send}
+                buttonText="SEND"
+                inputValue={message}
+                uploadOptions={uploadOptions}
+              />
+            </Col>
           </Row>
         </Container>
       </>

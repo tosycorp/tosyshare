@@ -9,6 +9,7 @@ type UploadProps = {
   onUploadDone: (obj: { file: File; key: string }) => void;
   connected: Connected;
   onUploadProgress: (progress: number) => void;
+  disabled: boolean;
 };
 
 class Upload extends React.Component<UploadProps, UploadState> {
@@ -34,6 +35,7 @@ class Upload extends React.Component<UploadProps, UploadState> {
 
   render() {
     let fileInputRef: HTMLInputElement;
+    const { disabled } = this.props;
 
     return (
       <>
@@ -46,7 +48,11 @@ class Upload extends React.Component<UploadProps, UploadState> {
           accept="image/png"
           onChange={(evt) => this.onChange(evt as any)}
         />
-        <Button variant="primary" onClick={() => fileInputRef.click()}>
+        <Button
+          variant="primary"
+          onClick={() => fileInputRef.click()}
+          disabled={disabled}
+        >
           <BsFileDiff style={{ width: '30px', height: '30px' }} />
         </Button>
       </>

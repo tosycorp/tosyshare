@@ -1,13 +1,11 @@
 import React from 'react';
-import { FormControl, InputGroup, Button } from 'react-bootstrap';
-
+import { FormControl, InputGroup, Button, ProgressBar } from 'react-bootstrap';
 import Upload from './Upload';
 import { Connected } from '../types';
 
 export type UploadOptions = {
   uploadHandler: (obj: { file: File; key: string }) => void;
   connected: Connected;
-  uploadProgressHandler: (progress: number) => void;
 };
 
 type InputBoxProps = {
@@ -21,8 +19,19 @@ type InputBoxProps = {
   uploadOptions?: UploadOptions;
 };
 
-class InputBox extends React.Component<InputBoxProps> {
+type InputBoxState = {
+  uploadProgress: number;
+};
+
+class InputBox extends React.Component<InputBoxProps, InputBoxState> {
   private input: React.RefObject<HTMLTextAreaElement> = React.createRef();
+
+  constructor(props: InputBoxProps) {
+    super(props);
+    this.state = {
+      uploadProgress: null,
+    };
+  }
 
   componentDidUpdate() {
     this.input.current.focus();
@@ -41,7 +50,14 @@ class InputBox extends React.Component<InputBoxProps> {
     }
   };
 
+  uploadProgressHandler: (progress: number) => void = (val) => {
+    this.setState({
+      uploadProgress: val < 100 ? val : null,
+    });
+  };
+
   render() {
+    const { uploadProgress } = this.state;
     const {
       changeHandler,
       clickHandler,
@@ -54,6 +70,7 @@ class InputBox extends React.Component<InputBoxProps> {
     } = this.props;
     return (
       <>
+        {uploadProgress && <ProgressBar now={uploadProgress} />}
         <InputGroup className="mb-3">
           <FormControl
             as="textarea"
@@ -78,7 +95,8 @@ class InputBox extends React.Component<InputBoxProps> {
               <Upload
                 connected={uploadOptions.connected}
                 onUploadDone={uploadOptions.uploadHandler}
-                onUploadProgress={uploadOptions.uploadProgressHandler}
+                onUploadProgress={this.uploadProgressHandler}
+                disabled={uploadProgress !== null}
               />
             )}
             <Button
