@@ -10,12 +10,17 @@ const uploadImage = async (
 ) => {
   return new Promise<{ key: string }>((res, rej) => {
     const { connectionId, connectorId } = connected;
-    Storage.put(`${connectionId}/${connectorId}_${imageCount}.png`, file, {
-      // level: 'protected',
-      contentType: 'image/png',
-      ACL: 'public-read',
-      progressCallback,
-    })
+    const extension = file.name.split('.').pop();
+    Storage.put(
+      `${connectionId}/${connectorId}_${imageCount}.${extension}`,
+      file,
+      {
+        // level: 'protected',
+        contentType: file.type,
+        ACL: 'public-read',
+        progressCallback,
+      }
+    )
       .then((result) => {
         imageCount += 1;
         res(result as { key: string });

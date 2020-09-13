@@ -9,7 +9,10 @@ export type UploadOptions = {
 };
 
 type InputBoxProps = {
-  changeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  changeHandler: (
+    e: React.ChangeEvent<HTMLInputElement>,
+    inputHeight: number
+  ) => void;
   clickHandler: () => void;
   buttonText: string;
   inputValue?: string;
@@ -52,14 +55,19 @@ class InputBox extends React.Component<InputBoxProps, InputBoxState> {
 
   uploadProgressHandler: (progress: number) => void = (val) => {
     this.setState({
-      uploadProgress: val < 100 ? val : null,
+      uploadProgress: val,
     });
+  };
+
+  changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { changeHandler } = this.props;
+    const inputHeight = Math.min(this.input.current.scrollHeight + 2, 108);
+    changeHandler(e, inputHeight);
   };
 
   render() {
     const { uploadProgress } = this.state;
     const {
-      changeHandler,
       clickHandler,
       buttonText,
       inputValue,
@@ -84,7 +92,7 @@ class InputBox extends React.Component<InputBoxProps, InputBoxState> {
             autoFocus
             placeholder={inputPlaceholder || ''}
             aria-describedby="basic-addon2"
-            onChange={changeHandler}
+            onChange={this.changeHandler}
             onKeyDown={this.handleInputKeyDown}
             value={inputValue || ''}
             type={inputType || 'text'}
@@ -96,7 +104,6 @@ class InputBox extends React.Component<InputBoxProps, InputBoxState> {
                 connected={uploadOptions.connected}
                 onUploadDone={uploadOptions.uploadHandler}
                 onUploadProgress={this.uploadProgressHandler}
-                disabled={uploadProgress !== null}
               />
             )}
             <Button

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col, Alert, Container } from 'react-bootstrap';
+import { Row, Col, Alert, Container, Image } from 'react-bootstrap';
 import { listenMessages } from '../utils/listen-messages';
 import saveMessage from '../utils/save-message';
 import InputBox, { UploadOptions } from './InputBox';
@@ -10,12 +10,14 @@ import { Message, Connected } from '../types';
 type JSONMessage = {
   url: string;
   fileName: string;
+  type: string;
 };
 
 type ChatState = {
   message: string;
   messageType: 'STRING' | 'JSON';
   messages: Message[];
+  chatMaxHeight: string;
 };
 type ChatProps = {
   connected: Connected;
@@ -30,6 +32,7 @@ class Chat extends React.Component<ChatProps, ChatState> {
       message: '',
       messages: [],
       messageType: 'STRING',
+      chatMaxHeight: 'calc(100vh - 130px)',
     };
   }
 
@@ -51,7 +54,11 @@ class Chat extends React.Component<ChatProps, ChatState> {
     }
   };
 
-  messageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  messageChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    inputHeight: number
+  ) => {
+    this.setState({ chatMaxHeight: `calc(100vh - ${inputHeight + 82}px)` });
     const message = e.target.value;
     if (message !== '\n') {
       this.setState({ message, messageType: 'STRING' });
@@ -71,8 +78,53 @@ class Chat extends React.Component<ChatProps, ChatState> {
     return messages.length - 1 === index;
   };
 
+  prepareLinkMessage = (obj: JSONMessage) => (
+    <a target="_blank" rel="noopener noreferrer" href={obj.url}>
+      {obj.fileName}
+    </a>
+  );
+
+  prepareMessage = (
+    m: Message,
+    ref: React.RefObject<HTMLDivElement>,
+    index: number
+  ) => {
+    type returnObjectType = {
+      className: string;
+      val: JSX.Element | string;
+    };
+    const returnObject: returnObjectType = {
+      className: '',
+      val: m.value,
+    };
+
+    if (m.type === 'JSON') {
+      const obj = JSON.parse(m.value);
+      returnObject.className = 'text-center';
+      returnObject.val = obj.type.toLowerCase().includes('image') ? (
+        <Image style={{ width: '300px' }} alt="Message" src={obj.url} />
+      ) : (
+        <a target="_blank" rel="noopener noreferrer" href={obj.url}>
+          {obj.fileName}
+        </a>
+      );
+    }
+
+    return (
+      <Alert
+        className={returnObject.className}
+        ref={ref}
+        key={`alert_${index}`}
+        style={{ overflowWrap: 'break-word' }}
+        variant={generateColor(m.connector.id)}
+      >
+        {returnObject.val}
+      </Alert>
+    );
+  };
+
   public render() {
-    const { messages, message } = this.state;
+    const { messages, message, chatMaxHeight } = this.state;
     const { connected } = this.props;
     const { code, connectorId } = connected;
 
@@ -81,6 +133,7 @@ class Chat extends React.Component<ChatProps, ChatState> {
       const messageS: JSONMessage = {
         url: `https://tosyshare33f3b4cb0e3045bba147150ad29e916a214301-dev.s3-eu-west-1.amazonaws.com/public/${key}`,
         fileName: file.name,
+        type: file.type,
       };
       this.setState({
         message: JSON.stringify(messageS),
@@ -93,16 +146,9 @@ class Chat extends React.Component<ChatProps, ChatState> {
       uploadHandler,
       connected,
     };
-
-    const prepareLinkMessage = (obj: JSONMessage) => (
-      <a target="_blank" rel="noopener noreferrer" href={obj.url}>
-        {obj.fileName}
-      </a>
-    );
-
     return (
       <>
-        <Row style={{ maxHeight: 'calc(100vh - 200px)', overflowY: 'auto' }}>
+        <Row style={{ maxHeight: chatMaxHeight, overflowY: 'auto' }}>
           <Col>
             <Row className="justify-content-center">
               <Col className="text-center">
@@ -121,20 +167,11 @@ class Chat extends React.Component<ChatProps, ChatState> {
                 }
               >
                 <Col key={`col_${index}`} md={9} sm={9} xs={9}>
-                  <Alert
-                    ref={
-                      this.isLastMessage(messages, index)
-                        ? this.messagesEndRef
-                        : null
-                    }
-                    key={`alert_${index}`}
-                    style={{ overflowWrap: 'break-word' }}
-                    variant={generateColor(m.connector.id)}
-                  >
-                    {m.type === 'JSON'
-                      ? prepareLinkMessage(JSON.parse(m.value))
-                      : m.value}
-                  </Alert>
+                  {this.prepareMessage(
+                    m,
+                    messages.length - 1 === index ? this.messagesEndRef : null,
+                    index
+                  )}
                 </Col>
               </Row>
             ))}

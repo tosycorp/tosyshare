@@ -4,38 +4,47 @@ import { Button } from 'react-bootstrap';
 import uploadImage from '../utils/upload-image';
 import { Connected } from '../types';
 
-type UploadState = {};
+type UploadState = {
+  progress: number;
+};
 type UploadProps = {
   onUploadDone: (obj: { file: File; key: string }) => void;
   connected: Connected;
   onUploadProgress: (progress: number) => void;
-  disabled: boolean;
 };
 
 class Upload extends React.Component<UploadProps, UploadState> {
+  constructor(props: UploadProps) {
+    super(props);
+    this.state = {
+      progress: null,
+    };
+  }
+
   async onChange(e: ChangeEvent<{ files: File[] }>) {
     const file = e.target.files[0];
-    const { connected, onUploadDone } = this.props;
+    const { connected, onUploadDone, onUploadProgress } = this.props;
 
     const uploaded = await uploadImage(file, connected, this.progressCallback);
     if (onUploadDone) {
       onUploadDone({ file, ...uploaded });
+      this.setState({ progress: null });
+      onUploadProgress(null);
     }
     // eslint-disable-next-line no-console
     console.log(`File uploaded.`, uploaded);
   }
 
   progressCallback = (progress: ProgressEvent) => {
-    const progresss = (progress.loaded / progress.total) * 100;
+    const progressQuantity = (progress.loaded / progress.total) * 100;
+    this.setState({ progress: progressQuantity });
     const { onUploadProgress } = this.props;
-    if (onUploadProgress) {
-      onUploadProgress(progresss);
-    }
+    onUploadProgress(progressQuantity);
   };
 
   render() {
     let fileInputRef: HTMLInputElement;
-    const { disabled } = this.props;
+    const { progress } = this.state;
 
     return (
       <>
@@ -45,13 +54,13 @@ class Upload extends React.Component<UploadProps, UploadState> {
           }}
           style={{ display: 'none' }}
           type="file"
-          accept="image/png"
+          // accept="image/png"
           onChange={(evt) => this.onChange(evt as any)}
         />
         <Button
           variant="primary"
           onClick={() => fileInputRef.click()}
-          disabled={disabled}
+          disabled={progress !== null}
         >
           <BsFileDiff style={{ width: '30px', height: '30px' }} />
         </Button>
