@@ -1,5 +1,6 @@
 import React from 'react';
-import { Row, Col, Alert, Container, Image } from 'react-bootstrap';
+import FileSaver from 'file-saver';
+import { Row, Col, Alert, Container, Image, Button } from 'react-bootstrap';
 import { listenMessages } from '../utils/listen-messages';
 import saveMessage from '../utils/save-message';
 import InputBox, { UploadOptions } from './InputBox';
@@ -74,78 +75,67 @@ class Chat extends React.Component<ChatProps, ChatState> {
     }
   };
 
-  isLastMessage = (messages: Message[], index: number) => {
-    return messages.length - 1 === index;
-  };
-
-  prepareLinkMessage = (obj: JSONMessage) => (
-    <a target="_blank" rel="noopener noreferrer" href={obj.url}>
-      {obj.fileName}
-    </a>
-  );
-
   prepareMessage = (
     m: Message,
     ref: React.RefObject<HTMLDivElement>,
     index: number
   ) => {
-    type returnObjectType = {
-      className: string;
-      val: JSX.Element | string;
-    };
-    const returnObject: returnObjectType = {
-      className: '',
-      val: m.value,
-    };
+    let val: JSX.Element;
 
     if (m.type === 'JSON') {
       const obj = JSON.parse(m.value);
-      returnObject.className = 'text-center';
-      returnObject.val = obj.type.toLowerCase().includes('image') ? (
-        <Image style={{ width: '300px' }} alt="Message" src={obj.url} />
-      ) : (
-        <a target="_blank" rel="noopener noreferrer" href={obj.url}>
-          {obj.fileName}
-        </a>
+      val = (
+        <Button
+          variant="link"
+          onClick={() => FileSaver.saveAs(obj.url, obj.fileName)}
+        >
+          {obj.type.toLowerCase().includes('image') ? (
+            <Image style={{ width: '300px' }} alt="Message" src={obj.url} />
+          ) : (
+            obj.fileName
+          )}
+        </Button>
       );
     }
 
     return (
       <Alert
-        className={returnObject.className}
+        className={m.type === 'JSON' ? 'text-center' : ''}
         ref={ref}
         key={`alert_${index}`}
         style={{ overflowWrap: 'break-word' }}
         variant={generateColor(m.connector.id)}
       >
-        {returnObject.val}
+        {val || m.value}
       </Alert>
     );
+  };
+
+  private uploadHandler: (obj: { file: File; key: string }) => void = (val) => {
+    const { file, key } = val;
+    const messageS: JSONMessage = {
+      url: `https://tosyshare33f3b4cb0e3045bba147150ad29e916a214301-dev.s3-eu-west-1.amazonaws.com/public/${key}`,
+      fileName: file.name,
+      type: file.type,
+    };
+    this.setState({
+      message: JSON.stringify(messageS),
+      messageType: 'JSON',
+    });
+    this.send();
   };
 
   public render() {
     const { messages, message, chatMaxHeight } = this.state;
     const { connected } = this.props;
     const { code, connectorId } = connected;
-
-    const uploadHandler: (obj: { file: File; key: string }) => void = (val) => {
-      const { file, key } = val;
-      const messageS: JSONMessage = {
-        url: `https://tosyshare33f3b4cb0e3045bba147150ad29e916a214301-dev.s3-eu-west-1.amazonaws.com/public/${key}`,
-        fileName: file.name,
-        type: file.type,
-      };
-      this.setState({
-        message: JSON.stringify(messageS),
-        messageType: 'JSON',
-      });
-      this.send();
-    };
+    const { uploadHandler } = this;
 
     const uploadOptions: UploadOptions = {
       uploadHandler,
       connected,
     };
+
     return (
       <>
         <Row style={{ maxHeight: chatMaxHeight, overflowY: 'auto' }}>

@@ -1,9 +1,9 @@
 import { Storage } from 'aws-amplify';
 import { Connected } from '../types';
 
-let imageCount = 0;
+let fileCount = 0;
 
-const uploadImage = async (
+const uploadFile = async (
   file: File,
   connected: Connected,
   progressCallback: (progress: ProgressEvent) => void
@@ -12,7 +12,7 @@ const uploadImage = async (
     const { connectionId, connectorId } = connected;
     const extension = file.name.split('.').pop();
     Storage.put(
-      `${connectionId}/${connectorId}_${imageCount}.${extension}`,
+      `${connectionId}/${connectorId}_${fileCount}.${extension}`,
       file,
       {
         // level: 'protected',
@@ -22,11 +22,11 @@ const uploadImage = async (
       }
     )
       .then((result) => {
-        imageCount += 1;
+        fileCount += 1;
         res(result as { key: string });
       })
       .catch(rej);
   });
 };
 
-export default uploadImage;
+export default uploadFile;
