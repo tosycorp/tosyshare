@@ -90,7 +90,7 @@ class Chat extends React.Component<ChatProps, ChatState> {
           onClick={() => FileSaver.saveAs(obj.url, obj.fileName)}
         >
           {obj.type.toLowerCase().includes('image') ? (
-            <Image style={{ width: '300px' }} alt="Message" src={obj.url} />
+            <Image style={{ maxWidth: '100%' }} alt="Message" src={obj.url} />
           ) : (
             obj.fileName
           )}
