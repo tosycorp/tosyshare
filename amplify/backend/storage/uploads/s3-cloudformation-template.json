@@ -227,6 +227,16 @@
 							"MaxAge": "3000"
 						}
 					]
+				},
+				"LifecycleConfiguration": {
+					"Rules": [
+						{
+							"Id": "Upload files expire after 1 day",
+							"Prefix": "public/",
+							"Status": "Enabled", 
+							"ExpirationInDays": 1
+						}
+					]
 				}
 			}
 		},
@@ -639,7 +649,21 @@
 					]
 				}
 			}
-		}
+		},
+		"S3BucketPolicy" : {
+			"Type" : "AWS::S3::BucketPolicy",
+			"Properties" : {
+			  "Bucket" : {"Ref" : "S3Bucket"},
+			  "PolicyDocument": {
+				"Statement":[{
+				  "Action":["s3:GetObject"],
+				  "Effect":"Allow",
+				  "Resource": { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "S3Bucket" } , "/public/*" ]]},
+				  "Principal":"*"
+				}]
+			  }
+			}
+		  }  
 	},
 	"Outputs": {
 		"BucketName": {
