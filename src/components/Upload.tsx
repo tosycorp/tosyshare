@@ -23,6 +23,10 @@ class Upload extends React.Component<UploadProps, UploadState> {
 
   async onChange(e: ChangeEvent<{ files: File[] }>) {
     const file = e.target.files[0];
+    if (!file) {
+      return;
+    }
+
     const { connected, onUploadDone, onUploadProgress } = this.props;
 
     const uploaded = await uploadFile(file, connected, this.progressCallback);
