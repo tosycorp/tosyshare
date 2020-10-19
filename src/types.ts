@@ -2,6 +2,7 @@ export interface Connection {
   id: string;
   code: number;
   connectors: Connector[];
+  hasPin: boolean;
 }
 
 export interface Connector {
@@ -10,10 +11,17 @@ export interface Connector {
   identityId: string;
 }
 
+export interface Pin {
+  id: string;
+  value: number;
+  connectionId: string;
+}
+
 export interface Connected {
   connectionId: string;
   connectorId: string;
   code: number;
+  pin?: number;
 }
 
 export interface Message {

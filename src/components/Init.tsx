@@ -9,6 +9,8 @@ import QR from './QR';
 import QRReader from './QRReader';
 import CopyText from './CopyText';
 import { Connector, Connected } from '../types';
+import generatePin from '../utils/generate-pin';
+import setConnectionHasPin from '../utils/set-connection-hasPin';
 
 type InitState = {
   generatedCode: number;
@@ -42,12 +44,16 @@ class Init extends React.Component<InitProps, InitState> {
       connector,
     });
 
-    this.listenConnectionSub = listenConnection(connection.id).subscribe(() =>
-      this.onConnected()
+    this.listenConnectionSub = listenConnection(connection.id).subscribe(
+      async () => {
+        const pin = await generatePin(connection.id);
+        await setConnectionHasPin(connection);
+        this.onConnected(pin.value);
+      }
     );
   }
 
-  onConnected = async () => {
+  onConnected = async (pin?: number) => {
     this.unsubscribeListenConnection();
 
     const { connector } = this.state;
@@ -56,6 +62,7 @@ class Init extends React.Component<InitProps, InitState> {
       connectionId: connector.connection.id,
       connectorId,
       code: connector.connection.code,
+      pin,
     };
 
     const { onConnected } = this.props;

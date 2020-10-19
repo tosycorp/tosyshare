@@ -9,6 +9,7 @@ export const createConnection = /* GraphQL */ `
     createConnection(input: $input, condition: $condition) {
       id
       code
+      hasPin
       connectors {
         items {
           id
@@ -16,6 +17,7 @@ export const createConnection = /* GraphQL */ `
           connection {
             id
             code
+            hasPin
             createdAt
             updatedAt
           }
@@ -38,6 +40,7 @@ export const updateConnection = /* GraphQL */ `
     updateConnection(input: $input, condition: $condition) {
       id
       code
+      hasPin
       connectors {
         items {
           id
@@ -45,6 +48,7 @@ export const updateConnection = /* GraphQL */ `
           connection {
             id
             code
+            hasPin
             createdAt
             updatedAt
           }
@@ -67,6 +71,7 @@ export const deleteConnection = /* GraphQL */ `
     deleteConnection(input: $input, condition: $condition) {
       id
       code
+      hasPin
       connectors {
         items {
           id
@@ -74,6 +79,7 @@ export const deleteConnection = /* GraphQL */ `
           connection {
             id
             code
+            hasPin
             createdAt
             updatedAt
           }
@@ -99,6 +105,7 @@ export const createConnector = /* GraphQL */ `
       connection {
         id
         code
+        hasPin
         connectors {
           items {
             id
@@ -129,6 +136,7 @@ export const updateConnector = /* GraphQL */ `
       connection {
         id
         code
+        hasPin
         connectors {
           items {
             id
@@ -159,6 +167,7 @@ export const deleteConnector = /* GraphQL */ `
       connection {
         id
         code
+        hasPin
         connectors {
           items {
             id
@@ -178,6 +187,48 @@ export const deleteConnector = /* GraphQL */ `
     }
   }
 `;
+export const createPin = /* GraphQL */ `
+  mutation CreatePin(
+    $input: CreatePinInput!
+    $condition: ModelPinConditionInput
+  ) {
+    createPin(input: $input, condition: $condition) {
+      id
+      value
+      connectionId
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updatePin = /* GraphQL */ `
+  mutation UpdatePin(
+    $input: UpdatePinInput!
+    $condition: ModelPinConditionInput
+  ) {
+    updatePin(input: $input, condition: $condition) {
+      id
+      value
+      connectionId
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deletePin = /* GraphQL */ `
+  mutation DeletePin(
+    $input: DeletePinInput!
+    $condition: ModelPinConditionInput
+  ) {
+    deletePin(input: $input, condition: $condition) {
+      id
+      value
+      connectionId
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createMessage = /* GraphQL */ `
   mutation CreateMessage(
     $input: CreateMessageInput!
@@ -190,6 +241,7 @@ export const createMessage = /* GraphQL */ `
       connection {
         id
         code
+        hasPin
         connectors {
           items {
             id
@@ -209,6 +261,7 @@ export const createMessage = /* GraphQL */ `
         connection {
           id
           code
+          hasPin
           connectors {
             nextToken
           }
@@ -237,6 +290,7 @@ export const updateMessage = /* GraphQL */ `
       connection {
         id
         code
+        hasPin
         connectors {
           items {
             id
@@ -256,6 +310,7 @@ export const updateMessage = /* GraphQL */ `
         connection {
           id
           code
+          hasPin
           connectors {
             nextToken
           }
@@ -284,6 +339,7 @@ export const deleteMessage = /* GraphQL */ `
       connection {
         id
         code
+        hasPin
         connectors {
           items {
             id
@@ -303,6 +359,7 @@ export const deleteMessage = /* GraphQL */ `
         connection {
           id
           code
+          hasPin
           connectors {
             nextToken
           }

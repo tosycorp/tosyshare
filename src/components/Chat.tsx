@@ -128,7 +128,7 @@ class Chat extends React.Component<ChatProps, ChatState> {
   public render() {
     const { messages, message, chatMaxHeight } = this.state;
     const { connected } = this.props;
-    const { code, connectorId } = connected;
+    const { code, connectorId, pin } = connected;
     const { uploadHandler } = this;
 
     const uploadOptions: UploadOptions = {
@@ -143,7 +143,8 @@ class Chat extends React.Component<ChatProps, ChatState> {
             <Row className="justify-content-center">
               <Col className="text-center">
                 <Alert variant="dark">
-                  Chat Started (Code: <CopyText text={code.toString()} />)
+                  Chat Started (Code: <CopyText text={code.toString()} />{' '}
+                  {pin && <>Pin: {pin.toString()}</>})
                 </Alert>
               </Col>
             </Row>

@@ -10,6 +10,7 @@ export const onMessageByConnectionId = /* GraphQL */ `
       connection {
         id
         code
+        hasPin
         connectors {
           items {
             id
@@ -29,6 +30,7 @@ export const onMessageByConnectionId = /* GraphQL */ `
         connection {
           id
           code
+          hasPin
           connectors {
             nextToken
           }
@@ -53,6 +55,7 @@ export const onConnectorByConnectionId = /* GraphQL */ `
       connection {
         id
         code
+        hasPin
         connectors {
           items {
             id
@@ -77,6 +80,7 @@ export const onCreateConnection = /* GraphQL */ `
     onCreateConnection {
       id
       code
+      hasPin
       connectors {
         items {
           id
@@ -84,6 +88,7 @@ export const onCreateConnection = /* GraphQL */ `
           connection {
             id
             code
+            hasPin
             createdAt
             updatedAt
           }
@@ -103,6 +108,7 @@ export const onUpdateConnection = /* GraphQL */ `
     onUpdateConnection {
       id
       code
+      hasPin
       connectors {
         items {
           id
@@ -110,6 +116,7 @@ export const onUpdateConnection = /* GraphQL */ `
           connection {
             id
             code
+            hasPin
             createdAt
             updatedAt
           }
@@ -129,6 +136,7 @@ export const onDeleteConnection = /* GraphQL */ `
     onDeleteConnection {
       id
       code
+      hasPin
       connectors {
         items {
           id
@@ -136,6 +144,7 @@ export const onDeleteConnection = /* GraphQL */ `
           connection {
             id
             code
+            hasPin
             createdAt
             updatedAt
           }
@@ -158,6 +167,7 @@ export const onCreateConnector = /* GraphQL */ `
       connection {
         id
         code
+        hasPin
         connectors {
           items {
             id
@@ -185,6 +195,7 @@ export const onUpdateConnector = /* GraphQL */ `
       connection {
         id
         code
+        hasPin
         connectors {
           items {
             id
@@ -212,6 +223,7 @@ export const onDeleteConnector = /* GraphQL */ `
       connection {
         id
         code
+        hasPin
         connectors {
           items {
             id
@@ -231,6 +243,39 @@ export const onDeleteConnector = /* GraphQL */ `
     }
   }
 `;
+export const onCreatePin = /* GraphQL */ `
+  subscription OnCreatePin {
+    onCreatePin {
+      id
+      value
+      connectionId
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdatePin = /* GraphQL */ `
+  subscription OnUpdatePin {
+    onUpdatePin {
+      id
+      value
+      connectionId
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeletePin = /* GraphQL */ `
+  subscription OnDeletePin {
+    onDeletePin {
+      id
+      value
+      connectionId
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateMessage = /* GraphQL */ `
   subscription OnCreateMessage {
     onCreateMessage {
@@ -240,6 +285,7 @@ export const onCreateMessage = /* GraphQL */ `
       connection {
         id
         code
+        hasPin
         connectors {
           items {
             id
@@ -259,6 +305,7 @@ export const onCreateMessage = /* GraphQL */ `
         connection {
           id
           code
+          hasPin
           connectors {
             nextToken
           }
@@ -284,6 +331,7 @@ export const onUpdateMessage = /* GraphQL */ `
       connection {
         id
         code
+        hasPin
         connectors {
           items {
             id
@@ -303,6 +351,7 @@ export const onUpdateMessage = /* GraphQL */ `
         connection {
           id
           code
+          hasPin
           connectors {
             nextToken
           }
@@ -328,6 +377,7 @@ export const onDeleteMessage = /* GraphQL */ `
       connection {
         id
         code
+        hasPin
         connectors {
           items {
             id
@@ -347,6 +397,7 @@ export const onDeleteMessage = /* GraphQL */ `
         connection {
           id
           code
+          hasPin
           connectors {
             nextToken
           }

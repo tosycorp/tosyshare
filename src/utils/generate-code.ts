@@ -3,7 +3,10 @@ import { createConnection, createConnector } from '../graphql/mutations';
 import getConnectionByCode from './get-connection-by-code';
 import { Connection, Connector } from '../types';
 
-const addConnectionWrapper = async (input: { code: number }) => {
+const addConnectionWrapper = async (input: {
+  code: number;
+  hasPin: boolean;
+}) => {
   return (await API.graphql(graphqlOperation(createConnection, { input }))) as {
     data: { createConnection: Connection };
   };
@@ -11,7 +14,7 @@ const addConnectionWrapper = async (input: { code: number }) => {
 
 const addConnection = async (code: number): Promise<Connection> => {
   try {
-    const connection = await addConnectionWrapper({ code });
+    const connection = await addConnectionWrapper({ code, hasPin: false });
     return connection.data.createConnection;
   } catch (err) {
     console.error('error creating addConnection:', err);

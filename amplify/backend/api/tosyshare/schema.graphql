@@ -3,6 +3,7 @@ type Connection @model
   @key(name: "ByCode", fields: ["code"], queryField: "GetConnectionsByCode") {
   id: ID!
   code: Int!
+  hasPin: Boolean!
   connectors: [Connector] @connection(name: "ConnectionConnectors")
 }
 
@@ -12,6 +13,14 @@ type Connector @model
   identityId: String!
   connection: Connection @connection(name: "ConnectionConnectors")
   connectorConnectionId: ID!
+}
+
+type Pin @model
+  @auth(rules: [{ allow: public, operations: [read, create] }])
+  @key(name: "ByValue", fields: ["value"], queryField: "GetPinsByValue") {
+  id: ID!
+  value: Int!
+  connectionId: ID!
 }
 
 enum MessageType {

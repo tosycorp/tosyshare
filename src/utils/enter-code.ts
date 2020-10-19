@@ -12,6 +12,12 @@ const enterCode = async (
     return null;
   }
 
+  if (connection.hasPin) {
+    // eslint-disable-next-line no-console
+    console.log('ENTER PIN');
+    return null;
+  }
+
   const updateConnectorWrapper = async (input: {
     id: string;
     connectorConnectionId: string;

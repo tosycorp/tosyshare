@@ -6,6 +6,7 @@ export const getConnection = /* GraphQL */ `
     getConnection(id: $id) {
       id
       code
+      hasPin
       connectors {
         items {
           id
@@ -13,6 +14,7 @@ export const getConnection = /* GraphQL */ `
           connection {
             id
             code
+            hasPin
             createdAt
             updatedAt
           }
@@ -37,6 +39,7 @@ export const listConnections = /* GraphQL */ `
       items {
         id
         code
+        hasPin
         connectors {
           items {
             id
@@ -62,6 +65,7 @@ export const getConnector = /* GraphQL */ `
       connection {
         id
         code
+        hasPin
         connectors {
           items {
             id
@@ -94,6 +98,7 @@ export const listConnectors = /* GraphQL */ `
         connection {
           id
           code
+          hasPin
           connectors {
             nextToken
           }
@@ -101,6 +106,35 @@ export const listConnectors = /* GraphQL */ `
           updatedAt
         }
         connectorConnectionId
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getPin = /* GraphQL */ `
+  query GetPin($id: ID!) {
+    getPin(id: $id) {
+      id
+      value
+      connectionId
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listPins = /* GraphQL */ `
+  query ListPins(
+    $filter: ModelPinFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listPins(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        value
+        connectionId
         createdAt
         updatedAt
       }
@@ -117,6 +151,7 @@ export const getMessage = /* GraphQL */ `
       connection {
         id
         code
+        hasPin
         connectors {
           items {
             id
@@ -136,6 +171,7 @@ export const getMessage = /* GraphQL */ `
         connection {
           id
           code
+          hasPin
           connectors {
             nextToken
           }
@@ -166,6 +202,7 @@ export const listMessages = /* GraphQL */ `
         connection {
           id
           code
+          hasPin
           connectors {
             nextToken
           }
@@ -178,6 +215,7 @@ export const listMessages = /* GraphQL */ `
           connection {
             id
             code
+            hasPin
             createdAt
             updatedAt
           }
@@ -211,6 +249,7 @@ export const getConnectionsByCode = /* GraphQL */ `
       items {
         id
         code
+        hasPin
         connectors {
           items {
             id
@@ -221,6 +260,32 @@ export const getConnectionsByCode = /* GraphQL */ `
           }
           nextToken
         }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getPinsByValue = /* GraphQL */ `
+  query GetPinsByValue(
+    $value: Int
+    $sortDirection: ModelSortDirection
+    $filter: ModelPinFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    GetPinsByValue(
+      value: $value
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        value
+        connectionId
         createdAt
         updatedAt
       }
