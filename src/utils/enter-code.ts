@@ -2,6 +2,7 @@ import { API, graphqlOperation } from 'aws-amplify';
 import { updateConnector } from '../graphql/mutations';
 import getConnectionByCode from './get-connection-by-code';
 import { Connector } from '../types';
+import validatePin from './validate-pin';
 
 const enterCode = async (
   code: number,
@@ -14,8 +15,17 @@ const enterCode = async (
 
   if (connection.hasPin) {
     // eslint-disable-next-line no-console
-    console.log('ENTER PIN');
-    return null;
+    console.log('ENTER PIN: set window.pin');
+    // eslint-disable-next-line no-console
+    console.log('window.pin = 1234');
+    if (
+      !(window as any).pin ||
+      !(await validatePin((window as any).pin, connection.id))
+    ) {
+      // eslint-disable-next-line no-console
+      console.log('INVALID PIN');
+      return null;
+    }
   }
 
   const updateConnectorWrapper = async (input: {
