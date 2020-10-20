@@ -6,19 +6,20 @@ import saveMessage from '../utils/save-message';
 import InputBox, { UploadOptions } from './InputBox';
 import CopyText from './CopyText';
 import generateColor from '../utils/generate-color';
-import { Message, Connected } from '../types';
-
-type JSONMessage = {
-  url: string;
-  fileName: string;
-  type: string;
-};
+import {
+  Message,
+  Connected,
+  JSONMessage,
+  Actions,
+  MessageType,
+} from '../types';
 
 type ChatState = {
   message: string;
-  messageType: 'STRING' | 'JSON';
+  messageType: MessageType;
   messages: Message[];
   chatMaxHeight: string;
+  pin?: number;
 };
 type ChatProps = {
   connected: Connected;
@@ -32,14 +33,19 @@ class Chat extends React.Component<ChatProps, ChatState> {
     this.state = {
       message: '',
       messages: [],
-      messageType: 'STRING',
+      messageType: MessageType.STRING,
       chatMaxHeight: 'calc(100vh - 130px)',
     };
   }
 
   async componentDidMount() {
     const { connected } = this.props;
-    listenMessages(connected.connectionId).subscribe((m: Message) => {
+    const { pin, connectionId } = connected;
+    this.setPin(pin);
+    const actionHandlers = {
+      [Actions.SET_PIN]: (val: any) => this.setPin(val),
+    };
+    listenMessages(connectionId, actionHandlers).subscribe((m: Message) => {
       const { messages } = this.state;
       this.setState({ messages: [...messages, m] });
     });
@@ -47,6 +53,10 @@ class Chat extends React.Component<ChatProps, ChatState> {
 
   componentDidUpdate() {
     this.scrollToBottom();
+  }
+
+  setPin(pin: number) {
+    this.setState({ pin });
   }
 
   scrollToBottom = () => {
@@ -62,7 +72,7 @@ class Chat extends React.Component<ChatProps, ChatState> {
     this.setState({ chatMaxHeight: `calc(100vh - ${inputHeight + 82}px)` });
     const message = e.target.value;
     if (message !== '\n') {
-      this.setState({ message, messageType: 'STRING' });
+      this.setState({ message, messageType: MessageType.STRING });
     }
   };
 
@@ -82,8 +92,8 @@ class Chat extends React.Component<ChatProps, ChatState> {
   ) => {
     let val: JSX.Element;
 
-    if (m.type === 'JSON') {
-      const obj = JSON.parse(m.value);
+    if (m.type === MessageType.JSON) {
+      const obj = JSON.parse(m.value) as JSONMessage;
       val = (
         <Button
           variant="link"
@@ -100,7 +110,7 @@ class Chat extends React.Component<ChatProps, ChatState> {
 
     return (
       <Alert
-        className={m.type === 'JSON' ? 'text-center' : ''}
+        className={m.type === MessageType.JSON ? 'text-center' : ''}
         ref={ref}
         key={`alert_${index}`}
         style={{ overflowWrap: 'break-word' }}
@@ -120,15 +130,15 @@ class Chat extends React.Component<ChatProps, ChatState> {
     };
     this.setState({
       message: JSON.stringify(messageS),
-      messageType: 'JSON',
+      messageType: MessageType.JSON,
     });
     this.send();
   };
 
   public render() {
-    const { messages, message, chatMaxHeight } = this.state;
+    const { messages, message, chatMaxHeight, pin } = this.state;
     const { connected } = this.props;
-    const { code, connectorId, pin } = connected;
+    const { code, connectorId } = connected;
     const { uploadHandler } = this;
 
     const uploadOptions: UploadOptions = {

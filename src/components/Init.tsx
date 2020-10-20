@@ -9,8 +9,7 @@ import QR from './QR';
 import QRReader from './QRReader';
 import CopyText from './CopyText';
 import { Connector, Connected } from '../types';
-import generatePin from '../utils/generate-pin';
-import setConnectionHasPin from '../utils/set-connection-hasPin';
+import listenConnectionDone from '../utils/listen-connection-done';
 
 type InitState = {
   generatedCode: number;
@@ -46,8 +45,7 @@ class Init extends React.Component<InitProps, InitState> {
 
     this.listenConnectionSub = listenConnection(connection.id).subscribe(
       async () => {
-        const pin = await generatePin(connection.id);
-        await setConnectionHasPin(connection);
+        const { pin } = await listenConnectionDone(connection, connector);
         this.onConnected(pin.value);
       }
     );

@@ -1,11 +1,11 @@
 import { API, graphqlOperation } from 'aws-amplify';
 import { createMessage } from '../graphql/mutations';
-import { Message, Connected } from '../types';
+import { Message, Connected, MessageType } from '../types';
 
 const saveMessage = async (
   value: string,
   connected: Connected,
-  type: 'STRING' | 'JSON'
+  type: MessageType
 ): Promise<Message> => {
   const createMessageWrapper = async (input: {
     type: string;

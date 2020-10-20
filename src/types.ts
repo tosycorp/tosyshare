@@ -24,10 +24,27 @@ export interface Connected {
   pin?: number;
 }
 
+export type JSONMessage = {
+  url: string;
+  fileName: string;
+  type: string;
+  value?: any;
+};
+
+export enum MessageType {
+  STRING = 'STRING',
+  JSON = 'JSON',
+  ACTION = 'ACTION',
+}
+
 export interface Message {
   id: string;
-  type: 'STRING' | 'JSON';
+  type: MessageType;
   value: string;
   connection: Connection;
   connector: Connector;
+}
+
+export enum Actions {
+  SET_PIN = 'SET_PIN',
 }
