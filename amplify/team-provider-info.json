@@ -1,47 +1,50 @@
 {
-    "dev": {
-        "awscloudformation": {
-            "AuthRoleName": "amplify-tosyshare-dev-214301-authRole",
-            "UnauthRoleArn": "arn:aws:iam::383545132830:role/amplify-tosyshare-dev-214301-unauthRole",
-            "AuthRoleArn": "arn:aws:iam::383545132830:role/amplify-tosyshare-dev-214301-authRole",
-            "Region": "eu-west-1",
-            "DeploymentBucketName": "amplify-tosyshare-dev-214301-deployment",
-            "UnauthRoleName": "amplify-tosyshare-dev-214301-unauthRole",
-            "StackName": "amplify-tosyshare-dev-214301",
-            "StackId": "arn:aws:cloudformation:eu-west-1:383545132830:stack/amplify-tosyshare-dev-214301/e98049a0-bb09-11ea-b302-0ace5b4cd800",
-            "AmplifyAppId": "d27a89su3ed8iz"
-        },
-        "categories": {
-            "hosting": {
-                "amplifyhosting": {
-                    "appId": "d27a89su3ed8iz",
-                    "type": "manual"
-                }
-            },
-            "auth": {
-                "auth": {}
-            }
-        }
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-tosyshare-dev-214301-authRole",
+      "UnauthRoleArn": "arn:aws:iam::383545132830:role/amplify-tosyshare-dev-214301-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::383545132830:role/amplify-tosyshare-dev-214301-authRole",
+      "Region": "eu-west-1",
+      "DeploymentBucketName": "amplify-tosyshare-dev-214301-deployment",
+      "UnauthRoleName": "amplify-tosyshare-dev-214301-unauthRole",
+      "StackName": "amplify-tosyshare-dev-214301",
+      "StackId": "arn:aws:cloudformation:eu-west-1:383545132830:stack/amplify-tosyshare-dev-214301/e98049a0-bb09-11ea-b302-0ace5b4cd800",
+      "AmplifyAppId": "d27a89su3ed8iz"
     },
-    "prod": {
-        "awscloudformation": {
-            "AuthRoleName": "amplify-tosyshare-prod-102521-authRole",
-            "UnauthRoleArn": "arn:aws:iam::383545132830:role/amplify-tosyshare-prod-102521-unauthRole",
-            "AuthRoleArn": "arn:aws:iam::383545132830:role/amplify-tosyshare-prod-102521-authRole",
-            "Region": "eu-west-1",
-            "DeploymentBucketName": "amplify-tosyshare-prod-102521-deployment",
-            "UnauthRoleName": "amplify-tosyshare-prod-102521-unauthRole",
-            "StackName": "amplify-tosyshare-prod-102521",
-            "StackId": "arn:aws:cloudformation:eu-west-1:383545132830:stack/amplify-tosyshare-prod-102521/66e8f010-c02b-11ea-8d1a-0659495bde12",
-            "AmplifyAppId": "d27a89su3ed8iz"
-        },
-        "categories": {
-            "hosting": {
-                "amplifyhosting": {
-                    "appId": "d27a89su3ed8iz",
-                    "type": "manual"
-                }
-            }
+    "categories": {
+      "hosting": {
+        "amplifyhosting": {
+          "appId": "d27a89su3ed8iz",
+          "type": "manual"
         }
+      },
+      "auth": {
+        "auth": {}
+      }
     }
+  },
+  "prod": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-tosyshare-prod-102521-authRole",
+      "UnauthRoleArn": "arn:aws:iam::383545132830:role/amplify-tosyshare-prod-102521-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::383545132830:role/amplify-tosyshare-prod-102521-authRole",
+      "Region": "eu-west-1",
+      "DeploymentBucketName": "amplify-tosyshare-prod-102521-deployment",
+      "UnauthRoleName": "amplify-tosyshare-prod-102521-unauthRole",
+      "StackName": "amplify-tosyshare-prod-102521",
+      "StackId": "arn:aws:cloudformation:eu-west-1:383545132830:stack/amplify-tosyshare-prod-102521/66e8f010-c02b-11ea-8d1a-0659495bde12",
+      "AmplifyAppId": "d27a89su3ed8iz"
+    },
+    "categories": {
+      "hosting": {
+        "amplifyhosting": {
+          "appId": "d27a89su3ed8iz",
+          "type": "manual"
+        }
+      },
+      "auth": {
+        "auth": {}
+      }
+    }
+  }
 }

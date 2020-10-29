@@ -13,6 +13,7 @@ import {
   Actions,
   MessageType,
 } from '../types';
+import env, { Env } from '../utils/env';
 
 type ChatState = {
   message: string;
@@ -27,6 +28,10 @@ type ChatProps = {
 
 class Chat extends React.Component<ChatProps, ChatState> {
   private messagesEndRef: React.RefObject<HTMLDivElement> = React.createRef();
+  private s3Prefix =
+    env === Env.dev
+      ? 'https://tosyshare33f3b4cb0e3045bba147150ad29e916a214301-dev.s3-eu-west-1.amazonaws.com/public'
+      : 'https://tosyshare33f3b4cb0e3045bba147150ad29e916a102521-prod.s3.eu-west-1.amazonaws.com/public';
 
   constructor(props: ChatProps) {
     super(props);
@@ -124,7 +129,7 @@ class Chat extends React.Component<ChatProps, ChatState> {
   private uploadHandler: (obj: { file: File; key: string }) => void = (val) => {
     const { file, key } = val;
     const messageS: JSONMessage = {
-      url: `https://tosyshare33f3b4cb0e3045bba147150ad29e916a214301-dev.s3-eu-west-1.amazonaws.com/public/${key}`,
+      url: `${this.s3Prefix}/${key}`,
       fileName: file.name,
       type: file.type,
     };
