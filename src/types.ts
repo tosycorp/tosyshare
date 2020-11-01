@@ -1,18 +1,22 @@
-export interface Connection {
+interface DynamoDbTable {
   id: string;
+  createdAt: string;
+  updatedAt: string;
+  expDate: number;
+}
+
+export interface Connection extends DynamoDbTable {
   code: number;
   connectors: Connector[];
   hasPin: boolean;
 }
 
-export interface Connector {
-  id: string;
+export interface Connector extends DynamoDbTable {
   connection?: Connection;
   identityId: string;
 }
 
-export interface Pin {
-  id: string;
+export interface Pin extends DynamoDbTable {
   value: number;
   connectionId: string;
 }
@@ -37,8 +41,7 @@ export enum MessageType {
   ACTION = 'ACTION',
 }
 
-export interface Message {
-  id: string;
+export interface Message extends DynamoDbTable {
   type: MessageType;
   value: string;
   connection: Connection;

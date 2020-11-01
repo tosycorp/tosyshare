@@ -1,13 +1,14 @@
-import { Auth, API, graphqlOperation } from 'aws-amplify';
+import { Auth } from 'aws-amplify';
 import { createConnection, createConnector } from '../graphql/mutations';
 import getConnectionByCode from './get-connection-by-code';
 import { Connection, Connector } from '../types';
+import gqlOperationCreate from './gql-api.create';
 
 const addConnectionWrapper = async (input: {
   code: number;
   hasPin: boolean;
 }) => {
-  return (await API.graphql(graphqlOperation(createConnection, { input }))) as {
+  return (await gqlOperationCreate(createConnection, input)) as {
     data: { createConnection: Connection };
   };
 };
@@ -26,7 +27,7 @@ const addConnectorWrapper = async (input: {
   connectorConnectionId: string;
   identityId: string;
 }) => {
-  return (await API.graphql(graphqlOperation(createConnector, { input }))) as {
+  return (await gqlOperationCreate(createConnector, input)) as {
     data: { createConnector: Connector };
   };
 };

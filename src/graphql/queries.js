@@ -5,14 +5,17 @@ export const getConnection = /* GraphQL */ `
   query GetConnection($id: ID!) {
     getConnection(id: $id) {
       id
+      expDate
       code
       hasPin
       connectors {
         items {
           id
+          expDate
           identityId
           connection {
             id
+            expDate
             code
             hasPin
             createdAt
@@ -38,11 +41,13 @@ export const listConnections = /* GraphQL */ `
     listConnections(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        expDate
         code
         hasPin
         connectors {
           items {
             id
+            expDate
             identityId
             connectorConnectionId
             createdAt
@@ -61,14 +66,17 @@ export const getConnector = /* GraphQL */ `
   query GetConnector($id: ID!) {
     getConnector(id: $id) {
       id
+      expDate
       identityId
       connection {
         id
+        expDate
         code
         hasPin
         connectors {
           items {
             id
+            expDate
             identityId
             connectorConnectionId
             createdAt
@@ -94,9 +102,11 @@ export const listConnectors = /* GraphQL */ `
     listConnectors(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        expDate
         identityId
         connection {
           id
+          expDate
           code
           hasPin
           connectors {
@@ -117,6 +127,7 @@ export const getPin = /* GraphQL */ `
   query GetPin($id: ID!) {
     getPin(id: $id) {
       id
+      expDate
       value
       connectionId
       createdAt
@@ -133,6 +144,7 @@ export const listPins = /* GraphQL */ `
     listPins(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        expDate
         value
         connectionId
         createdAt
@@ -146,15 +158,18 @@ export const getMessage = /* GraphQL */ `
   query GetMessage($id: ID!) {
     getMessage(id: $id) {
       id
+      expDate
       type
       value
       connection {
         id
+        expDate
         code
         hasPin
         connectors {
           items {
             id
+            expDate
             identityId
             connectorConnectionId
             createdAt
@@ -167,9 +182,11 @@ export const getMessage = /* GraphQL */ `
       }
       connector {
         id
+        expDate
         identityId
         connection {
           id
+          expDate
           code
           hasPin
           connectors {
@@ -197,10 +214,12 @@ export const listMessages = /* GraphQL */ `
     listMessages(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        expDate
         type
         value
         connection {
           id
+          expDate
           code
           hasPin
           connectors {
@@ -211,9 +230,11 @@ export const listMessages = /* GraphQL */ `
         }
         connector {
           id
+          expDate
           identityId
           connection {
             id
+            expDate
             code
             hasPin
             createdAt
@@ -248,11 +269,13 @@ export const getConnectionsByCode = /* GraphQL */ `
     ) {
       items {
         id
+        expDate
         code
         hasPin
         connectors {
           items {
             id
+            expDate
             identityId
             connectorConnectionId
             createdAt
@@ -284,6 +307,7 @@ export const getPinsByValue = /* GraphQL */ `
     ) {
       items {
         id
+        expDate
         value
         connectionId
         createdAt

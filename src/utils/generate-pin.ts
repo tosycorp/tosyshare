@@ -1,13 +1,13 @@
-import { API, graphqlOperation } from 'aws-amplify';
 import { createPin } from '../graphql/mutations';
 import { Pin } from '../types';
+import gqlOperationCreate from './gql-api.create';
 
 const generatePin = async (connectionId: string): Promise<Pin> => {
   const createPinWrapper = async (input: {
     value: number;
     connectionId: string;
   }) => {
-    return (await API.graphql(graphqlOperation(createPin, { input }))) as {
+    return (await gqlOperationCreate(createPin, input)) as {
       data: { createPin: Pin };
     };
   };

@@ -8,14 +8,17 @@ export const createConnection = /* GraphQL */ `
   ) {
     createConnection(input: $input, condition: $condition) {
       id
+      expDate
       code
       hasPin
       connectors {
         items {
           id
+          expDate
           identityId
           connection {
             id
+            expDate
             code
             hasPin
             createdAt
@@ -39,14 +42,17 @@ export const updateConnection = /* GraphQL */ `
   ) {
     updateConnection(input: $input, condition: $condition) {
       id
+      expDate
       code
       hasPin
       connectors {
         items {
           id
+          expDate
           identityId
           connection {
             id
+            expDate
             code
             hasPin
             createdAt
@@ -70,14 +76,17 @@ export const deleteConnection = /* GraphQL */ `
   ) {
     deleteConnection(input: $input, condition: $condition) {
       id
+      expDate
       code
       hasPin
       connectors {
         items {
           id
+          expDate
           identityId
           connection {
             id
+            expDate
             code
             hasPin
             createdAt
@@ -101,14 +110,17 @@ export const createConnector = /* GraphQL */ `
   ) {
     createConnector(input: $input, condition: $condition) {
       id
+      expDate
       identityId
       connection {
         id
+        expDate
         code
         hasPin
         connectors {
           items {
             id
+            expDate
             identityId
             connectorConnectionId
             createdAt
@@ -132,14 +144,17 @@ export const updateConnector = /* GraphQL */ `
   ) {
     updateConnector(input: $input, condition: $condition) {
       id
+      expDate
       identityId
       connection {
         id
+        expDate
         code
         hasPin
         connectors {
           items {
             id
+            expDate
             identityId
             connectorConnectionId
             createdAt
@@ -163,14 +178,17 @@ export const deleteConnector = /* GraphQL */ `
   ) {
     deleteConnector(input: $input, condition: $condition) {
       id
+      expDate
       identityId
       connection {
         id
+        expDate
         code
         hasPin
         connectors {
           items {
             id
+            expDate
             identityId
             connectorConnectionId
             createdAt
@@ -194,6 +212,7 @@ export const createPin = /* GraphQL */ `
   ) {
     createPin(input: $input, condition: $condition) {
       id
+      expDate
       value
       connectionId
       createdAt
@@ -208,6 +227,7 @@ export const updatePin = /* GraphQL */ `
   ) {
     updatePin(input: $input, condition: $condition) {
       id
+      expDate
       value
       connectionId
       createdAt
@@ -222,6 +242,7 @@ export const deletePin = /* GraphQL */ `
   ) {
     deletePin(input: $input, condition: $condition) {
       id
+      expDate
       value
       connectionId
       createdAt
@@ -236,15 +257,18 @@ export const createMessage = /* GraphQL */ `
   ) {
     createMessage(input: $input, condition: $condition) {
       id
+      expDate
       type
       value
       connection {
         id
+        expDate
         code
         hasPin
         connectors {
           items {
             id
+            expDate
             identityId
             connectorConnectionId
             createdAt
@@ -257,9 +281,11 @@ export const createMessage = /* GraphQL */ `
       }
       connector {
         id
+        expDate
         identityId
         connection {
           id
+          expDate
           code
           hasPin
           connectors {
@@ -285,15 +311,18 @@ export const updateMessage = /* GraphQL */ `
   ) {
     updateMessage(input: $input, condition: $condition) {
       id
+      expDate
       type
       value
       connection {
         id
+        expDate
         code
         hasPin
         connectors {
           items {
             id
+            expDate
             identityId
             connectorConnectionId
             createdAt
@@ -306,9 +335,11 @@ export const updateMessage = /* GraphQL */ `
       }
       connector {
         id
+        expDate
         identityId
         connection {
           id
+          expDate
           code
           hasPin
           connectors {
@@ -334,15 +365,18 @@ export const deleteMessage = /* GraphQL */ `
   ) {
     deleteMessage(input: $input, condition: $condition) {
       id
+      expDate
       type
       value
       connection {
         id
+        expDate
         code
         hasPin
         connectors {
           items {
             id
+            expDate
             identityId
             connectorConnectionId
             createdAt
@@ -355,9 +389,11 @@ export const deleteMessage = /* GraphQL */ `
       }
       connector {
         id
+        expDate
         identityId
         connection {
           id
+          expDate
           code
           hasPin
           connectors {

@@ -2,6 +2,7 @@ type Connection @model
   @auth(rules: [{ allow: public, operations: [read, create] }])
   @key(name: "ByCode", fields: ["code"], queryField: "GetConnectionsByCode") {
   id: ID!
+  expDate: Int! @ttl
   code: Int!
   hasPin: Boolean!
   connectors: [Connector] @connection(name: "ConnectionConnectors")
@@ -10,6 +11,7 @@ type Connection @model
 type Connector @model
   @auth(rules: [{ allow: public, operations: [create, update] }]) {
   id: ID!
+  expDate: Int! @ttl
   identityId: String!
   connection: Connection @connection(name: "ConnectionConnectors")
   connectorConnectionId: ID!
@@ -19,6 +21,7 @@ type Pin @model
   @auth(rules: [{ allow: public, operations: [read, create] }])
   @key(name: "ByValue", fields: ["value"], queryField: "GetPinsByValue") {
   id: ID!
+  expDate: Int! @ttl
   value: Int!
   connectionId: ID!
 }
@@ -32,6 +35,7 @@ enum MessageType {
 type Message @model
   @auth(rules: [{ allow: public, operations: [read, create] }]) {
   id: ID!
+  expDate: Int! @ttl
   type: MessageType!
   value: String!
   connection: Connection! @connection

@@ -1,6 +1,6 @@
-import { API, graphqlOperation } from 'aws-amplify';
 import { createMessage } from '../graphql/mutations';
 import { Message, Connected, MessageType } from '../types';
+import gqlOperationCreate from './gql-api.create';
 
 const saveMessage = async (
   value: string,
@@ -13,7 +13,7 @@ const saveMessage = async (
     messageConnectionId: string;
     messageConnectorId: string;
   }) => {
-    return (await API.graphql(graphqlOperation(createMessage, { input }))) as {
+    return (await gqlOperationCreate(createMessage, input)) as {
       data: { createMessage: Message };
     };
   };
