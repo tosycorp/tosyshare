@@ -2,13 +2,13 @@ import React from 'react';
 import { Subscription } from 'rxjs';
 import { Row, Col, Button, Spinner, Modal } from 'react-bootstrap';
 import generateCode from '../utils/generate-code';
-import { enterCode, enterPin } from '../utils/enter-code';
+import enterCode from '../utils/enter-code';
 import listenConnection from '../utils/listen-connection';
 import InputBox from './InputBox';
 import QR from './QR';
 import QRReader from './QRReader';
 import CopyText from './CopyText';
-import { Connector, Connected, Connection } from '../types';
+import { Connector, Connected } from '../types';
 import listenConnectionDone from '../utils/listen-connection-done';
 
 type InitState = {
@@ -19,7 +19,6 @@ type InitState = {
   buttonDisabled: boolean;
   hasPin: boolean;
   enteredPin: number;
-  connection: Connection;
 };
 type InitProps = {
   onConnected?: (data: Connected) => void;
@@ -38,7 +37,6 @@ class Init extends React.Component<InitProps, InitState> {
       buttonDisabled: true,
       hasPin: false,
       enteredPin: null,
-      connection: null,
     };
   }
 
@@ -73,23 +71,43 @@ class Init extends React.Component<InitProps, InitState> {
     onConnected(data);
   };
 
+  handlePinRequired = async () => {
+    this.setState({ hasPin: true });
+    await this.waitForPin(() => {
+      const { hasPin } = this.state;
+      return !hasPin;
+    });
+    const { enteredPin } = this.state;
+    this.onConnected(enteredPin);
+    return enteredPin;
+  };
+
+  waitForPin = async (condition: () => boolean) => {
+    return new Promise((resolve) => {
+      if (condition()) {
+        resolve();
+      } else {
+        setTimeout(async () => {
+          await this.waitForPin(condition);
+          resolve();
+        }, 100);
+      }
+    });
+  };
+
   enterCode = async () => {
     const { enteredCode, connector } = this.state;
     if (!enteredCode || enteredCode.toString().length !== 6) {
       return;
     }
-    const updatedConnector = await enterCode(enteredCode, connector);
+    const updatedConnector = await enterCode(
+      enteredCode,
+      connector,
+      this.handlePinRequired
+    );
     if (updatedConnector) {
-      if (updatedConnector.connector) {
-        this.setState({
-          hasPin: true,
-          connector: updatedConnector.connector,
-          connection: updatedConnector.connection,
-        });
-      } else {
-        this.setState({ connector: updatedConnector });
-        this.onConnected();
-      }
+      this.setState({ connector: updatedConnector });
+      this.onConnected();
     }
   };
 
@@ -110,32 +128,15 @@ class Init extends React.Component<InitProps, InitState> {
     }
   };
 
-  enterPin = async () => {
-    const { enteredPin, connector, connection } = this.state;
-    if (!enteredPin || enteredPin.toString().length !== 4) {
-      return;
-    }
-    const updatedConnector = await enterPin(connector, connection, enteredPin);
-    if (updatedConnector) {
-      this.setState({ hasPin: false, connector: updatedConnector });
-      this.onConnected(enteredPin);
-    }
+  enterPin = () => {
+    this.setState({ hasPin: false });
   };
 
   pinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value;
-    if (!val) {
-      this.setState({ enteredCode: null });
-    } else {
-      const pin = parseInt(e.target.value, 10);
-      if (!Number.isNaN(pin)) {
-        if (val.length <= 4) {
-          this.setState({
-            enteredPin: pin,
-          });
-        }
-      }
-    }
+    const pin = parseInt(e.target.value, 10);
+    this.setState({
+      enteredPin: pin,
+    });
   };
 
   unsubscribeListenConnection = () => {

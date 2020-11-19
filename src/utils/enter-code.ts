@@ -1,47 +1,36 @@
 import { API, graphqlOperation } from 'aws-amplify';
 import { updateConnector } from '../graphql/mutations';
 import getConnectionByCode from './get-connection-by-code';
-import { Connection, Connector } from '../types';
+import { Connector } from '../types';
 import validatePin from './validate-pin';
 
-const updateConnectorWrapper = async (input: {
-  id: string;
-  connectorConnectionId: string;
-}) => {
-  return (await API.graphql(graphqlOperation(updateConnector, { input }))) as {
-    data: { updateConnector: Connector };
-  };
-};
-
-const enterPin = async (
+const enterCode = async (
+  code: number,
   connector: Connector,
-  connection: Connection,
-  pin?: number
-) => {
-  if (pin) {
-    if (!(await validatePin(pin, connection.id))) {
-      // eslint-disable-next-line no-console
-      console.log('INVALID PIN');
-      return null;
-    }
-  }
-  return (
-    await updateConnectorWrapper({
-      id: connector.id,
-      connectorConnectionId: connection.id,
-    })
-  ).data.updateConnector;
-};
-
-const enterCode = async (code: number, connector: Connector): Promise<any> => {
+  onPinRequired?: () => Promise<number>
+): Promise<Connector> => {
   const connection = await getConnectionByCode(code);
   if (!connection) {
     return null;
   }
 
   if (connection.hasPin) {
-    return { connector, connection };
+    const pin = await onPinRequired();
+    if (!pin || !(await validatePin(pin, connection.id))) {
+      // eslint-disable-next-line no-console
+      console.log('INVALID PIN');
+      return null;
+    }
   }
+
+  const updateConnectorWrapper = async (input: {
+    id: string;
+    connectorConnectionId: string;
+  }) => {
+    return (await API.graphql(
+      graphqlOperation(updateConnector, { input })
+    )) as { data: { updateConnector: Connector } };
+  };
 
   return (
     await updateConnectorWrapper({
@@ -51,4 +40,4 @@ const enterCode = async (code: number, connector: Connector): Promise<any> => {
   ).data.updateConnector;
 };
 
-export { enterCode, enterPin };
+export default enterCode;
