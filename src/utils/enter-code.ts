@@ -7,7 +7,7 @@ import validatePin from './validate-pin';
 const enterCode = async (
   code: number,
   connector: Connector,
-  onPinRequired?: () => Promise<number>
+  onPinRequired: () => Promise<number>
 ): Promise<Connector> => {
   const connection = await getConnectionByCode(code);
   if (!connection) {

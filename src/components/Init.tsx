@@ -1,6 +1,6 @@
 import React from 'react';
 import { Subscription } from 'rxjs';
-import { Row, Col, Button, Spinner, Modal } from 'react-bootstrap';
+import { Row, Col, Button, Spinner } from 'react-bootstrap';
 import generateCode from '../utils/generate-code';
 import enterCode from '../utils/enter-code';
 import listenConnection from '../utils/listen-connection';
@@ -10,6 +10,7 @@ import QRReader from './QRReader';
 import CopyText from './CopyText';
 import { Connector, Connected } from '../types';
 import listenConnectionDone from '../utils/listen-connection-done';
+import Pin from './Pin';
 
 type InitState = {
   generatedCode: number;
@@ -17,7 +18,7 @@ type InitState = {
   connector: Connector;
   readQR: boolean;
   buttonDisabled: boolean;
-  hasPin: boolean;
+  showPinModal: boolean;
   enteredPin: number;
 };
 type InitProps = {
@@ -27,6 +28,9 @@ type InitProps = {
 class Init extends React.Component<InitProps, InitState> {
   private listenConnectionSub: Subscription = null;
 
+  private onPinEnteredEventName = 'onPinEntered';
+  private onPinEnteredEvent = new Event(this.onPinEnteredEventName);
+
   constructor(props: InitProps) {
     super(props);
     this.state = {
@@ -35,7 +39,7 @@ class Init extends React.Component<InitProps, InitState> {
       generatedCode: null,
       readQR: false,
       buttonDisabled: true,
-      hasPin: false,
+      showPinModal: false,
       enteredPin: null,
     };
   }
@@ -72,27 +76,20 @@ class Init extends React.Component<InitProps, InitState> {
   };
 
   handlePinRequired = async () => {
-    this.setState({ hasPin: true });
-    await this.waitForPin(() => {
-      const { hasPin } = this.state;
-      return !hasPin;
-    });
+    this.setState({ showPinModal: true });
+
+    await this.waitForPin();
     const { enteredPin } = this.state;
-    this.onConnected(enteredPin);
     return enteredPin;
   };
 
-  waitForPin = async (condition: () => boolean) => {
-    return new Promise((resolve) => {
-      if (condition()) {
-        resolve();
-      } else {
-        setTimeout(async () => {
-          await this.waitForPin(condition);
-          resolve();
-        }, 100);
-      }
+  waitForPin = async () => {
+    let listener;
+    await new Promise((res) => {
+      listener = res;
+      window.addEventListener(this.onPinEnteredEventName, listener);
     });
+    window.removeEventListener(this.onPinEnteredEventName, listener);
   };
 
   enterCode = async () => {
@@ -107,36 +104,24 @@ class Init extends React.Component<InitProps, InitState> {
     );
     if (updatedConnector) {
       this.setState({ connector: updatedConnector });
-      this.onConnected();
+      const { enteredPin } = this.state;
+      this.onConnected(enteredPin);
     }
   };
 
   codeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
-    if (!val) {
-      this.setState({ enteredCode: null });
-    } else {
-      const code = parseInt(e.target.value, 10);
-      if (!Number.isNaN(code)) {
-        if (val.length <= 6) {
-          this.setState({
-            enteredCode: code,
-            buttonDisabled: val.length !== 6,
-          });
-        }
-      }
+    if (val.length <= 6) {
+      this.setState({
+        enteredCode: parseInt(val, 10),
+        buttonDisabled: val.length !== 6,
+      });
     }
   };
 
-  enterPin = () => {
-    this.setState({ hasPin: false });
-  };
-
-  pinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const pin = parseInt(e.target.value, 10);
-    this.setState({
-      enteredPin: pin,
-    });
+  enterPin = (pin: number) => {
+    this.setState({ showPinModal: false, enteredPin: pin });
+    window.dispatchEvent(this.onPinEnteredEvent);
   };
 
   unsubscribeListenConnection = () => {
@@ -160,8 +145,7 @@ class Init extends React.Component<InitProps, InitState> {
       readQR,
       buttonDisabled,
       enteredCode,
-      hasPin,
-      enteredPin,
+      showPinModal,
     } = this.state;
     return (
       <>
@@ -224,23 +208,11 @@ class Init extends React.Component<InitProps, InitState> {
             />
           </Col>
         </Row>
-        <Modal
-          show={hasPin}
-          size="sm"
-          aria-labelledby="contained-modal-title-vcenter"
-          centered
-        >
-          <Modal.Body>
-            <InputBox
-              changeHandler={this.pinChange}
-              clickHandler={this.enterPin}
-              inputPlaceholder="Enter Pin"
-              buttonText="JOIN"
-              inputType="number"
-              inputValue={enteredPin && enteredPin.toString()}
-            />
-          </Modal.Body>
-        </Modal>
+        <Pin
+          show={showPinModal}
+          enterPin={this.enterPin}
+          onHide={() => this.setState({ showPinModal: false })}
+        />
       </>
     );
   }
