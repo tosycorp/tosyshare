@@ -28,6 +28,7 @@ type ChatProps = {
 
 class Chat extends React.Component<ChatProps, ChatState> {
   private messagesEndRef: React.RefObject<HTMLDivElement> = React.createRef();
+  private chatScreenHeight: 'calc(100vh - 130px)';
   private s3Prefix =
     env === Env.dev
       ? 'https://tosyshare33f3b4cb0e3045bba147150ad29e916a214301-dev.s3-eu-west-1.amazonaws.com/public'
@@ -39,7 +40,7 @@ class Chat extends React.Component<ChatProps, ChatState> {
       message: '',
       messages: [],
       messageType: MessageType.STRING,
-      chatMaxHeight: 'calc(100vh - 130px)',
+      chatMaxHeight: this.chatScreenHeight,
     };
   }
 
@@ -66,7 +67,7 @@ class Chat extends React.Component<ChatProps, ChatState> {
 
   scrollToBottom = () => {
     if (this.messagesEndRef.current) {
-      this.messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+      this.messagesEndRef.current.scrollIntoView();
     }
   };
 
@@ -86,7 +87,7 @@ class Chat extends React.Component<ChatProps, ChatState> {
     if (message && message !== '\n') {
       const { connected } = this.props;
       saveMessage(message, connected, messageType);
-      this.setState({ message: '' });
+      this.setState({ message: '', chatMaxHeight: 'calc(100vh - 130px)' });
     }
   };
 
@@ -105,7 +106,12 @@ class Chat extends React.Component<ChatProps, ChatState> {
           onClick={() => FileSaver.saveAs(obj.url, obj.fileName)}
         >
           {obj.type.toLowerCase().includes('image') ? (
-            <Image style={{ maxWidth: '100%' }} alt="Message" src={obj.url} />
+            <Image
+              style={{ maxWidth: '100%' }}
+              alt="Message"
+              src={obj.url}
+              onLoad={this.scrollToBottom}
+            />
           ) : (
             obj.fileName
           )}
@@ -159,7 +165,12 @@ class Chat extends React.Component<ChatProps, ChatState> {
               <Col className="text-center">
                 <Alert variant="dark">
                   Chat Started (Code: <CopyText text={code.toString()} />{' '}
-                  {pin && <>Pin: {pin.toString()}</>})
+                  {pin && (
+                    <>
+                      Pin: <CopyText text={pin.toString()} />
+                    </>
+                  )}
+                  )
                 </Alert>
               </Col>
             </Row>
