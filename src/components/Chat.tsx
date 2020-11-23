@@ -87,7 +87,7 @@ class Chat extends React.Component<ChatProps, ChatState> {
     if (message && message !== '\n') {
       const { connected } = this.props;
       saveMessage(message, connected, messageType);
-      this.setState({ message: '', chatMaxHeight: 'calc(100vh - 130px)' });
+      this.setState({ message: '', chatMaxHeight: this.chatScreenHeight });
     }
   };
 
