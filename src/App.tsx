@@ -10,10 +10,20 @@ const App = () => {
     <Container>
       <Row className="justify-content-center mt-1 mb-1">
         <Col md={8}>
-          <Navbar variant="dark" bg="primary" expand>
-            <Container className="justify-content-center">
+          <Navbar bg="light" expand>
+            <Col md={4}>
+              <Navbar.Brand className="pt-0 pb-0">
+                <img
+                  src="/tosy-corp.png"
+                  height="40"
+                  className="d-inline-block align-top"
+                  alt="TOSYCorp logo"
+                />
+              </Navbar.Brand>
+            </Col>
+            <Col className="text-center" md={4}>
               <Navbar.Brand>TOSY SHARE</Navbar.Brand>
-            </Container>
+            </Col>
           </Navbar>
         </Col>
       </Row>

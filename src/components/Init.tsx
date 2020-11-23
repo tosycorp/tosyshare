@@ -10,6 +10,7 @@ import QRReader from './QRReader';
 import CopyText from './CopyText';
 import { Connector, Connected } from '../types';
 import listenConnectionDone from '../utils/listen-connection-done';
+import Pin from './Pin';
 
 type InitState = {
   generatedCode: number;
@@ -17,6 +18,8 @@ type InitState = {
   connector: Connector;
   readQR: boolean;
   buttonDisabled: boolean;
+  showPinModal: boolean;
+  enteredPin: number;
 };
 type InitProps = {
   onConnected?: (data: Connected) => void;
@@ -24,6 +27,9 @@ type InitProps = {
 
 class Init extends React.Component<InitProps, InitState> {
   private listenConnectionSub: Subscription = null;
+
+  private onPinEnteredEventName = 'onPinEntered';
+  private onPinEnteredEvent = new Event(this.onPinEnteredEventName);
 
   constructor(props: InitProps) {
     super(props);
@@ -33,6 +39,8 @@ class Init extends React.Component<InitProps, InitState> {
       generatedCode: null,
       readQR: false,
       buttonDisabled: true,
+      showPinModal: false,
+      enteredPin: null,
     };
   }
 
@@ -67,33 +75,52 @@ class Init extends React.Component<InitProps, InitState> {
     onConnected(data);
   };
 
+  handlePinRequired = async () => this.askForPin();
+
+  askForPin = async () => {
+    this.setState({ showPinModal: true });
+
+    let listener;
+    await new Promise((res) => {
+      listener = res;
+      window.addEventListener(this.onPinEnteredEventName, listener);
+    });
+    window.removeEventListener(this.onPinEnteredEventName, listener);
+
+    const { enteredPin } = this.state;
+    return enteredPin;
+  };
+
   enterCode = async () => {
     const { enteredCode, connector } = this.state;
     if (!enteredCode || enteredCode.toString().length !== 6) {
       return;
     }
-    const updatedConnector = await enterCode(enteredCode, connector);
+    const updatedConnector = await enterCode(
+      enteredCode,
+      connector,
+      this.handlePinRequired
+    );
     if (updatedConnector) {
       this.setState({ connector: updatedConnector });
-      this.onConnected();
+      const { enteredPin } = this.state;
+      this.onConnected(enteredPin);
     }
   };
 
   codeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
-    if (!val) {
-      this.setState({ enteredCode: null });
-    } else {
-      const code = parseInt(e.target.value, 10);
-      if (!Number.isNaN(code)) {
-        if (val.length <= 6) {
-          this.setState({
-            enteredCode: code,
-            buttonDisabled: val.length !== 6,
-          });
-        }
-      }
+    if (val.length <= 6) {
+      this.setState({
+        enteredCode: parseInt(val, 10),
+        buttonDisabled: val.length !== 6,
+      });
     }
+  };
+
+  enterPin = (pin: number) => {
+    this.setState({ showPinModal: false, enteredPin: pin });
+    window.dispatchEvent(this.onPinEnteredEvent);
   };
 
   unsubscribeListenConnection = () => {
@@ -112,7 +139,13 @@ class Init extends React.Component<InitProps, InitState> {
   };
 
   render() {
-    const { generatedCode, readQR, buttonDisabled, enteredCode } = this.state;
+    const {
+      generatedCode,
+      readQR,
+      buttonDisabled,
+      enteredCode,
+      showPinModal,
+    } = this.state;
     return (
       <>
         {!readQR && (
@@ -174,6 +207,11 @@ class Init extends React.Component<InitProps, InitState> {
             />
           </Col>
         </Row>
+        <Pin
+          show={showPinModal}
+          enterPin={this.enterPin}
+          onHide={() => this.setState({ showPinModal: false })}
+        />
       </>
     );
   }

@@ -6,7 +6,8 @@ import validatePin from './validate-pin';
 
 const enterCode = async (
   code: number,
-  connector: Connector
+  connector: Connector,
+  onPinRequired: () => Promise<number>
 ): Promise<Connector> => {
   const connection = await getConnectionByCode(code);
   if (!connection) {
@@ -14,14 +15,8 @@ const enterCode = async (
   }
 
   if (connection.hasPin) {
-    // eslint-disable-next-line no-console
-    console.log('ENTER PIN: set window.pin');
-    // eslint-disable-next-line no-console
-    console.log('window.pin = 1234');
-    if (
-      !(window as any).pin ||
-      !(await validatePin((window as any).pin, connection.id))
-    ) {
+    const pin = await onPinRequired();
+    if (!pin || !(await validatePin(pin, connection.id))) {
       // eslint-disable-next-line no-console
       console.log('INVALID PIN');
       return null;
