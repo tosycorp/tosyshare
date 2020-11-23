@@ -75,21 +75,20 @@ class Init extends React.Component<InitProps, InitState> {
     onConnected(data);
   };
 
-  handlePinRequired = async () => {
+  handlePinRequired = async () => this.askForPin();
+
+  askForPin = async () => {
     this.setState({ showPinModal: true });
 
-    await this.waitForPin();
-    const { enteredPin } = this.state;
-    return enteredPin;
-  };
-
-  waitForPin = async () => {
     let listener;
     await new Promise((res) => {
       listener = res;
       window.addEventListener(this.onPinEnteredEventName, listener);
     });
     window.removeEventListener(this.onPinEnteredEventName, listener);
+
+    const { enteredPin } = this.state;
+    return enteredPin;
   };
 
   enterCode = async () => {
