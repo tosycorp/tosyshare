@@ -101,14 +101,15 @@ class Init extends React.Component<InitProps, InitState> {
       connector,
       this.handlePinRequired
     );
-    if (updatedConnector) {
-      const isSelfConnection =
-        connector.connection.id === updatedConnector.connection.id;
-      if (!isSelfConnection) {
-        this.setState({ connector: updatedConnector });
-        const { enteredPin } = this.state;
-        this.onConnected(enteredPin);
-      }
+
+    // Let listenConnection complete the connection when user enter own code.
+    const isSelfConnection =
+      connector.connection.id === updatedConnector.connection.id;
+
+    if (updatedConnector && !isSelfConnection) {
+      this.setState({ connector: updatedConnector });
+      const { enteredPin } = this.state;
+      this.onConnected(enteredPin);
     }
   };
 
