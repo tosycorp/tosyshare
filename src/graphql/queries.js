@@ -290,6 +290,44 @@ export const getConnectionsByCode = /* GraphQL */ `
     }
   }
 `;
+export const getConnectorsByConnectionId = /* GraphQL */ `
+  query GetConnectorsByConnectionId(
+    $connectorConnectionId: ID
+    $sortDirection: ModelSortDirection
+    $filter: ModelConnectorFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    GetConnectorsByConnectionId(
+      connectorConnectionId: $connectorConnectionId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        expDate
+        identityId
+        connection {
+          id
+          expDate
+          code
+          hasPin
+          connectors {
+            nextToken
+          }
+          createdAt
+          updatedAt
+        }
+        connectorConnectionId
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getPinsByValue = /* GraphQL */ `
   query GetPinsByValue(
     $value: Int
@@ -310,6 +348,61 @@ export const getPinsByValue = /* GraphQL */ `
         expDate
         value
         connectionId
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getMessagesByConnectionId = /* GraphQL */ `
+  query GetMessagesByConnectionId(
+    $messageConnectionId: ID
+    $sortDirection: ModelSortDirection
+    $filter: ModelMessageFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    GetMessagesByConnectionId(
+      messageConnectionId: $messageConnectionId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        expDate
+        type
+        value
+        connection {
+          id
+          expDate
+          code
+          hasPin
+          connectors {
+            nextToken
+          }
+          createdAt
+          updatedAt
+        }
+        connector {
+          id
+          expDate
+          identityId
+          connection {
+            id
+            expDate
+            code
+            hasPin
+            createdAt
+            updatedAt
+          }
+          connectorConnectionId
+          createdAt
+          updatedAt
+        }
+        messageConnectionId
         createdAt
         updatedAt
       }
