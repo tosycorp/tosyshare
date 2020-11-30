@@ -27,8 +27,8 @@ const App = () => {
           </Navbar>
         </Col>
       </Row>
-      <Row className="justify-content-center">
-        <Col md={8}>
+      <Row className="justify-content-center no-scroll flex-full">
+        <Col className="flex-disp flex-col full-height " md={8}>
           <Suspense fallback="Loading...">
             <Layout />
           </Suspense>

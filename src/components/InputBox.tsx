@@ -9,10 +9,7 @@ export type UploadOptions = {
 };
 
 type InputBoxProps = {
-  changeHandler: (
-    e: React.ChangeEvent<HTMLInputElement>,
-    inputHeight: number
-  ) => void;
+  changeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void;
   clickHandler: () => void;
   buttonText: string;
   inputValue?: string;
@@ -58,13 +55,8 @@ class InputBox extends React.Component<InputBoxProps, InputBoxState> {
     });
   };
 
-  changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { changeHandler } = this.props;
-    const inputHeight = Math.min(this.input.current.scrollHeight + 2, 108);
-    changeHandler(e, inputHeight);
-  };
-
   render() {
+    const { changeHandler } = this.props;
     const { uploadProgress } = this.state;
     const {
       clickHandler,
@@ -91,7 +83,7 @@ class InputBox extends React.Component<InputBoxProps, InputBoxState> {
             autoFocus
             placeholder={inputPlaceholder || ''}
             aria-describedby="basic-addon2"
-            onChange={this.changeHandler}
+            onChange={changeHandler}
             onKeyDown={this.handleInputKeyDown}
             value={inputValue || ''}
             type={inputType || 'text'}

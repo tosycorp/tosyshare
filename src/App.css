@@ -32,6 +32,44 @@
   background-color: #cce5ff !important;
 }
 
+html,
+body,
+#root {
+  height: 100vh;
+  overflow: hidden;
+}
+
+.container {
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.no-scroll {
+  overflow: hidden;
+}
+
+.auto-scroll {
+  overflow: auto;
+}
+
+.flex-full {
+  flex: 1;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.flex-disp {
+  display: flex;
+}
+
+.full-height {
+  max-height: 100%;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

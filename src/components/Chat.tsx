@@ -1,6 +1,6 @@
 import React from 'react';
 import FileSaver from 'file-saver';
-import { Row, Col, Alert, Container, Image, Button } from 'react-bootstrap';
+import { Row, Col, Alert, Image, Button } from 'react-bootstrap';
 import { listenMessages } from '../utils/listen-messages';
 import saveMessage from '../utils/save-message';
 import InputBox, { UploadOptions } from './InputBox';
@@ -19,7 +19,6 @@ type ChatState = {
   message: string;
   messageType: MessageType;
   messages: Message[];
-  chatMaxHeight: string;
   pin?: number;
 };
 type ChatProps = {
@@ -28,7 +27,6 @@ type ChatProps = {
 
 class Chat extends React.Component<ChatProps, ChatState> {
   private messagesEndRef: React.RefObject<HTMLDivElement> = React.createRef();
-  private chatScreenHeight: 'calc(100vh - 130px)';
   private s3Prefix =
     env === Env.dev
       ? 'https://tosyshare33f3b4cb0e3045bba147150ad29e916a214301-dev.s3-eu-west-1.amazonaws.com/public'
@@ -40,7 +38,6 @@ class Chat extends React.Component<ChatProps, ChatState> {
       message: '',
       messages: [],
       messageType: MessageType.STRING,
-      chatMaxHeight: this.chatScreenHeight,
     };
   }
 
@@ -71,11 +68,7 @@ class Chat extends React.Component<ChatProps, ChatState> {
     }
   };
 
-  messageChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    inputHeight: number
-  ) => {
-    this.setState({ chatMaxHeight: `calc(100vh - ${inputHeight + 82}px)` });
+  messageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const message = e.target.value;
     if (message !== '\n') {
       this.setState({ message, messageType: MessageType.STRING });
@@ -87,7 +80,7 @@ class Chat extends React.Component<ChatProps, ChatState> {
     if (message && message !== '\n') {
       const { connected } = this.props;
       saveMessage(message, connected, messageType);
-      this.setState({ message: '', chatMaxHeight: this.chatScreenHeight });
+      this.setState({ message: '' });
     }
   };
 
@@ -146,8 +139,8 @@ class Chat extends React.Component<ChatProps, ChatState> {
     this.send();
   };
 
-  public render() {
-    const { messages, message, chatMaxHeight, pin } = this.state;
+  render = () => {
+    const { messages, message, pin } = this.state;
     const { connected } = this.props;
     const { code, connectorId } = connected;
     const { uploadHandler } = this;
@@ -159,21 +152,18 @@ class Chat extends React.Component<ChatProps, ChatState> {
 
     return (
       <>
-        <Row style={{ maxHeight: chatMaxHeight, overflowY: 'auto' }}>
-          <Col>
-            <Row className="justify-content-center">
-              <Col className="text-center">
-                <Alert variant="dark">
-                  Chat Started (Code: <CopyText text={code.toString()} />{' '}
-                  {pin && (
-                    <>
-                      Pin: <CopyText text={pin.toString()} />
-                    </>
-                  )}
-                  )
-                </Alert>
-              </Col>
-            </Row>
+        <Alert className="text-center" variant="dark">
+          Chat Started (Code: <CopyText text={code.toString()} />{' '}
+          {pin && (
+            <>
+              Pin: <CopyText text={pin.toString()} />
+            </>
+          )}
+          )
+        </Alert>
+
+        <Row className="no-scroll flex-col flex-full">
+          <Col className="auto-scroll flex-full">
             {messages?.map((m, index) => (
               <Row
                 key={`row_${index}`}
@@ -194,22 +184,16 @@ class Chat extends React.Component<ChatProps, ChatState> {
             ))}
           </Col>
         </Row>
-        <Container className="fixed-bottom">
-          <Row className="justify-content-center">
-            <Col md={8}>
-              <InputBox
-                changeHandler={this.messageChange}
-                clickHandler={this.send}
-                buttonText="SEND"
-                inputValue={message}
-                uploadOptions={uploadOptions}
-              />
-            </Col>
-          </Row>
-        </Container>
+        <InputBox
+          changeHandler={this.messageChange}
+          clickHandler={this.send}
+          buttonText="SEND"
+          inputValue={message}
+          uploadOptions={uploadOptions}
+        />
       </>
     );
-  }
+  };
 }
 
 export default Chat;
