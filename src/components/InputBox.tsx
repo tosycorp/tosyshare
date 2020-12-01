@@ -34,6 +34,7 @@ class InputBox extends React.Component<InputBoxProps, InputBoxState> {
   }
 
   componentDidUpdate() {
+    this.input.current.focus();
     this.input.current.style.height = '0';
     this.input.current.style.height = `${
       this.input.current.scrollHeight + 2
