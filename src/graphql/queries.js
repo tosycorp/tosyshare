@@ -358,6 +358,7 @@ export const getPinsByValue = /* GraphQL */ `
 export const getMessagesByConnectionId = /* GraphQL */ `
   query GetMessagesByConnectionId(
     $messageConnectionId: ID
+    $expDate: ModelIntKeyConditionInput
     $sortDirection: ModelSortDirection
     $filter: ModelMessageFilterInput
     $limit: Int
@@ -365,6 +366,7 @@ export const getMessagesByConnectionId = /* GraphQL */ `
   ) {
     GetMessagesByConnectionId(
       messageConnectionId: $messageConnectionId
+      expDate: $expDate
       sortDirection: $sortDirection
       filter: $filter
       limit: $limit

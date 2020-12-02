@@ -35,7 +35,7 @@ enum MessageType {
 
 type Message @model
   @auth(rules: [{ allow: public, operations: [read, create] }])
-  @key(name: "ByConnectionId", fields: ["messageConnectionId"], queryField: "GetMessagesByConnectionId") {
+  @key(name: "ByConnectionId", fields: ["messageConnectionId", "expDate"], queryField: "GetMessagesByConnectionId") {
   id: ID!
   expDate: Int! @ttl
   type: MessageType!

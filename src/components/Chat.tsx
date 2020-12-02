@@ -12,8 +12,10 @@ import {
   JSONMessage,
   Actions,
   MessageType,
+  ActionHandlers,
 } from '../types';
 import env, { Env } from '../utils/env';
+import getMessagesByConnectionId from '../utils/get-messages-by-connectionId';
 
 type ChatState = {
   message: string;
@@ -45,17 +47,28 @@ class Chat extends React.Component<ChatProps, ChatState> {
     const { connected } = this.props;
     const { pin, connectionId } = connected;
     this.setPin(pin);
-    const actionHandlers = {
+    const actionHandlers: ActionHandlers = {
       [Actions.SET_PIN]: (val: any) => this.setPin(val),
     };
     listenMessages(connectionId, actionHandlers).subscribe((m: Message) => {
       const { messages } = this.state;
       this.setState({ messages: [...messages, m] });
     });
+
+    this.setPastMessages(connected.connectionId, actionHandlers);
   }
 
   componentDidUpdate() {
     this.scrollToBottom();
+  }
+
+  async setPastMessages(connectionId: string, actionHandlers: ActionHandlers) {
+    const pastMessages = await getMessagesByConnectionId(
+      connectionId,
+      actionHandlers
+    );
+    const { messages } = this.state;
+    this.setState({ messages: [...pastMessages, ...messages] });
   }
 
   setPin(pin: number) {

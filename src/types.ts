@@ -51,3 +51,5 @@ export interface Message extends DynamoDbTable {
 export enum Actions {
   SET_PIN = 'SET_PIN',
 }
+
+export type ActionHandlers = { [key: string]: (val?: any) => void };
