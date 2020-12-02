@@ -8,9 +8,10 @@ import InputBox from './InputBox';
 import QR from './QR';
 import QRReader from './QRReader';
 import CopyText from './CopyText';
-import { Connector, Connected } from '../types';
+import { Connector, Connected, CodePinPair } from '../types';
 import listenConnectionDone from '../utils/listen-connection-done';
 import Pin from './Pin';
+import codePinManager from '../utils/code-pin-manager';
 
 type InitState = {
   generatedCode: number;
@@ -20,6 +21,7 @@ type InitState = {
   buttonDisabled: boolean;
   showPinModal: boolean;
   enteredPin: number;
+  codePin: CodePinPair;
 };
 type InitProps = {
   onConnected?: (data: Connected) => void;
@@ -41,22 +43,31 @@ class Init extends React.Component<InitProps, InitState> {
       buttonDisabled: true,
       showPinModal: false,
       enteredPin: null,
+      codePin: codePinManager.getCodePin(),
     };
   }
 
   async componentDidMount() {
-    const { code, connector, connection } = await generateCode();
+    const { code, connector } = await generateCode();
     this.setState({
       generatedCode: code,
       connector,
     });
 
-    this.listenConnectionSub = listenConnection(connection.id).subscribe(
-      async () => {
-        const { pin } = await listenConnectionDone(connection, connector);
-        this.onConnected(pin.value);
-      }
-    );
+    // If user has session, use code and pin from session
+    // No need to 'listenConnection' in case of successful login
+    const { codePin } = this.state;
+    if (codePin) {
+      this.setState({
+        enteredCode: codePin.code,
+        enteredPin: codePin.pin,
+        codePin: null,
+      });
+      this.enterCode();
+      return;
+    }
+
+    this.startListenConnection(connector);
   }
 
   onConnected = async (pin?: number) => {
@@ -72,6 +83,7 @@ class Init extends React.Component<InitProps, InitState> {
     };
 
     const { onConnected } = this.props;
+    codePinManager.setCodePin(data.code, data.pin);
     onConnected(data);
   };
 
@@ -92,25 +104,39 @@ class Init extends React.Component<InitProps, InitState> {
   };
 
   enterCode = async () => {
-    const { enteredCode, connector } = this.state;
+    const { enteredCode, connector, enteredPin } = this.state;
     if (!enteredCode || enteredCode.toString().length !== 6) {
       return;
     }
-    const updatedConnector = await enterCode(
-      enteredCode,
-      connector,
-      this.handlePinRequired
-    );
+
+    let updatedConnector: Connector;
+    try {
+      updatedConnector = await enterCode(
+        enteredCode,
+        connector,
+        enteredPin ? () => Promise.resolve(enteredPin) : this.handlePinRequired
+      );
+    } catch (e) {
+      this.handleEnterCodeError(e, connector);
+      return;
+    }
 
     // Let listenConnection complete the connection when user enter own code.
     const isSelfConnection =
-      connector.connection.id === updatedConnector.connection.id;
+      connector.connection.id ===
+      (updatedConnector && updatedConnector.connection.id);
 
-    if (updatedConnector && !isSelfConnection) {
-      this.setState({ connector: updatedConnector });
-      const { enteredPin } = this.state;
-      this.onConnected(enteredPin);
-    }
+    this.enterCodeSuccess(updatedConnector, isSelfConnection);
+  };
+
+  handleEnterCodeError = (e: Error, connector: Connector) => {
+    console.error(
+      'Error occured while enterCode(), session might be expired',
+      e
+    );
+    codePinManager.clearCodePin();
+    this.setState({ enteredCode: null, enteredPin: null });
+    this.startListenConnection(connector);
   };
 
   codeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -141,6 +167,28 @@ class Init extends React.Component<InitProps, InitState> {
   onQRRead = (code: number) => {
     this.setState({ enteredCode: code });
     this.enterCode();
+  };
+
+  enterCodeSuccess = (
+    updatedConnector: Connector,
+    isSelfConnection: boolean
+  ) => {
+    if (updatedConnector && !isSelfConnection) {
+      this.setState({ connector: updatedConnector });
+      const { enteredPin } = this.state;
+      this.onConnected(enteredPin);
+    }
+  };
+
+  startListenConnection = (connector: Connector) => {
+    this.unsubscribeListenConnection();
+    const { connection } = connector;
+    this.listenConnectionSub = listenConnection(connection.id).subscribe(
+      async () => {
+        const { pin } = await listenConnectionDone(connection, connector);
+        this.onConnected(pin.value);
+      }
+    );
   };
 
   render() {

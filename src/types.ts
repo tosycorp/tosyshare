@@ -53,3 +53,13 @@ export enum Actions {
 }
 
 export type ActionHandlers = { [key: string]: (val?: any) => void };
+
+export enum EnterCodeErrors {
+  NO_CONNECTION_FOUND = 'NO_CONNECTION_FOUND',
+  INVALID_PIN = 'INVALID_PIN',
+}
+
+export interface CodePinPair {
+  code: number;
+  pin: number;
+}

@@ -1,6 +1,7 @@
 import React from 'react';
 import FileSaver from 'file-saver';
 import { Row, Col, Alert, Image, Button } from 'react-bootstrap';
+import { Subscription } from 'rxjs';
 import { listenMessages } from '../utils/listen-messages';
 import saveMessage from '../utils/save-message';
 import InputBox, { UploadOptions } from './InputBox';
@@ -16,6 +17,7 @@ import {
 } from '../types';
 import env, { Env } from '../utils/env';
 import getMessagesByConnectionId from '../utils/get-messages-by-connectionId';
+import codePinManager from '../utils/code-pin-manager';
 
 type ChatState = {
   message: string;
@@ -25,9 +27,11 @@ type ChatState = {
 };
 type ChatProps = {
   connected: Connected;
+  onOut: () => void;
 };
 
 class Chat extends React.Component<ChatProps, ChatState> {
+  private listenMessageSub: Subscription = null;
   private messagesEndRef: React.RefObject<HTMLDivElement> = React.createRef();
   private s3Prefix =
     env === Env.dev
@@ -50,7 +54,10 @@ class Chat extends React.Component<ChatProps, ChatState> {
     const actionHandlers: ActionHandlers = {
       [Actions.SET_PIN]: (val: any) => this.setPin(val),
     };
-    listenMessages(connectionId, actionHandlers).subscribe((m: Message) => {
+    this.listenMessageSub = listenMessages(
+      connectionId,
+      actionHandlers
+    ).subscribe((m: Message) => {
       const { messages } = this.state;
       this.setState({ messages: [...messages, m] });
     });
@@ -60,6 +67,10 @@ class Chat extends React.Component<ChatProps, ChatState> {
 
   componentDidUpdate() {
     this.scrollToBottom();
+  }
+
+  componentWillUnmount() {
+    this.unsubscribeListenMessage();
   }
 
   async setPastMessages(connectionId: string, actionHandlers: ActionHandlers) {
@@ -74,6 +85,12 @@ class Chat extends React.Component<ChatProps, ChatState> {
   setPin(pin: number) {
     this.setState({ pin });
   }
+
+  unsubscribeListenMessage = () => {
+    if (this.listenMessageSub && !this.listenMessageSub.closed) {
+      this.listenMessageSub.unsubscribe();
+    }
+  };
 
   scrollToBottom = () => {
     if (this.messagesEndRef.current) {
@@ -154,7 +171,7 @@ class Chat extends React.Component<ChatProps, ChatState> {
 
   render = () => {
     const { messages, message, pin } = this.state;
-    const { connected } = this.props;
+    const { connected, onOut } = this.props;
     const { code, connectorId } = connected;
     const { uploadHandler } = this;
 
@@ -166,13 +183,32 @@ class Chat extends React.Component<ChatProps, ChatState> {
     return (
       <>
         <Alert className="text-center" variant="dark">
-          Chat Started (Code: <CopyText text={code.toString()} />{' '}
-          {pin && (
-            <>
-              Pin: <CopyText text={pin.toString()} />
-            </>
-          )}
-          )
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div>
+              <div
+                style={{ display: 'table', height: '100%', overflow: 'hidden' }}
+              >
+                <div style={{ display: 'table-cell', verticalAlign: 'middle' }}>
+                  Code: <CopyText text={code.toString()} />{' '}
+                  {pin && (
+                    <>
+                      Pin: <CopyText text={pin.toString()} />
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+            <Button
+              variant="danger"
+              className="float-right btn-sm"
+              onClick={() => {
+                codePinManager.clearCodePin();
+                onOut();
+              }}
+            >
+              Out
+            </Button>
+          </div>
         </Alert>
 
         <Row className="no-scroll flex-col flex-full">

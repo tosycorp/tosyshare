@@ -19,12 +19,13 @@ class Layout extends React.Component<LayoutProps, LayoutState> {
   };
 
   render() {
+    const onOut = () => this.setState({ connected: null });
     const { connected } = this.state;
 
     return !connected ? (
       <Init onConnected={this.onConnected} />
     ) : (
-      <Chat connected={connected} />
+      <Chat connected={connected} onOut={onOut} />
     );
   }
 }

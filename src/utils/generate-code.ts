@@ -50,7 +50,6 @@ const addConnector = async (connectionId: string): Promise<Connector> => {
 const generateCode = async (): Promise<{
   code: number;
   connector: Connector;
-  connection: Connection;
 }> => {
   const code = Math.floor(100000 + Math.random() * 900000);
 
@@ -63,7 +62,7 @@ const generateCode = async (): Promise<{
   connection = await addConnection(code);
   const connector = await addConnector(connection.id);
 
-  return { code, connector, connection };
+  return { code, connector };
 };
 
 export default generateCode;

@@ -1,7 +1,7 @@
 import { API, graphqlOperation } from 'aws-amplify';
 import { updateConnector } from '../graphql/mutations';
 import getConnectionByCode from './get-connection-by-code';
-import { Connector } from '../types';
+import { EnterCodeErrors, Connector } from '../types';
 import validatePin from './validate-pin';
 
 const enterCode = async (
@@ -11,15 +11,13 @@ const enterCode = async (
 ): Promise<Connector> => {
   const connection = await getConnectionByCode(code);
   if (!connection) {
-    return null;
+    throw Error(EnterCodeErrors.NO_CONNECTION_FOUND);
   }
 
   if (connection.hasPin) {
     const pin = await onPinRequired();
     if (!pin || !(await validatePin(pin, connection.id))) {
-      // eslint-disable-next-line no-console
-      console.log('INVALID PIN');
-      return null;
+      throw Error(EnterCodeErrors.INVALID_PIN);
     }
   }
 
