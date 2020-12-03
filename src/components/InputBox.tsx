@@ -70,13 +70,15 @@ class InputBox extends React.Component<InputBoxProps, InputBoxState> {
     } = this.props;
     return (
       <>
-        {uploadProgress && <ProgressBar now={uploadProgress} />}
+        {uploadProgress && (
+          <ProgressBar variant="warning" now={uploadProgress} />
+        )}
         <InputGroup className="mb-3">
           <FormControl
             as="textarea"
             ref={this.input}
             style={{
-              borderColor: '#007bff',
+              borderColor: '#e0a800',
               maxHeight: '108px',
               resize: 'none',
             }}
@@ -99,7 +101,7 @@ class InputBox extends React.Component<InputBoxProps, InputBoxState> {
               />
             )}
             <Button
-              variant="primary"
+              variant="warning"
               onClick={clickHandler}
               disabled={buttonDisabled}
             >

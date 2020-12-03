@@ -232,7 +232,7 @@ class Init extends React.Component<InitProps, InitState> {
             ) : (
               <Button
                 className="btn-block"
-                variant="outline-primary"
+                variant="warning"
                 size="lg"
                 onClick={this.onQRCodeReadClick}
               >

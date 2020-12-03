@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { Container, Navbar, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
@@ -9,27 +9,25 @@ const App = () => {
   return (
     <Container>
       <Row className="justify-content-center mt-1 mb-1">
-        <Col md={8}>
-          <Navbar bg="light" expand>
-            <Col xs={4}>
-              <Navbar.Brand className="pt-0 pb-0">
-                <img
-                  src="/tosy-corp.png"
-                  height="40"
-                  className="d-inline-block align-top"
-                  alt="TOSYCorp logo"
-                />
-              </Navbar.Brand>
-            </Col>
-            <Col className="text-center" xs={4}>
-              <Navbar.Brand>TOSY SHARE</Navbar.Brand>
-            </Col>
-          </Navbar>
+        <Col className="text-center align-self-center" md={8}>
+          <div>
+            <img
+              style={{
+                backgroundColor: '#2e99c8',
+                backgroundImage: 'linear-gradient(180deg, #2e99c8, #389ecb)',
+                marginBottom: '-12px',
+              }}
+              src="/tosy-corp.png"
+              height="60"
+              className="align-top"
+              alt="TOSYCorp logo"
+            />
+          </div>
         </Col>
       </Row>
-      <Row className="justify-content-center no-scroll flex-full">
+      <Row className="justify-content-center no-scroll flex-full px-2">
         <Col className="flex-disp flex-col full-height " md={8}>
-          <Suspense fallback="Loading...">
+          <Suspense fallback="">
             <Layout />
           </Suspense>
         </Col>
