@@ -17,7 +17,7 @@ import {
 } from '../types';
 import env, { Env } from '../utils/env';
 import getMessagesByConnectionId from '../utils/get-messages-by-connectionId';
-import codePinManager from '../utils/code-pin-manager';
+import sessionManager from '../utils/session-manager';
 
 type ChatState = {
   message: string;
@@ -83,6 +83,7 @@ class Chat extends React.Component<ChatProps, ChatState> {
   }
 
   setPin(pin: number) {
+    sessionManager.setSessionPinValue(pin);
     this.setState({ pin });
   }
 
@@ -202,7 +203,7 @@ class Chat extends React.Component<ChatProps, ChatState> {
               variant="danger"
               className="float-right btn-sm"
               onClick={() => {
-                codePinManager.clearCodePin();
+                sessionManager.clearSessionValues();
                 onOut();
               }}
             >

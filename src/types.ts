@@ -59,7 +59,8 @@ export enum EnterCodeErrors {
   INVALID_PIN = 'INVALID_PIN',
 }
 
-export interface CodePinPair {
+export interface SessionValues {
   code: number;
   pin: number;
+  connector: Connector;
 }
