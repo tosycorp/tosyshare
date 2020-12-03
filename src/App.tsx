@@ -13,8 +13,6 @@ const App = () => {
           <div>
             <img
               style={{
-                backgroundColor: '#2e99c8',
-                backgroundImage: 'linear-gradient(180deg, #2e99c8, #389ecb)',
                 marginBottom: '-12px',
               }}
               src="/tosy-corp.png"

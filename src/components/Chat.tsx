@@ -184,7 +184,11 @@ class Chat extends React.Component<ChatProps, ChatState> {
 
     return (
       <>
-        <Alert className="text-center" variant="dark">
+        <Alert
+          style={{ height: '33px', lineHeight: '31px', padding: '0px 10px' }}
+          className="text-center"
+          variant="dark"
+        >
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <div>
               <div
