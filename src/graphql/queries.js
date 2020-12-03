@@ -9,22 +9,6 @@ export const getConnection = /* GraphQL */ `
       code
       hasPin
       connectors {
-        items {
-          id
-          expDate
-          identityId
-          connection {
-            id
-            expDate
-            code
-            hasPin
-            createdAt
-            updatedAt
-          }
-          connectorConnectionId
-          createdAt
-          updatedAt
-        }
         nextToken
       }
       createdAt
@@ -44,17 +28,6 @@ export const listConnections = /* GraphQL */ `
         expDate
         code
         hasPin
-        connectors {
-          items {
-            id
-            expDate
-            identityId
-            connectorConnectionId
-            createdAt
-            updatedAt
-          }
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -73,17 +46,6 @@ export const getConnector = /* GraphQL */ `
         expDate
         code
         hasPin
-        connectors {
-          items {
-            id
-            expDate
-            identityId
-            connectorConnectionId
-            createdAt
-            updatedAt
-          }
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -104,17 +66,6 @@ export const listConnectors = /* GraphQL */ `
         id
         expDate
         identityId
-        connection {
-          id
-          expDate
-          code
-          hasPin
-          connectors {
-            nextToken
-          }
-          createdAt
-          updatedAt
-        }
         connectorConnectionId
         createdAt
         updatedAt
@@ -166,17 +117,6 @@ export const getMessage = /* GraphQL */ `
         expDate
         code
         hasPin
-        connectors {
-          items {
-            id
-            expDate
-            identityId
-            connectorConnectionId
-            createdAt
-            updatedAt
-          }
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -184,22 +124,12 @@ export const getMessage = /* GraphQL */ `
         id
         expDate
         identityId
-        connection {
-          id
-          expDate
-          code
-          hasPin
-          connectors {
-            nextToken
-          }
-          createdAt
-          updatedAt
-        }
         connectorConnectionId
         createdAt
         updatedAt
       }
       messageConnectionId
+      messageConnectorId
       createdAt
       updatedAt
     }
@@ -217,34 +147,8 @@ export const listMessages = /* GraphQL */ `
         expDate
         type
         value
-        connection {
-          id
-          expDate
-          code
-          hasPin
-          connectors {
-            nextToken
-          }
-          createdAt
-          updatedAt
-        }
-        connector {
-          id
-          expDate
-          identityId
-          connection {
-            id
-            expDate
-            code
-            hasPin
-            createdAt
-            updatedAt
-          }
-          connectorConnectionId
-          createdAt
-          updatedAt
-        }
         messageConnectionId
+        messageConnectorId
         createdAt
         updatedAt
       }
@@ -272,17 +176,6 @@ export const getConnectionsByCode = /* GraphQL */ `
         expDate
         code
         hasPin
-        connectors {
-          items {
-            id
-            expDate
-            identityId
-            connectorConnectionId
-            createdAt
-            updatedAt
-          }
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -309,17 +202,6 @@ export const getConnectorsByConnectionId = /* GraphQL */ `
         id
         expDate
         identityId
-        connection {
-          id
-          expDate
-          code
-          hasPin
-          connectors {
-            nextToken
-          }
-          createdAt
-          updatedAt
-        }
         connectorConnectionId
         createdAt
         updatedAt
@@ -377,34 +259,8 @@ export const getMessagesByConnectionId = /* GraphQL */ `
         expDate
         type
         value
-        connection {
-          id
-          expDate
-          code
-          hasPin
-          connectors {
-            nextToken
-          }
-          createdAt
-          updatedAt
-        }
-        connector {
-          id
-          expDate
-          identityId
-          connection {
-            id
-            expDate
-            code
-            hasPin
-            createdAt
-            updatedAt
-          }
-          connectorConnectionId
-          createdAt
-          updatedAt
-        }
         messageConnectionId
+        messageConnectorId
         createdAt
         updatedAt
       }

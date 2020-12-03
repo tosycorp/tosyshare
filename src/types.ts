@@ -46,6 +46,8 @@ export interface Message extends DynamoDbTable {
   value: string;
   connection: Connection;
   connector: Connector;
+  messageConnectionId: string;
+  messageConnectorId: string;
 }
 
 export enum Actions {

@@ -150,7 +150,7 @@ class Chat extends React.Component<ChatProps, ChatState> {
         ref={ref}
         key={`alert_${index}`}
         style={{ overflowWrap: 'break-word' }}
-        variant={generateColor(m.connector.id)}
+        variant={generateColor(m.messageConnectorId)}
       >
         {val || m.value}
       </Alert>
@@ -219,7 +219,7 @@ class Chat extends React.Component<ChatProps, ChatState> {
               <Row
                 key={`row_${index}`}
                 className={
-                  connectorId === m.connector.id
+                  connectorId === m.messageConnectorId
                     ? 'justify-content-end'
                     : 'justify-content-start'
                 }
