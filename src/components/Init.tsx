@@ -49,20 +49,27 @@ class Init extends React.Component<InitProps, InitState> {
 
   async componentDidMount() {
     // Bypass code generation and connection listening if code and pin already defined.
-    const { enteredCode, enteredPin } = this.state;
+    const { enteredCode, enteredPin, connector } = this.state;
     if (enteredCode && enteredPin) {
+      // Generate code and connector if not available yet.
+      // Use case: when user uses predefined URL to join.
+      if (!connector) await this.executeGenerateCode();
+
       this.enterCode(true);
       return;
     }
 
+    await this.executeGenerateCode();
+    this.startListenConnection();
+  }
+
+  executeGenerateCode = async () => {
     const { code, connector } = await generateCode();
     this.setState({
       generatedCode: code,
       connector,
     });
-
-    this.startListenConnection(connector);
-  }
+  };
 
   onConnected = async (pin?: number) => {
     this.unsubscribeListenConnection();
@@ -166,8 +173,9 @@ class Init extends React.Component<InitProps, InitState> {
     this.enterCode();
   };
 
-  startListenConnection = (connector: Connector) => {
+  startListenConnection = () => {
     this.unsubscribeListenConnection();
+    const { connector } = this.state;
     const { connection } = connector;
     this.listenConnectionSub = listenConnection(connection.id).subscribe(
       async () => {
