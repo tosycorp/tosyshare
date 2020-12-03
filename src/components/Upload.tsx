@@ -61,7 +61,7 @@ class Upload extends React.Component<UploadProps, UploadState> {
           onChange={(evt) => this.onChange(evt as any)}
         />
         <Button
-          variant="primary"
+          variant="warning"
           onClick={() => fileInputRef.click()}
           disabled={progress !== null}
         >
