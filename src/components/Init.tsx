@@ -8,10 +8,10 @@ import InputBox from './InputBox';
 import QR from './QR';
 import QRReader from './QRReader';
 import CopyText from './CopyText';
-import { Connector, Connected, CodePinPair } from '../types';
+import { Connector, Connected } from '../types';
 import listenConnectionDone from '../utils/listen-connection-done';
 import Pin from './Pin';
-import codePinManager from '../utils/code-pin-manager';
+import sessionManager from '../utils/session-manager';
 
 type InitState = {
   generatedCode: number;
@@ -21,7 +21,6 @@ type InitState = {
   buttonDisabled: boolean;
   showPinModal: boolean;
   enteredPin: number;
-  codePin: CodePinPair;
 };
 type InitProps = {
   onConnected?: (data: Connected) => void;
@@ -35,40 +34,42 @@ class Init extends React.Component<InitProps, InitState> {
 
   constructor(props: InitProps) {
     super(props);
+    const { code, pin, connector } = sessionManager.getSessionValues() || {};
+
     this.state = {
-      connector: null,
-      enteredCode: null,
+      connector: connector || null,
+      enteredCode: code || null,
       generatedCode: null,
       readQR: false,
       buttonDisabled: true,
       showPinModal: false,
-      enteredPin: null,
-      codePin: codePinManager.getCodePin(),
+      enteredPin: pin || null,
     };
   }
 
   async componentDidMount() {
+    // Bypass code generation and connection listening if code and pin already defined.
+    const { enteredCode, enteredPin, connector } = this.state;
+    if (enteredCode && enteredPin) {
+      // Generate code and connector if not available yet.
+      // Use case: when user uses predefined URL to join.
+      if (!connector) await this.executeGenerateCode();
+
+      this.enterCode(true);
+      return;
+    }
+
+    await this.executeGenerateCode();
+    this.startListenConnection();
+  }
+
+  executeGenerateCode = async () => {
     const { code, connector } = await generateCode();
     this.setState({
       generatedCode: code,
       connector,
     });
-
-    // If user has session, use code and pin from session
-    // No need to 'listenConnection' in case of successful login
-    const { codePin } = this.state;
-    if (codePin) {
-      this.setState({
-        enteredCode: codePin.code,
-        enteredPin: codePin.pin,
-        codePin: null,
-      });
-      this.enterCode();
-      return;
-    }
-
-    this.startListenConnection(connector);
-  }
+  };
 
   onConnected = async (pin?: number) => {
     this.unsubscribeListenConnection();
@@ -83,7 +84,7 @@ class Init extends React.Component<InitProps, InitState> {
     };
 
     const { onConnected } = this.props;
-    codePinManager.setCodePin(data.code, data.pin);
+    sessionManager.setSessionValues(data.code, data.pin, connector);
     onConnected(data);
   };
 
@@ -103,7 +104,7 @@ class Init extends React.Component<InitProps, InitState> {
     return enteredPin;
   };
 
-  enterCode = async () => {
+  enterCode = async (ignoreSelfConnection = false) => {
     const { enteredCode, connector, enteredPin } = this.state;
     if (!enteredCode || enteredCode.toString().length !== 6) {
       return;
@@ -117,7 +118,7 @@ class Init extends React.Component<InitProps, InitState> {
         enteredPin ? () => Promise.resolve(enteredPin) : this.handlePinRequired
       );
     } catch (e) {
-      this.handleEnterCodeError(e, connector);
+      this.handleEnterCodeError(e);
       return;
     }
 
@@ -126,17 +127,20 @@ class Init extends React.Component<InitProps, InitState> {
       connector.connection.id ===
       (updatedConnector && updatedConnector.connection.id);
 
-    this.enterCodeSuccess(updatedConnector, isSelfConnection);
+    if (updatedConnector && (ignoreSelfConnection || !isSelfConnection)) {
+      this.setState({ connector: updatedConnector });
+      this.onConnected(enteredPin);
+    }
   };
 
-  handleEnterCodeError = (e: Error, connector: Connector) => {
+  handleEnterCodeError = (e: Error) => {
     console.error(
       'Error occured while enterCode(), session might be expired',
       e
     );
-    codePinManager.clearCodePin();
+    sessionManager.clearSessionValues();
     this.setState({ enteredCode: null, enteredPin: null });
-    this.startListenConnection(connector);
+    this.componentDidMount();
   };
 
   codeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -169,19 +173,9 @@ class Init extends React.Component<InitProps, InitState> {
     this.enterCode();
   };
 
-  enterCodeSuccess = (
-    updatedConnector: Connector,
-    isSelfConnection: boolean
-  ) => {
-    if (updatedConnector && !isSelfConnection) {
-      this.setState({ connector: updatedConnector });
-      const { enteredPin } = this.state;
-      this.onConnected(enteredPin);
-    }
-  };
-
-  startListenConnection = (connector: Connector) => {
+  startListenConnection = () => {
     this.unsubscribeListenConnection();
+    const { connector } = this.state;
     const { connection } = connector;
     this.listenConnectionSub = listenConnection(connection.id).subscribe(
       async () => {
@@ -251,7 +245,7 @@ class Init extends React.Component<InitProps, InitState> {
           <Col xl={6} md={8} sm={9} xs={10}>
             <InputBox
               changeHandler={this.codeChange}
-              clickHandler={this.enterCode}
+              clickHandler={() => this.enterCode()}
               inputPlaceholder="Enter Code"
               buttonText="JOIN"
               inputType="number"

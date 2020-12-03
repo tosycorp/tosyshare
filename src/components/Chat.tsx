@@ -2,7 +2,7 @@ import React from 'react';
 import FileSaver from 'file-saver';
 import { Row, Col, Alert, Image, Button } from 'react-bootstrap';
 import { Subscription } from 'rxjs';
-import { listenMessages } from '../utils/listen-messages';
+import { listenMessages, stopListenMessages } from '../utils/listen-messages';
 import saveMessage from '../utils/save-message';
 import InputBox, { UploadOptions } from './InputBox';
 import CopyText from './CopyText';
@@ -17,7 +17,7 @@ import {
 } from '../types';
 import env, { Env } from '../utils/env';
 import getMessagesByConnectionId from '../utils/get-messages-by-connectionId';
-import codePinManager from '../utils/code-pin-manager';
+import sessionManager from '../utils/session-manager';
 
 type ChatState = {
   message: string;
@@ -83,10 +83,12 @@ class Chat extends React.Component<ChatProps, ChatState> {
   }
 
   setPin(pin: number) {
+    sessionManager.setSessionPinValue(pin);
     this.setState({ pin });
   }
 
   unsubscribeListenMessage = () => {
+    stopListenMessages();
     if (this.listenMessageSub && !this.listenMessageSub.closed) {
       this.listenMessageSub.unsubscribe();
     }
@@ -148,7 +150,7 @@ class Chat extends React.Component<ChatProps, ChatState> {
         ref={ref}
         key={`alert_${index}`}
         style={{ overflowWrap: 'break-word' }}
-        variant={generateColor(m.connector.id)}
+        variant={generateColor(m.messageConnectorId)}
       >
         {val || m.value}
       </Alert>
@@ -202,7 +204,7 @@ class Chat extends React.Component<ChatProps, ChatState> {
               variant="danger"
               className="float-right btn-sm"
               onClick={() => {
-                codePinManager.clearCodePin();
+                sessionManager.clearSessionValues();
                 onOut();
               }}
             >
@@ -217,7 +219,7 @@ class Chat extends React.Component<ChatProps, ChatState> {
               <Row
                 key={`row_${index}`}
                 className={
-                  connectorId === m.connector.id
+                  connectorId === m.messageConnectorId
                     ? 'justify-content-end'
                     : 'justify-content-start'
                 }

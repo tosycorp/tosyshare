@@ -13,17 +13,6 @@ export const onMessageByConnectionId = /* GraphQL */ `
         expDate
         code
         hasPin
-        connectors {
-          items {
-            id
-            expDate
-            identityId
-            connectorConnectionId
-            createdAt
-            updatedAt
-          }
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -31,22 +20,12 @@ export const onMessageByConnectionId = /* GraphQL */ `
         id
         expDate
         identityId
-        connection {
-          id
-          expDate
-          code
-          hasPin
-          connectors {
-            nextToken
-          }
-          createdAt
-          updatedAt
-        }
         connectorConnectionId
         createdAt
         updatedAt
       }
       messageConnectionId
+      messageConnectorId
       createdAt
       updatedAt
     }
@@ -63,17 +42,6 @@ export const onConnectorByConnectionId = /* GraphQL */ `
         expDate
         code
         hasPin
-        connectors {
-          items {
-            id
-            expDate
-            identityId
-            connectorConnectionId
-            createdAt
-            updatedAt
-          }
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -91,22 +59,6 @@ export const onCreateConnection = /* GraphQL */ `
       code
       hasPin
       connectors {
-        items {
-          id
-          expDate
-          identityId
-          connection {
-            id
-            expDate
-            code
-            hasPin
-            createdAt
-            updatedAt
-          }
-          connectorConnectionId
-          createdAt
-          updatedAt
-        }
         nextToken
       }
       createdAt
@@ -122,22 +74,6 @@ export const onUpdateConnection = /* GraphQL */ `
       code
       hasPin
       connectors {
-        items {
-          id
-          expDate
-          identityId
-          connection {
-            id
-            expDate
-            code
-            hasPin
-            createdAt
-            updatedAt
-          }
-          connectorConnectionId
-          createdAt
-          updatedAt
-        }
         nextToken
       }
       createdAt
@@ -153,22 +89,6 @@ export const onDeleteConnection = /* GraphQL */ `
       code
       hasPin
       connectors {
-        items {
-          id
-          expDate
-          identityId
-          connection {
-            id
-            expDate
-            code
-            hasPin
-            createdAt
-            updatedAt
-          }
-          connectorConnectionId
-          createdAt
-          updatedAt
-        }
         nextToken
       }
       createdAt
@@ -187,17 +107,6 @@ export const onCreateConnector = /* GraphQL */ `
         expDate
         code
         hasPin
-        connectors {
-          items {
-            id
-            expDate
-            identityId
-            connectorConnectionId
-            createdAt
-            updatedAt
-          }
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -218,17 +127,6 @@ export const onUpdateConnector = /* GraphQL */ `
         expDate
         code
         hasPin
-        connectors {
-          items {
-            id
-            expDate
-            identityId
-            connectorConnectionId
-            createdAt
-            updatedAt
-          }
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -249,17 +147,6 @@ export const onDeleteConnector = /* GraphQL */ `
         expDate
         code
         hasPin
-        connectors {
-          items {
-            id
-            expDate
-            identityId
-            connectorConnectionId
-            createdAt
-            updatedAt
-          }
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -317,17 +204,6 @@ export const onCreateMessage = /* GraphQL */ `
         expDate
         code
         hasPin
-        connectors {
-          items {
-            id
-            expDate
-            identityId
-            connectorConnectionId
-            createdAt
-            updatedAt
-          }
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -335,22 +211,12 @@ export const onCreateMessage = /* GraphQL */ `
         id
         expDate
         identityId
-        connection {
-          id
-          expDate
-          code
-          hasPin
-          connectors {
-            nextToken
-          }
-          createdAt
-          updatedAt
-        }
         connectorConnectionId
         createdAt
         updatedAt
       }
       messageConnectionId
+      messageConnectorId
       createdAt
       updatedAt
     }
@@ -368,17 +234,6 @@ export const onUpdateMessage = /* GraphQL */ `
         expDate
         code
         hasPin
-        connectors {
-          items {
-            id
-            expDate
-            identityId
-            connectorConnectionId
-            createdAt
-            updatedAt
-          }
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -386,22 +241,12 @@ export const onUpdateMessage = /* GraphQL */ `
         id
         expDate
         identityId
-        connection {
-          id
-          expDate
-          code
-          hasPin
-          connectors {
-            nextToken
-          }
-          createdAt
-          updatedAt
-        }
         connectorConnectionId
         createdAt
         updatedAt
       }
       messageConnectionId
+      messageConnectorId
       createdAt
       updatedAt
     }
@@ -419,17 +264,6 @@ export const onDeleteMessage = /* GraphQL */ `
         expDate
         code
         hasPin
-        connectors {
-          items {
-            id
-            expDate
-            identityId
-            connectorConnectionId
-            createdAt
-            updatedAt
-          }
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -437,22 +271,12 @@ export const onDeleteMessage = /* GraphQL */ `
         id
         expDate
         identityId
-        connection {
-          id
-          expDate
-          code
-          hasPin
-          connectors {
-            nextToken
-          }
-          createdAt
-          updatedAt
-        }
         connectorConnectionId
         createdAt
         updatedAt
       }
       messageConnectionId
+      messageConnectorId
       createdAt
       updatedAt
     }

@@ -43,6 +43,7 @@ type Message @model
   connection: Connection! @connection
   connector: Connector! @connection
   messageConnectionId: ID!
+  messageConnectorId: ID!
 }
 
 type Subscription {
