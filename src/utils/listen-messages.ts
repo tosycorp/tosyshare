@@ -59,7 +59,11 @@ export const listenMessages = (
 };
 
 export const stopListenMessages = () => {
-  subscriber.complete();
+  if (subscriber) {
+    subscriber.complete();
+  }
   // Stop receiving data updates from the subscription
-  subscription.unsubscribe();
+  if (subscription && !subscription.closed) {
+    subscription.unsubscribe();
+  }
 };

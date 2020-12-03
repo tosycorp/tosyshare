@@ -2,7 +2,7 @@ import React from 'react';
 import FileSaver from 'file-saver';
 import { Row, Col, Alert, Image, Button } from 'react-bootstrap';
 import { Subscription } from 'rxjs';
-import { listenMessages } from '../utils/listen-messages';
+import { listenMessages, stopListenMessages } from '../utils/listen-messages';
 import saveMessage from '../utils/save-message';
 import InputBox, { UploadOptions } from './InputBox';
 import CopyText from './CopyText';
@@ -88,6 +88,7 @@ class Chat extends React.Component<ChatProps, ChatState> {
   }
 
   unsubscribeListenMessage = () => {
+    stopListenMessages();
     if (this.listenMessageSub && !this.listenMessageSub.closed) {
       this.listenMessageSub.unsubscribe();
     }
