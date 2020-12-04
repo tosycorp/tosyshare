@@ -6,7 +6,7 @@ import validatePin from './validate-pin';
 
 const enterCode = async (
   code: number,
-  connector: Connector,
+  connectorId: string,
   onPinRequired: () => Promise<number>
 ): Promise<Connector> => {
   const connection = await getConnectionByCode(code);
@@ -32,7 +32,7 @@ const enterCode = async (
 
   return (
     await updateConnectorWrapper({
-      id: connector.id,
+      id: connectorId,
       connectorConnectionId: connection.id,
     })
   ).data.updateConnector;

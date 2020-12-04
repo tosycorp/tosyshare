@@ -64,5 +64,5 @@ export enum EnterCodeErrors {
 export interface SessionValues {
   code: number;
   pin: number;
-  connector: Connector;
+  connectorId: string;
 }

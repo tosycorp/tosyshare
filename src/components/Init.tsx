@@ -34,7 +34,8 @@ class Init extends React.Component<InitProps, InitState> {
 
   constructor(props: InitProps) {
     super(props);
-    const { code, pin, connector } = sessionManager.getSessionValues() || {};
+    const { code, pin, connectorId } = sessionManager.getSessionValues() || {};
+    const connector = connectorId && this.generateConnectorById(connectorId);
 
     this.state = {
       connector: connector || null,
@@ -84,7 +85,7 @@ class Init extends React.Component<InitProps, InitState> {
     };
 
     const { onConnected } = this.props;
-    sessionManager.setSessionValues(data.code, data.pin, connector);
+    sessionManager.setSessionValues(data.code, data.pin, connectorId);
     onConnected(data);
   };
 
@@ -114,7 +115,7 @@ class Init extends React.Component<InitProps, InitState> {
     try {
       updatedConnector = await enterCode(
         enteredCode,
-        connector,
+        connector.id,
         enteredPin ? () => Promise.resolve(enteredPin) : this.handlePinRequired
       );
     } catch (e) {
@@ -124,7 +125,7 @@ class Init extends React.Component<InitProps, InitState> {
 
     // Let listenConnection complete the connection when user enter own code.
     const isSelfConnection =
-      connector.connection.id ===
+      (connector.connection && connector.connection.id) ===
       (updatedConnector && updatedConnector.connection.id);
 
     if (updatedConnector && (ignoreSelfConnection || !isSelfConnection)) {
@@ -157,6 +158,14 @@ class Init extends React.Component<InitProps, InitState> {
     this.setState({ showPinModal: false, enteredPin: pin });
     window.dispatchEvent(this.onPinEnteredEvent);
   };
+
+  generateConnectorById = (id: string): Connector => ({
+    id,
+    identityId: null,
+    createdAt: null,
+    updatedAt: null,
+    expDate: null,
+  });
 
   unsubscribeListenConnection = () => {
     if (this.listenConnectionSub && !this.listenConnectionSub.closed) {
