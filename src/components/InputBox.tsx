@@ -73,7 +73,7 @@ class InputBox extends React.Component<InputBoxProps, InputBoxState> {
         {uploadProgress && (
           <ProgressBar variant="warning" now={uploadProgress} />
         )}
-        <InputGroup className="mb-1">
+        <InputGroup className="mb-2">
           <FormControl
             as="textarea"
             ref={this.input}

@@ -6,9 +6,6 @@ type QRReaderProps = {
 };
 class QRReader extends React.Component<QRReaderProps, {}> {
   handleScan = (data: string) => {
-    // eslint-disable-next-line no-console
-    console.log(data);
-
     const { onRead } = this.props;
     if (data) {
       const dataAsNumber = parseInt(data, 10);
@@ -19,8 +16,7 @@ class QRReader extends React.Component<QRReaderProps, {}> {
   };
 
   handleError = (err: string) => {
-    // eslint-disable-next-line no-console
-    console.log(err);
+    console.error('Error while scanning QR code', err);
   };
 
   render() {
