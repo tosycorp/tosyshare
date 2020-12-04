@@ -22,6 +22,7 @@ class QRReader extends React.Component<QRReaderProps, {}> {
   render() {
     return (
       <QrReader
+        showViewFinder={false}
         style={{ display: 'flex', justifyContent: 'center', width: '100%' }}
         className="justify-content-center"
         delay={300}
