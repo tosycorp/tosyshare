@@ -17,6 +17,7 @@ type InputBoxProps = {
   buttonDisabled?: boolean;
   inputPlaceholder?: string;
   uploadOptions?: UploadOptions;
+  stopAutoFocus?: boolean;
 };
 
 type InputBoxState = {
@@ -34,7 +35,10 @@ class InputBox extends React.Component<InputBoxProps, InputBoxState> {
   }
 
   componentDidUpdate() {
-    this.input.current.focus();
+    const { stopAutoFocus } = this.props;
+    if (!stopAutoFocus) {
+      this.input.current.focus();
+    }
     this.input.current.style.height = '0';
     this.input.current.style.height = `${
       this.input.current.scrollHeight + 2

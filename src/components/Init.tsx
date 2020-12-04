@@ -251,6 +251,7 @@ class Init extends React.Component<InitProps, InitState> {
               inputType="number"
               buttonDisabled={buttonDisabled}
               inputValue={enteredCode && enteredCode.toString()}
+              stopAutoFocus={readQR}
             />
           </Col>
         </Row>
