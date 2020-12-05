@@ -204,66 +204,99 @@ class Init extends React.Component<InitProps, InitState> {
     } = this.state;
     return (
       <>
-        {!readQR && (
+        {readQR && (
           <>
-            <Row className="justify-content-center">
-              <Col className="text-center align-self-center" md={8}>
-                <QR text={generatedCode ? generatedCode.toString() : null} />
+            <Row className="justify-content-center mt-3">
+              <Col xl={6} md={8} sm={9} xs={10}>
+                <QRReader onRead={this.onQRRead} />
               </Col>
             </Row>
-            <Row className="justify-content-center">
-              <Col className="text-center align-self-center">or use</Col>
-            </Row>
-            <Row className="justify-content-center">
-              <Col className="text-center align-self-center">
-                {generatedCode ? (
-                  <h3>
-                    <CopyText text={generatedCode.toString()} />
-                  </h3>
-                ) : (
-                  <Spinner animation="border" />
-                )}
+            <Row className="justify-content-center mt-3">
+              <Col xl={6} md={8} sm={9} xs={10}>
+                <Button
+                  variant="danger"
+                  className="btn-block"
+                  size="lg"
+                  onClick={() => this.setState({ readQR: false })}
+                >
+                  Back
+                </Button>
               </Col>
             </Row>
           </>
         )}
-        <Row className="justify-content-center mt-3">
-          <Col
-            className="justify-content-center text-center align-self-center"
-            style={{ display: 'flex' }}
-            xl={6}
-            md={8}
-            sm={9}
-            xs={10}
-          >
-            {readQR ? (
-              <QRReader onRead={this.onQRRead} />
-            ) : (
-              <Button
-                className="btn-block"
-                variant="warning"
-                size="lg"
-                onClick={this.onQRCodeReadClick}
-              >
-                Scan QR Code
-              </Button>
-            )}
-          </Col>
-        </Row>
-        <Row className="justify-content-center mt-2">
-          <Col xl={6} md={8} sm={9} xs={10}>
-            <InputBox
-              changeHandler={this.codeChange}
-              clickHandler={() => this.enterCode()}
-              inputPlaceholder="Enter Code"
-              buttonText="JOIN"
-              inputType="number"
-              buttonDisabled={buttonDisabled}
-              inputValue={enteredCode && enteredCode.toString()}
-              stopAutoFocus={readQR}
-            />
-          </Col>
-        </Row>
+        {!readQR && (
+          <>
+            <Row className="flex-column sketchy init-row">
+              <Row className="justify-content-start ml-1">
+                <b>To create connection,</b>
+              </Row>
+              <Row className="justify-content-center flex-column flex-grow-1">
+                <Row className="justify-content-center">
+                  <Col className="text-center align-self-center" md={8}>
+                    <QR
+                      text={generatedCode ? generatedCode.toString() : null}
+                    />
+                  </Col>
+                </Row>
+                <Row className="justify-content-center">
+                  <Col className="text-center align-self-center">or use</Col>
+                </Row>
+                <Row className="justify-content-center">
+                  <Col className="text-center align-self-center">
+                    {generatedCode ? (
+                      <h3>
+                        <CopyText text={generatedCode.toString()} />
+                      </h3>
+                    ) : (
+                      <Spinner animation="border" />
+                    )}
+                  </Col>
+                </Row>
+              </Row>
+            </Row>
+            <Row className="justify-content-center flex-column sketchy init-row">
+              <Row className="justify-content-start ml-1">
+                <b>To connect,</b>
+              </Row>
+              <Row className="justify-content-center flex-column flex-grow-1">
+                <Row className="justify-content-center mt-3">
+                  <Col
+                    className="justify-content-center text-center align-self-center"
+                    style={{ display: 'flex' }}
+                    xl={6}
+                    md={8}
+                    sm={9}
+                    xs={10}
+                  >
+                    <Button
+                      className="btn-block"
+                      variant="warning"
+                      size="lg"
+                      onClick={this.onQRCodeReadClick}
+                    >
+                      Scan QR Code
+                    </Button>
+                  </Col>
+                </Row>
+                <Row className="justify-content-center mt-2">
+                  <Col xl={6} md={8} sm={9} xs={10}>
+                    <InputBox
+                      changeHandler={this.codeChange}
+                      clickHandler={() => this.enterCode()}
+                      inputPlaceholder="Enter Code"
+                      buttonText="JOIN"
+                      inputType="number"
+                      buttonDisabled={buttonDisabled}
+                      inputValue={enteredCode && enteredCode.toString()}
+                      stopAutoFocus={readQR}
+                    />
+                  </Col>
+                </Row>
+              </Row>
+            </Row>
+          </>
+        )}
         <Pin
           show={showPinModal}
           enterPin={this.enterPin}

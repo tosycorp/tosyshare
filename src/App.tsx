@@ -7,7 +7,7 @@ const Layout = React.lazy(() => import('./components/Layout'));
 
 const App = () => {
   return (
-    <Container>
+    <Container className="p-2">
       <Row className="justify-content-center mt-1 mb-1">
         <Col className="text-center align-self-center" md={8}>
           <div>

@@ -17,13 +17,22 @@ class QR extends React.Component<QRProps, QRState> {
     this.state = { dataURL: null };
   }
 
-  async componentDidUpdate(previousProps: QRProps) {
-    const { text } = this.props;
-    if (text && previousProps.text !== text) {
-      // eslint-disable-next-line react/no-did-update-set-state
-      this.setState({ dataURL: await generateQR(text) });
-    }
+  componentDidMount() {
+    this.setData();
   }
+
+  componentDidUpdate(previousProps: QRProps) {
+    this.setData(previousProps);
+  }
+
+  setData = async (previousProps?: QRProps) => {
+    const { text } = this.props;
+    if (!text || (previousProps && previousProps.text === text)) {
+      return;
+    }
+    // eslint-disable-next-line react/no-did-update-set-state
+    this.setState({ dataURL: await generateQR(text) });
+  };
 
   render() {
     const { dataURL } = this.state;
