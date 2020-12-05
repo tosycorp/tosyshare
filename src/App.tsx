@@ -13,7 +13,8 @@ const App = () => {
           <div>
             <img
               style={{
-                marginBottom: '-12px',
+                marginBottom: '-20px',
+                marginTop: '-10px',
               }}
               src="/tosy-corp.png"
               height="60"

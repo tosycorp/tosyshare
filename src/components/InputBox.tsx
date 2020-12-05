@@ -1,5 +1,6 @@
 import React from 'react';
 import { FormControl, InputGroup, Button, ProgressBar } from 'react-bootstrap';
+import { BsPlug } from 'react-icons/bs';
 import Upload from './Upload';
 import { Connected } from '../types';
 
@@ -11,13 +12,14 @@ export type UploadOptions = {
 type InputBoxProps = {
   changeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void;
   clickHandler: () => void;
-  buttonText: string;
+  buttonText?: string;
   inputValue?: string;
   inputType?: string;
   buttonDisabled?: boolean;
   inputPlaceholder?: string;
   uploadOptions?: UploadOptions;
   stopAutoFocus?: boolean;
+  showPlugIcon?: boolean;
 };
 
 type InputBoxState = {
@@ -71,6 +73,7 @@ class InputBox extends React.Component<InputBoxProps, InputBoxState> {
       inputPlaceholder,
       buttonDisabled,
       uploadOptions,
+      showPlugIcon,
     } = this.props;
     return (
       <>
@@ -109,7 +112,11 @@ class InputBox extends React.Component<InputBoxProps, InputBoxState> {
               onClick={clickHandler}
               disabled={buttonDisabled}
             >
-              {buttonText}
+              {showPlugIcon ? (
+                <BsPlug style={{ width: '30px', height: '30px' }} />
+              ) : (
+                buttonText
+              )}
             </Button>
           </InputGroup.Append>
         </InputGroup>

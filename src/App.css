@@ -115,6 +115,24 @@ input[type='number'] {
   background: #ee4037;
 }
 
+.divider
+{
+	position: relative;
+	height: 1px;
+}
+
+.divider:before
+{
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 5%;
+	right: 5%;
+	width: 90%;
+	height: 1px;
+	background-image: linear-gradient(to right, transparent, rgb(48,49,51), transparent);
+}
+
 .sketchy {
   border: 3px solid #333333;
   border-radius: 2% 6% 5% 4% / 1% 1% 2% 4%;
@@ -137,4 +155,14 @@ input[type='number'] {
 .init-row {
   flex: 1;
   margin: 3px -5px 3px -5px;
+  font-size: 0.8rem;
 }
+
+.init-row button {
+  font-size: 1rem;
+}
+
+.init-header-text-row {
+  font-size: 1rem;
+}
+

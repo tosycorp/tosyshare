@@ -1,6 +1,7 @@
 import React from 'react';
 import { Subscription } from 'rxjs';
 import { Row, Col, Button, Spinner } from 'react-bootstrap';
+import { BsCameraVideoFill } from 'react-icons/bs';
 import generateCode from '../utils/generate-code';
 import enterCode from '../utils/enter-code';
 import listenConnection from '../utils/listen-connection';
@@ -228,10 +229,16 @@ class Init extends React.Component<InitProps, InitState> {
         {!readQR && (
           <>
             <Row className="flex-column sketchy init-row">
-              <Row className="justify-content-start ml-1">
-                <b>To create connection,</b>
+              <Row className="justify-content-start ml-1 init-header-text-row">
+                <b>Want to be host,</b>
               </Row>
               <Row className="justify-content-center flex-column flex-grow-1">
+                <Row className="justify-content-center">
+                  <Col className="text-center align-self-center w-75" md={8}>
+                    <b>Option 1:</b> Scan QR Code below from connector&apos;s
+                    device,
+                  </Col>
+                </Row>
                 <Row className="justify-content-center">
                   <Col className="text-center align-self-center" md={8}>
                     <QR
@@ -239,15 +246,31 @@ class Init extends React.Component<InitProps, InitState> {
                     />
                   </Col>
                 </Row>
+                <Row
+                  className="justify-content-center"
+                  style={{ marginTop: '-10px' }}
+                >
+                  <Col className="text-center align-self-center w-75" md={8}>
+                    <i>if required, click to enlarge QR Code</i>
+                  </Col>
+                </Row>
                 <Row className="justify-content-center">
-                  <Col className="text-center align-self-center">or use</Col>
+                  <Col className="text-center align-self-center w-75" md={8}>
+                    <div className="divider" />
+                  </Col>
+                </Row>
+                <Row className="justify-content-center">
+                  <Col className="text-center align-self-center w-75" md={8}>
+                    <b>Option 2:</b> Share 6-digit code below with connector by
+                    yourself,
+                  </Col>
                 </Row>
                 <Row className="justify-content-center">
                   <Col className="text-center align-self-center">
                     {generatedCode ? (
-                      <h3>
+                      <h4>
                         <CopyText text={generatedCode.toString()} />
-                      </h3>
+                      </h4>
                     ) : (
                       <Spinner animation="border" />
                     )}
@@ -256,36 +279,48 @@ class Init extends React.Component<InitProps, InitState> {
               </Row>
             </Row>
             <Row className="justify-content-center flex-column sketchy init-row">
-              <Row className="justify-content-start ml-1">
-                <b>To connect,</b>
+              <Row className="justify-content-start ml-1 init-header-text-row">
+                <b>Connect to host,</b>
               </Row>
               <Row className="justify-content-center flex-column flex-grow-1">
-                <Row className="justify-content-center mt-3">
-                  <Col
-                    className="justify-content-center text-center align-self-center"
-                    style={{ display: 'flex' }}
-                    xl={6}
-                    md={8}
-                    sm={9}
-                    xs={10}
-                  >
+                <Row className="justify-content-center">
+                  <Col className="text-center align-self-center w-75" md={8}>
+                    <b>Option 1:</b> Use your camera and scan the QR code,
+                  </Col>
+                </Row>
+                <Row className="justify-content-center">
+                  <Col xl={5} md={5} sm={5} xs={5}>
                     <Button
                       className="btn-block"
                       variant="warning"
                       size="lg"
                       onClick={this.onQRCodeReadClick}
                     >
-                      Scan QR Code
+                      <BsCameraVideoFill
+                        style={{ width: '30px', height: '30px' }}
+                      />
                     </Button>
                   </Col>
                 </Row>
-                <Row className="justify-content-center mt-2">
-                  <Col xl={6} md={8} sm={9} xs={10}>
+                <Row className="justify-content-center">
+                  <Col className="text-center align-self-center w-75" md={8}>
+                    <div
+                      className="divider div-transparent"
+                      style={{ marginTop: '10px' }}
+                    />
+                  </Col>
+                </Row>
+                <Row className="justify-content-center">
+                  <Col className="text-center align-self-center w-75" md={8}>
+                    <b>Option 2:</b> Enter the code manually by yourself,
+                  </Col>
+                </Row>
+                <Row className="justify-content-center">
+                  <Col xl={7} md={7} sm={7} xs={7}>
                     <InputBox
                       changeHandler={this.codeChange}
                       clickHandler={() => this.enterCode()}
-                      inputPlaceholder="Enter Code"
-                      buttonText="JOIN"
+                      showPlugIcon
                       inputType="number"
                       buttonDisabled={buttonDisabled}
                       inputValue={enteredCode && enteredCode.toString()}
