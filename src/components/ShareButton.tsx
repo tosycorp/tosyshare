@@ -7,6 +7,7 @@ type ShareButtonProps = {
   className?: string;
   code: number;
   pin?: number;
+  showCodeOnButton?: boolean;
 };
 type ShareButtonState = {
   showCopiedText: boolean;
@@ -33,7 +34,7 @@ class ShareButton extends React.Component<ShareButtonProps, ShareButtonState> {
 
   render() {
     const { showCopiedText } = this.state;
-    const { className } = this.props;
+    const { className, code, showCodeOnButton } = this.props;
     return (
       <>
         <Modal
@@ -49,6 +50,8 @@ class ShareButton extends React.Component<ShareButtonProps, ShareButtonState> {
           variant="warning"
           onClick={this.onClick}
         >
+          {showCodeOnButton ? <b>{code}</b> : null}
+          &nbsp;
           <BsReplyFill style={{ width: '30px', height: '30px' }} />
         </Button>
       </>

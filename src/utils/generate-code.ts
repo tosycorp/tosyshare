@@ -1,8 +1,8 @@
-import { Auth } from 'aws-amplify';
-import { createConnection, createConnector } from '../graphql/mutations';
+import { createConnection } from '../graphql/mutations';
 import getConnectionByCode from './get-connection-by-code';
 import { Connection, Connector } from '../types';
 import gqlOperationCreate from './gql-api.create';
+import saveConnector from './save-connector';
 
 const addConnectionWrapper = async (input: {
   code: number;
@@ -23,30 +23,6 @@ const addConnection = async (code: number): Promise<Connection> => {
   }
 };
 
-const addConnectorWrapper = async (input: {
-  connectorConnectionId: string;
-  identityId: string;
-}) => {
-  return (await gqlOperationCreate(createConnector, input)) as {
-    data: { createConnector: Connector };
-  };
-};
-
-const addConnector = async (connectionId: string): Promise<Connector> => {
-  try {
-    const { identityId } = await Auth.currentCredentials();
-
-    const connector = await addConnectorWrapper({
-      connectorConnectionId: connectionId,
-      identityId,
-    });
-    return connector.data.createConnector;
-  } catch (err) {
-    console.error('error creating addConnector:', err);
-    return err;
-  }
-};
-
 const generateCode = async (): Promise<{
   code: number;
   connector: Connector;
@@ -60,7 +36,7 @@ const generateCode = async (): Promise<{
   }
 
   connection = await addConnection(code);
-  const connector = await addConnector(connection.id);
+  const connector = await saveConnector(connection.id);
 
   return { code, connector };
 };

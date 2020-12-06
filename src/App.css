@@ -129,7 +129,7 @@ input[type='number'] {
 	left: 5%;
 	right: 5%;
 	width: 90%;
-	height: 1px;
+	height: 2px;
 	background-image: linear-gradient(to right, transparent, rgb(48,49,51), transparent);
 }
 
@@ -177,6 +177,17 @@ input[type='number'] {
 
 .init-header-text-row {
   font-size: 1rem;
+}
+
+.init-share-code-button {
+  margin-bottom: 1px;
+  padding: 0;
+  line-height: 1;
+}
+
+.init-camera-button {
+  padding: .3rem 1rem;
+  line-height: 1;
 }
 
 .qr-modal-backdrop{

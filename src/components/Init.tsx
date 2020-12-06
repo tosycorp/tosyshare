@@ -8,12 +8,13 @@ import listenConnection from '../utils/listen-connection';
 import InputBox from './InputBox';
 import QR from './QR';
 import QRReader from './QRReader';
-import CopyText from './CopyText';
 import { Connector, Connected } from '../types';
 import listenConnectionDone from '../utils/listen-connection-done';
 import Pin from './Pin';
 import sessionManager from '../utils/session-manager';
 import ShareButton from './ShareButton';
+import getConnectionByCode from '../utils/get-connection-by-code';
+import saveConnector from '../utils/save-connector';
 
 type InitState = {
   generatedCode: number;
@@ -36,34 +37,25 @@ class Init extends React.Component<InitProps, InitState> {
 
   constructor(props: InitProps) {
     super(props);
-    const { code, pin, connectorId } = sessionManager.getSessionValues() || {};
-    const connector = connectorId && this.generateConnectorById(connectorId);
-
-    const { search } = window.location;
-    const params = new URLSearchParams(search);
-    const urlCode = parseInt(params.get('code'), 10) || null;
-    const urlPin = parseInt(params.get('pin'), 10) || null;
-
-    this.state = {
-      connector: connector || null,
-      enteredCode: code || urlCode,
-      generatedCode: null,
-      readQR: false,
-      buttonDisabled: true,
-      showPinModal: false,
-      enteredPin: pin || urlPin,
-    };
+    this.state = this.prepareInitState();
   }
 
   async componentDidMount() {
-    // Bypass code generation and connection listening if code already defined.
-    const { enteredCode, enteredPin, connector } = this.state;
+    // Bypass code generation if code already defined.
+    const { enteredCode, connector } = this.state;
     if (enteredCode) {
-      // Generate code and connector if not available yet.
-      // Use case: when user uses predefined URL to join.
-      if (!connector) await this.executeGenerateCode();
+      // Validate if there is valid connection for entered code.
+      const connection = await getConnectionByCode(enteredCode);
+      if (!connection) {
+        console.error(`No connection found for code: ${enterCode}`);
+        return;
+      }
 
-      if (!enteredPin) this.startListenConnection();
+      // Create new connector if not defined.
+      // Use case: when user uses predefined URL to join.
+      if (!connector) {
+        this.setState({ connector: await saveConnector(connection.id) });
+      }
 
       this.enterCode(true);
       return;
@@ -72,6 +64,32 @@ class Init extends React.Component<InitProps, InitState> {
     await this.executeGenerateCode();
     this.startListenConnection();
   }
+
+  prepareInitState = (): InitState => {
+    // Check if code and pin are on url.
+    const { search } = window.location;
+    const params = new URLSearchParams(search);
+    const urlCode = parseInt(params.get('code'), 10);
+    const urlPin = parseInt(params.get('pin'), 10);
+    // If data is received, clean up the url.
+    if (urlCode || urlPin) {
+      window.history.replaceState(null, null, window.location.pathname);
+    }
+
+    // Check if user have active session.
+    const { code, pin, connectorId } = sessionManager.getSessionValues() || {};
+    const connector = connectorId && this.generateConnectorById(connectorId);
+
+    return {
+      connector: connector || null,
+      enteredCode: urlCode || code || null,
+      generatedCode: null,
+      readQR: false,
+      buttonDisabled: true,
+      showPinModal: false,
+      enteredPin: urlPin || pin || null,
+    };
+  };
 
   executeGenerateCode = async () => {
     const { code, connector } = await generateCode();
@@ -272,27 +290,6 @@ class Init extends React.Component<InitProps, InitState> {
                   </Col>
                 </Row>
                 <Row className="justify-content-center">
-                  <Col className="text-center align-self-center">
-                    {generatedCode ? (
-                      <h4>
-                        <CopyText text={generatedCode.toString()} />
-                      </h4>
-                    ) : (
-                      <Spinner animation="border" />
-                    )}
-                  </Col>
-                </Row>
-                <Row className="justify-content-center">
-                  <Col className="text-center align-self-center w-75" md={8}>
-                    <div className="divider" />
-                  </Col>
-                </Row>
-                <Row className="justify-content-center">
-                  <Col className="text-center align-self-center w-75" md={8}>
-                    <b>Option 3:</b> Share link with participants
-                  </Col>
-                </Row>
-                <Row className="justify-content-center">
                   <Col
                     className="text-center align-self-center w-75"
                     xl={5}
@@ -302,8 +299,9 @@ class Init extends React.Component<InitProps, InitState> {
                   >
                     {generatedCode ? (
                       <ShareButton
-                        className="btn-block btn-lg"
+                        className="btn-block init-share-code-button"
                         code={generatedCode}
+                        showCodeOnButton
                       />
                     ) : (
                       <Spinner animation="border" />
@@ -325,7 +323,7 @@ class Init extends React.Component<InitProps, InitState> {
                 <Row className="justify-content-center">
                   <Col xl={5} md={5} sm={5} xs={5}>
                     <Button
-                      className="btn-block"
+                      className="btn-block init-camera-button"
                       variant="warning"
                       size="lg"
                       onClick={this.onQRCodeReadClick}
@@ -336,12 +334,12 @@ class Init extends React.Component<InitProps, InitState> {
                     </Button>
                   </Col>
                 </Row>
-                <Row className="justify-content-center">
+                <Row
+                  className="justify-content-center"
+                  style={{ marginBottom: '-5px', marginTop: '5px' }}
+                >
                   <Col className="text-center align-self-center w-75" md={8}>
-                    <div
-                      className="divider div-transparent"
-                      style={{ marginTop: '5px' }}
-                    />
+                    <div className="divider" />
                   </Col>
                 </Row>
                 <Row className="justify-content-center">
