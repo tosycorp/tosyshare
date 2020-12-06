@@ -1,3 +1,7 @@
+export interface Navigator {
+  share?: (options: any) => Promise<void>;
+}
+
 interface DynamoDbTable {
   id: string;
   createdAt: string;
