@@ -5,7 +5,6 @@ import { BsCameraVideoFill } from 'react-icons/bs';
 import generateCode from '../utils/generate-code';
 import enterCode from '../utils/enter-code';
 import listenConnection from '../utils/listen-connection';
-import InputBox from './InputBox';
 import QR from './QR';
 import QRReader from './QRReader';
 import { Connector, Connected } from '../types';
@@ -15,6 +14,7 @@ import sessionManager from '../utils/session-manager';
 import ShareButton from './ShareButton';
 import getConnectionByCode from '../utils/get-connection-by-code';
 import saveConnector from '../utils/save-connector';
+import EnterDigits from './EnterDigits';
 
 type InitState = {
   generatedCode: number;
@@ -44,16 +44,18 @@ class Init extends React.Component<InitProps, InitState> {
     // Bypass code generation if code already defined.
     const { enteredCode, connector } = this.state;
     if (enteredCode) {
-      // Validate if there is valid connection for entered code.
-      const connection = await getConnectionByCode(enteredCode);
-      if (!connection) {
-        console.error(`No connection found for code: ${enterCode}`);
-        return;
-      }
-
       // Create new connector if not defined.
       // Use case: when user uses predefined URL to join.
       if (!connector) {
+        // Validate if there is valid connection for entered code.
+        const connection = await getConnectionByCode(enteredCode);
+        if (!connection) {
+          this.handleError(
+            new Error(`No connection found for code: ${enterCode}`)
+          );
+          return;
+        }
+
         this.setState({ connector: await saveConnector(connection.id) });
       }
 
@@ -146,7 +148,10 @@ class Init extends React.Component<InitProps, InitState> {
         enteredPin ? () => Promise.resolve(enteredPin) : this.handlePinRequired
       );
     } catch (e) {
-      this.handleEnterCodeError(e);
+      this.handleError(
+        e,
+        'Error occured while enterCode(), session might be expired'
+      );
       return;
     }
 
@@ -161,11 +166,8 @@ class Init extends React.Component<InitProps, InitState> {
     }
   };
 
-  handleEnterCodeError = (e: Error) => {
-    console.error(
-      'Error occured while enterCode(), session might be expired',
-      e
-    );
+  handleError = (error?: Error, log?: string) => {
+    console.error(error, log);
     sessionManager.clearSessionValues();
     this.setState({ enteredCode: null, enteredPin: null });
     this.componentDidMount();
@@ -317,7 +319,7 @@ class Init extends React.Component<InitProps, InitState> {
               <Row className="justify-content-center flex-column flex-grow-1">
                 <Row className="justify-content-center">
                   <Col className="text-center align-self-center w-75" md={8}>
-                    <b>Option 1:</b> Use camera and scan &apos;QR Code&apos;
+                    <b>Option 1:</b> Use camera to scan &apos;QR Code&apos;
                   </Col>
                 </Row>
                 <Row className="justify-content-center">
@@ -349,11 +351,9 @@ class Init extends React.Component<InitProps, InitState> {
                 </Row>
                 <Row className="justify-content-center">
                   <Col xl={7} md={7} sm={7} xs={7}>
-                    <InputBox
+                    <EnterDigits
                       changeHandler={this.codeChange}
                       clickHandler={() => this.enterCode()}
-                      showPlugIcon
-                      inputType="number"
                       buttonDisabled={buttonDisabled}
                       inputValue={enteredCode && enteredCode.toString()}
                       stopAutoFocus={readQR}

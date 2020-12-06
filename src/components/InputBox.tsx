@@ -1,6 +1,5 @@
 import React from 'react';
 import { FormControl, InputGroup, Button, ProgressBar } from 'react-bootstrap';
-import { BsPlug } from 'react-icons/bs';
 import Upload from './Upload';
 import { Connected } from '../types';
 
@@ -18,8 +17,6 @@ type InputBoxProps = {
   buttonDisabled?: boolean;
   inputPlaceholder?: string;
   uploadOptions?: UploadOptions;
-  stopAutoFocus?: boolean;
-  showPlugIcon?: boolean;
 };
 
 type InputBoxState = {
@@ -37,10 +34,7 @@ class InputBox extends React.Component<InputBoxProps, InputBoxState> {
   }
 
   componentDidUpdate() {
-    const { stopAutoFocus } = this.props;
-    if (!stopAutoFocus) {
-      this.input.current.focus();
-    }
+    this.input.current.focus();
     this.input.current.style.height = '0';
     this.input.current.style.height = `${
       this.input.current.scrollHeight + 2
@@ -73,7 +67,6 @@ class InputBox extends React.Component<InputBoxProps, InputBoxState> {
       inputPlaceholder,
       buttonDisabled,
       uploadOptions,
-      showPlugIcon,
     } = this.props;
     return (
       <>
@@ -112,11 +105,7 @@ class InputBox extends React.Component<InputBoxProps, InputBoxState> {
               onClick={clickHandler}
               disabled={buttonDisabled}
             >
-              {showPlugIcon ? (
-                <BsPlug style={{ width: '30px', height: '30px' }} />
-              ) : (
-                buttonText
-              )}
+              {buttonText}
             </Button>
           </InputGroup.Append>
         </InputGroup>
