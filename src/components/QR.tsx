@@ -56,7 +56,6 @@ class QR extends React.Component<QRProps, QRState> {
         )}
         <Modal
           show={showModal}
-          animation={false}
           onHide={() => this.setState({ showModal: false })}
           aria-labelledby="contained-modal-title-vcenter"
           backdropClassName="qr-modal-backdrop"
@@ -67,7 +66,10 @@ class QR extends React.Component<QRProps, QRState> {
               <Image alt="QR Code" src={largeDataURL || defaultImageSrc} />
             </div>
             <div className="text-center align-self-center">
-              <i>click to hide</i>
+              <b>Let participant scan QR code above</b>
+            </div>
+            <div className="text-center align-self-center">
+              <i>click anywhere to hide</i>
             </div>
           </Modal.Body>
         </Modal>
