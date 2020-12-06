@@ -66,7 +66,7 @@ class QR extends React.Component<QRProps, QRState> {
               <Image alt="QR Code" src={largeDataURL || defaultImageSrc} />
             </div>
             <div className="text-center align-self-center">
-              <b>Let participant scan QR code above</b>
+              <b>Let participant scan &apos;QR Code&apos; above</b>
             </div>
             <div className="text-center align-self-center">
               <i>click anywhere to hide</i>
