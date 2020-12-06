@@ -18,6 +18,7 @@ import {
 import env, { Env } from '../utils/env';
 import getMessagesByConnectionId from '../utils/get-messages-by-connectionId';
 import sessionManager from '../utils/session-manager';
+import ShareButton from './ShareButton';
 
 type ChatState = {
   message: string;
@@ -185,12 +186,12 @@ class Chat extends React.Component<ChatProps, ChatState> {
     return (
       <>
         <Alert
-          style={{ height: '33px', lineHeight: '31px', padding: '0px 10px' }}
+          style={{ height: '34px', lineHeight: '31px', padding: '0px 10px' }}
           className="text-center"
           variant="dark"
         >
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <div>
+            <div style={{ flex: 1 }}>
               <div
                 style={{ display: 'table', height: '100%', overflow: 'hidden' }}
               >
@@ -204,6 +205,7 @@ class Chat extends React.Component<ChatProps, ChatState> {
                 </div>
               </div>
             </div>
+            <ShareButton className="p-0 m-0 btn-sm" code={code} pin={pin} />
             <Button
               variant="danger"
               className="float-right btn-sm"
