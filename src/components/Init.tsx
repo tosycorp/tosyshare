@@ -13,6 +13,7 @@ import { Connector, Connected } from '../types';
 import listenConnectionDone from '../utils/listen-connection-done';
 import Pin from './Pin';
 import sessionManager from '../utils/session-manager';
+import ShareButton from './ShareButton';
 
 type InitState = {
   generatedCode: number;
@@ -25,6 +26,8 @@ type InitState = {
 };
 type InitProps = {
   onConnected?: (data: Connected) => void;
+  code?: number;
+  pin?: number;
 };
 
 class Init extends React.Component<InitProps, InitState> {
@@ -38,24 +41,31 @@ class Init extends React.Component<InitProps, InitState> {
     const { code, pin, connectorId } = sessionManager.getSessionValues() || {};
     const connector = connectorId && this.generateConnectorById(connectorId);
 
+    const { search } = window.location;
+    const params = new URLSearchParams(search);
+    const urlCode = parseInt(params.get('code'), 10) || null;
+    const urlPin = parseInt(params.get('pin'), 10) || null;
+
     this.state = {
       connector: connector || null,
-      enteredCode: code || null,
+      enteredCode: code || urlCode,
       generatedCode: null,
       readQR: false,
       buttonDisabled: true,
       showPinModal: false,
-      enteredPin: pin || null,
+      enteredPin: pin || urlPin,
     };
   }
 
   async componentDidMount() {
-    // Bypass code generation and connection listening if code and pin already defined.
+    // Bypass code generation and connection listening if code already defined.
     const { enteredCode, enteredPin, connector } = this.state;
-    if (enteredCode && enteredPin) {
+    if (enteredCode) {
       // Generate code and connector if not available yet.
       // Use case: when user uses predefined URL to join.
       if (!connector) await this.executeGenerateCode();
+
+      if (!enteredPin) this.startListenConnection();
 
       this.enterCode(true);
       return;
@@ -269,6 +279,34 @@ class Init extends React.Component<InitProps, InitState> {
                       <h4>
                         <CopyText text={generatedCode.toString()} />
                       </h4>
+                    ) : (
+                      <Spinner animation="border" />
+                    )}
+                  </Col>
+                </Row>
+                <Row className="justify-content-center">
+                  <Col className="text-center align-self-center w-75" md={8}>
+                    <div className="divider" />
+                  </Col>
+                </Row>
+                <Row className="justify-content-center">
+                  <Col className="text-center align-self-center w-75" md={8}>
+                    <b>Option 3:</b> Share link with participants
+                  </Col>
+                </Row>
+                <Row className="justify-content-center">
+                  <Col
+                    className="text-center align-self-center w-75"
+                    xl={5}
+                    md={5}
+                    sm={5}
+                    xs={5}
+                  >
+                    {generatedCode ? (
+                      <ShareButton
+                        className="btn-block btn-lg"
+                        code={generatedCode}
+                      />
                     ) : (
                       <Spinner animation="border" />
                     )}
