@@ -26,8 +26,6 @@ type InitState = {
 };
 type InitProps = {
   onConnected?: (data: Connected) => void;
-  code?: number;
-  pin?: number;
 };
 
 class Init extends React.Component<InitProps, InitState> {
