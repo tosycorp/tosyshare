@@ -359,7 +359,6 @@ class Init extends React.Component<InitProps, InitState> {
                       clickHandler={() => this.enterCode()}
                       buttonDisabled={buttonDisabled}
                       inputValue={enteredCode && enteredCode.toString()}
-                      stopAutoFocus={readQR}
                     />
                   </Col>
                 </Row>

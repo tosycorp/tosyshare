@@ -7,7 +7,6 @@ type EnterDigitsProps = {
   clickHandler: () => void;
   inputValue?: string;
   buttonDisabled?: boolean;
-  stopAutoFocus?: boolean;
 };
 
 type EnterDigitsState = {};
@@ -18,13 +17,6 @@ class EnterDigits extends React.Component<EnterDigitsProps, EnterDigitsState> {
   constructor(props: EnterDigitsProps) {
     super(props);
     this.state = {};
-  }
-
-  componentDidUpdate() {
-    const { stopAutoFocus } = this.props;
-    if (!stopAutoFocus) {
-      this.input.current.focus();
-    }
   }
 
   handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
