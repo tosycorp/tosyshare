@@ -59,7 +59,7 @@ class Init extends React.Component<InitProps, InitState> {
         this.setState({ connector: await saveConnector(connection.id) });
       }
 
-      this.enterCode(true);
+      this.enterCode(true, true);
       return;
     }
 
@@ -134,7 +134,7 @@ class Init extends React.Component<InitProps, InitState> {
     return enteredPin;
   };
 
-  enterCode = async (ignoreSelfConnection = false) => {
+  enterCode = async (ignoreSelfConnection = false, refreshOnError = false) => {
     const { enteredCode, connector, enteredPin } = this.state;
     if (!enteredCode || enteredCode.toString().length !== 6) {
       return;
@@ -150,7 +150,8 @@ class Init extends React.Component<InitProps, InitState> {
     } catch (e) {
       this.handleError(
         e,
-        'Error occured while enterCode(), session might be expired'
+        'Error occured while enterCode(), session might be expired',
+        refreshOnError
       );
       return;
     }
@@ -166,11 +167,13 @@ class Init extends React.Component<InitProps, InitState> {
     }
   };
 
-  handleError = (error?: Error, log?: string) => {
+  handleError = (error?: Error, log?: string, refresh = false) => {
     console.error(error, log);
-    sessionManager.clearSessionValues();
-    this.setState({ enteredCode: null, enteredPin: null });
-    this.componentDidMount();
+    if (refresh) {
+      sessionManager.clearSessionValues();
+      this.setState({ enteredCode: null, enteredPin: null });
+      this.componentDidMount();
+    }
   };
 
   codeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
