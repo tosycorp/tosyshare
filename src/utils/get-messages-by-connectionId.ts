@@ -7,7 +7,7 @@ const getMessagesByConnectionIdWrapper = async (
   messageConnectionId: string
 ) => {
   return (await API.graphql(
-    graphqlOperation(gMBCI, { messageConnectionId })
+    graphqlOperation(gMBCI, { messageConnectionId, sortDirection: 'DESC' })
   )) as { data: { GetMessagesByConnectionId: { items: Message[] } } };
 };
 
@@ -21,7 +21,8 @@ const getMessagesByConnectionId = async (
     );
     return connectionsData.data.GetMessagesByConnectionId.items
       .map((m) => evaluateMessage(m, actionHandlers))
-      .filter((m) => !!m);
+      .filter((m) => !!m)
+      .reverse();
   } catch (err) {
     console.error('error fetching fetchConnection:', err);
     return null;
