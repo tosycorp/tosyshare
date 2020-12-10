@@ -7,18 +7,12 @@ import saveMessage from '../utils/save-message';
 import InputBox, { UploadOptions } from './InputBox';
 import CopyText from './CopyText';
 import generateColor from '../utils/generate-color';
-import {
-  Message,
-  Connected,
-  JSONMessage,
-  Actions,
-  MessageType,
-  ActionHandlers,
-} from '../types';
+import { Message, Connected, JSONMessage, MessageType, Pin } from '../types';
 import env, { Env } from '../utils/env';
 import getMessagesByConnectionId from '../utils/get-messages-by-connectionId';
 import sessionManager from '../utils/session-manager';
 import ShareButton from './ShareButton';
+import listenPin from '../utils/listen-pin';
 
 type ChatState = {
   message: string;
@@ -33,6 +27,7 @@ type ChatProps = {
 
 class Chat extends React.Component<ChatProps, ChatState> {
   private listenMessageSub: Subscription = null;
+  private listenPinSub: Subscription = null;
   private messagesEndRef: React.RefObject<HTMLDivElement> = React.createRef();
   private s3Prefix =
     env === Env.dev
@@ -51,19 +46,20 @@ class Chat extends React.Component<ChatProps, ChatState> {
   async componentDidMount() {
     const { connected } = this.props;
     const { pin, connectionId } = connected;
-    this.setPin(pin);
-    const actionHandlers: ActionHandlers = {
-      [Actions.SET_PIN]: (val: any) => this.setPin(val),
-    };
-    this.listenMessageSub = listenMessages(
-      connectionId,
-      actionHandlers
-    ).subscribe((m: Message) => {
-      const { messages } = this.state;
-      this.setState({ messages: [...messages, m] });
-    });
+    if (pin) {
+      this.setPin(pin);
+    } else {
+      this.startListenPin(connectionId);
+    }
 
-    this.setPastMessages(connected.connectionId, actionHandlers);
+    this.listenMessageSub = listenMessages(connectionId).subscribe(
+      (m: Message) => {
+        const { messages } = this.state;
+        this.setState({ messages: [...messages, m] });
+      }
+    );
+
+    this.setPastMessages(connected.connectionId);
   }
 
   componentDidUpdate() {
@@ -74,11 +70,8 @@ class Chat extends React.Component<ChatProps, ChatState> {
     this.unsubscribeListenMessage();
   }
 
-  async setPastMessages(connectionId: string, actionHandlers: ActionHandlers) {
-    const pastMessages = await getMessagesByConnectionId(
-      connectionId,
-      actionHandlers
-    );
+  async setPastMessages(connectionId: string) {
+    const pastMessages = await getMessagesByConnectionId(connectionId);
     const { messages } = this.state;
     this.setState({ messages: [...pastMessages, ...messages] });
   }
@@ -86,7 +79,20 @@ class Chat extends React.Component<ChatProps, ChatState> {
   setPin(pin: number) {
     sessionManager.setSessionPinValue(pin);
     this.setState({ pin });
+    this.unsubscribeListenPin();
   }
+
+  startListenPin = (connectionId: string) => {
+    this.listenPinSub = listenPin(connectionId).subscribe((pin: Pin) => {
+      this.setPin(pin.value);
+    });
+  };
+
+  unsubscribeListenPin = () => {
+    if (this.listenPinSub && !this.listenPinSub.closed) {
+      this.listenPinSub.unsubscribe();
+    }
+  };
 
   unsubscribeListenMessage = () => {
     stopListenMessages();

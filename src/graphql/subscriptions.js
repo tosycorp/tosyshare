@@ -51,6 +51,18 @@ export const onConnectorByConnectionId = /* GraphQL */ `
     }
   }
 `;
+export const onPinByConnectionId = /* GraphQL */ `
+  subscription OnPinByConnectionId($connectionId: ID!) {
+    onPinByConnectionId(connectionId: $connectionId) {
+      id
+      expDate
+      value
+      connectionId
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateConnection = /* GraphQL */ `
   subscription OnCreateConnection {
     onCreateConnection {

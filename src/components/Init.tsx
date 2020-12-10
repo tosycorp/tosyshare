@@ -220,7 +220,7 @@ class Init extends React.Component<InitProps, InitState> {
     const { connection } = connector;
     this.listenConnectionSub = listenConnection(connection.id).subscribe(
       async () => {
-        const { pin } = await listenConnectionDone(connection, connector);
+        const { pin } = await listenConnectionDone(connection);
         this.onConnected(pin.value);
       }
     );
