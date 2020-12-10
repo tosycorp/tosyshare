@@ -15,6 +15,7 @@ import ShareButton from './ShareButton';
 import getConnectionByCode from '../utils/get-connection-by-code';
 import saveConnector from '../utils/save-connector';
 import EnterDigits from './EnterDigits';
+import listenPin from '../utils/listen-pin';
 
 type InitState = {
   generatedCode: number;
@@ -31,6 +32,7 @@ type InitProps = {
 
 class Init extends React.Component<InitProps, InitState> {
   private listenConnectionSub: Subscription = null;
+  private listenPinSub: Subscription = null;
 
   private onPinEnteredEventName = 'onPinEntered';
   private onPinEnteredEvent = new Event(this.onPinEnteredEventName);
@@ -42,7 +44,7 @@ class Init extends React.Component<InitProps, InitState> {
 
   async componentDidMount() {
     // Bypass code generation if code already defined.
-    const { enteredCode, connector } = this.state;
+    const { enteredCode, enteredPin, connector } = this.state;
     if (enteredCode) {
       // Create new connector if not defined.
       // Use case: when user uses predefined URL to join.
@@ -56,6 +58,10 @@ class Init extends React.Component<InitProps, InitState> {
           return;
         }
 
+        if (!enteredPin) {
+          this.startListenPin(connection.id);
+        }
+
         this.setState({ connector: await saveConnector(connection.id) });
       }
 
@@ -65,6 +71,12 @@ class Init extends React.Component<InitProps, InitState> {
 
     await this.executeGenerateCode();
     this.startListenConnection();
+  }
+
+  componentWillUnmount() {
+    if (this.listenPinSub && !this.listenPinSub.closed) {
+      this.listenPinSub.unsubscribe();
+    }
   }
 
   prepareInitState = (): InitState => {
@@ -224,6 +236,10 @@ class Init extends React.Component<InitProps, InitState> {
         this.onConnected(pin.value);
       }
     );
+  };
+
+  startListenPin = async (connectionId: string) => {
+    this.listenPinSub = listenPin(connectionId).subscribe();
   };
 
   render() {
