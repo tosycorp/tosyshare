@@ -162,8 +162,9 @@ class Init extends React.Component<InitProps, InitState> {
       (updatedConnector && updatedConnector.connection.id);
 
     if (updatedConnector && (ignoreSelfConnection || !isSelfConnection)) {
+      const { enteredPin: pin } = this.state;
       this.setState({ connector: updatedConnector });
-      this.onConnected(enteredPin);
+      this.onConnected(pin);
     }
   };
 
