@@ -1,7 +1,6 @@
 import { API, graphqlOperation } from 'aws-amplify';
 import { getMessagesByConnectionId as gMBCI } from '../graphql/queries';
 import { Message } from '../types';
-import { evaluateMessage } from './listen-messages';
 
 const getMessagesByConnectionIdWrapper = async (
   messageConnectionId: string
@@ -19,7 +18,6 @@ const getMessagesByConnectionId = async (
       connectionId
     );
     return connectionsData.data.GetMessagesByConnectionId.items
-      .map((m) => evaluateMessage(m))
       .filter((m) => !!m)
       .reverse();
   } catch (err) {

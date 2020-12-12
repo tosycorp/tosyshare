@@ -6,10 +6,6 @@ import { Message } from '../types';
 let subscription: Subscription;
 let subscriber: Subscriber<Message>;
 
-export const evaluateMessage = (m: Message): Message => {
-  return m;
-};
-
 export const listenMessages = (connectionId: string) => {
   return new Observable<Message>((subs) => {
     subscriber = subs;
@@ -26,7 +22,7 @@ export const listenMessages = (connectionId: string) => {
 
     subscription = onMessageByConnectionIdWrapper().subscribe({
       next: ({ value }) => {
-        const m = evaluateMessage(value.data.onMessageByConnectionId);
+        const m = value.data.onMessageByConnectionId;
         if (m) {
           subs.next(m);
         }
