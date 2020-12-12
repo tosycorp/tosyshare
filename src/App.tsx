@@ -25,7 +25,7 @@ const App = () => {
         </Col>
       </Row>
       <Row className="justify-content-center no-scroll flex-full px-2">
-        <Col className="flex-disp flex-col full-height " md={8}>
+        <Col className="flex-disp flex-col full-height vertical-scroll" md={8}>
           <Suspense fallback="">
             <Layout />
           </Suspense>
