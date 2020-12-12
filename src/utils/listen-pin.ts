@@ -1,7 +1,11 @@
 import { API } from 'aws-amplify';
-import { Observable, Subscribable } from 'rxjs';
+import { Observable, Subscribable, Subscription } from 'rxjs';
 import { onPinByConnectionId } from '../graphql/subscriptions';
 import { Pin } from '../types';
+
+let subscription: Subscription = null;
+let setPin: (pin: number) => void = null;
+let pinValue: number = null;
 
 const onPinByConnectionIdWrapper = (connectionId: string) => {
   return API.graphql({
@@ -16,15 +20,35 @@ const onPinByConnectionIdWrapper = (connectionId: string) => {
 
 const listenPin = (connectionId: string) => {
   return new Observable<Pin>((subscriber) => {
-    const subscription = onPinByConnectionIdWrapper(connectionId).subscribe({
+    onPinByConnectionIdWrapper(connectionId).subscribe({
       next: ({ value }) => {
         subscriber.next(value.data.onPinByConnectionId);
         subscriber.complete();
         // Stop receiving data updates from the subscription
-        subscription.unsubscribe();
+        subscriber.unsubscribe();
       },
     });
   });
 };
 
-export default listenPin;
+const startListenPin = (connectionId: string) => {
+  subscription = listenPin(connectionId).subscribe((pin: Pin) => {
+    pinValue = pin.value;
+    if (setPin) {
+      setPin(pinValue);
+    }
+    if (subscription && !subscription.closed) {
+      subscription.unsubscribe();
+    }
+  });
+};
+
+const setGeneratedPin = (setPinCallBack: (pin: number) => void) => {
+  if (pinValue) {
+    setPinCallBack(pinValue);
+  } else {
+    setPin = setPinCallBack;
+  }
+};
+
+export { startListenPin, setGeneratedPin };

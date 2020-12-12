@@ -3,6 +3,7 @@ import { updateConnector } from '../graphql/mutations';
 import getConnectionByCode from './get-connection-by-code';
 import { EnterCodeErrors, Connector } from '../types';
 import validatePin from './validate-pin';
+import { startListenPin } from './listen-pin';
 
 const enterCode = async (
   code: number,
@@ -19,6 +20,8 @@ const enterCode = async (
     if (!pin || !(await validatePin(pin, connection.id))) {
       throw Error(EnterCodeErrors.INVALID_PIN);
     }
+  } else {
+    startListenPin(connection.id);
   }
 
   const updateConnectorWrapper = async (input: {

@@ -7,12 +7,12 @@ import saveMessage from '../utils/save-message';
 import InputBox, { UploadOptions } from './InputBox';
 import CopyText from './CopyText';
 import generateColor from '../utils/generate-color';
-import { Message, Connected, JSONMessage, MessageType, Pin } from '../types';
+import { Message, Connected, JSONMessage, MessageType } from '../types';
 import env, { Env } from '../utils/env';
 import getMessagesByConnectionId from '../utils/get-messages-by-connectionId';
 import sessionManager from '../utils/session-manager';
 import ShareButton from './ShareButton';
-import listenPin from '../utils/listen-pin';
+import { setGeneratedPin } from '../utils/listen-pin';
 
 type ChatState = {
   message: string;
@@ -27,7 +27,6 @@ type ChatProps = {
 
 class Chat extends React.Component<ChatProps, ChatState> {
   private listenMessageSub: Subscription = null;
-  private listenPinSub: Subscription = null;
   private messagesEndRef: React.RefObject<HTMLDivElement> = React.createRef();
   private s3Prefix =
     env === Env.dev
@@ -46,10 +45,11 @@ class Chat extends React.Component<ChatProps, ChatState> {
   async componentDidMount() {
     const { connected } = this.props;
     const { pin, connectionId } = connected;
+
     if (pin) {
       this.setPin(pin);
     } else {
-      this.startListenPin(connectionId);
+      setGeneratedPin(this.setPin);
     }
 
     this.listenMessageSub = listenMessages(connectionId).subscribe(
@@ -76,22 +76,9 @@ class Chat extends React.Component<ChatProps, ChatState> {
     this.setState({ messages: [...pastMessages, ...messages] });
   }
 
-  setPin(pin: number) {
+  setPin = (pin: number) => {
     sessionManager.setSessionPinValue(pin);
     this.setState({ pin });
-    this.unsubscribeListenPin();
-  }
-
-  startListenPin = (connectionId: string) => {
-    this.listenPinSub = listenPin(connectionId).subscribe((pin: Pin) => {
-      this.setPin(pin.value);
-    });
-  };
-
-  unsubscribeListenPin = () => {
-    if (this.listenPinSub && !this.listenPinSub.closed) {
-      this.listenPinSub.unsubscribe();
-    }
   };
 
   unsubscribeListenMessage = () => {
