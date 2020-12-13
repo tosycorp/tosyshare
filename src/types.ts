@@ -42,7 +42,6 @@ export type JSONMessage = {
 export enum MessageType {
   STRING = 'STRING',
   JSON = 'JSON',
-  ACTION = 'ACTION',
 }
 
 export interface Message extends DynamoDbTable {
@@ -53,12 +52,6 @@ export interface Message extends DynamoDbTable {
   messageConnectionId: string;
   messageConnectorId: string;
 }
-
-export enum Actions {
-  SET_PIN = 'SET_PIN',
-}
-
-export type ActionHandlers = { [key: string]: (val?: any) => void };
 
 export enum EnterCodeErrors {
   NO_CONNECTION_FOUND = 'NO_CONNECTION_FOUND',

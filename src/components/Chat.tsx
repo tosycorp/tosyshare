@@ -7,18 +7,12 @@ import saveMessage from '../utils/save-message';
 import InputBox, { UploadOptions } from './InputBox';
 import CopyText from './CopyText';
 import generateColor from '../utils/generate-color';
-import {
-  Message,
-  Connected,
-  JSONMessage,
-  Actions,
-  MessageType,
-  ActionHandlers,
-} from '../types';
+import { Message, Connected, JSONMessage, MessageType } from '../types';
 import env, { Env } from '../utils/env';
 import getMessagesByConnectionId from '../utils/get-messages-by-connectionId';
 import sessionManager from '../utils/session-manager';
 import ShareButton from './ShareButton';
+import { setGeneratedPin } from '../utils/listen-pin';
 
 type ChatState = {
   message: string;
@@ -51,19 +45,23 @@ class Chat extends React.Component<ChatProps, ChatState> {
   async componentDidMount() {
     const { connected } = this.props;
     const { pin, connectionId } = connected;
-    this.setPin(pin);
-    const actionHandlers: ActionHandlers = {
-      [Actions.SET_PIN]: (val: any) => this.setPin(val),
-    };
-    this.listenMessageSub = listenMessages(
-      connectionId,
-      actionHandlers
-    ).subscribe((m: Message) => {
-      const { messages } = this.state;
-      this.setState({ messages: [...messages, m] });
-    });
 
-    this.setPastMessages(connected.connectionId, actionHandlers);
+    if (pin) {
+      // Set pin if connector is host or entered pin on connecting
+      this.setPin(pin);
+    } else {
+      // Set the pin when host generates the pin, if connector is participant
+      setGeneratedPin(this.setPin);
+    }
+
+    this.listenMessageSub = listenMessages(connectionId).subscribe(
+      (m: Message) => {
+        const { messages } = this.state;
+        this.setState({ messages: [...messages, m] });
+      }
+    );
+
+    this.setPastMessages(connected.connectionId);
   }
 
   componentDidUpdate() {
@@ -74,19 +72,16 @@ class Chat extends React.Component<ChatProps, ChatState> {
     this.unsubscribeListenMessage();
   }
 
-  async setPastMessages(connectionId: string, actionHandlers: ActionHandlers) {
-    const pastMessages = await getMessagesByConnectionId(
-      connectionId,
-      actionHandlers
-    );
+  async setPastMessages(connectionId: string) {
+    const pastMessages = await getMessagesByConnectionId(connectionId);
     const { messages } = this.state;
     this.setState({ messages: [...pastMessages, ...messages] });
   }
 
-  setPin(pin: number) {
+  setPin = (pin: number) => {
     sessionManager.setSessionPinValue(pin);
     this.setState({ pin });
-  }
+  };
 
   unsubscribeListenMessage = () => {
     stopListenMessages();

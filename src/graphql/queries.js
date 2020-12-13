@@ -237,6 +237,33 @@ export const getPinsByValue = /* GraphQL */ `
     }
   }
 `;
+export const getPinsByConnectionId = /* GraphQL */ `
+  query GetPinsByConnectionId(
+    $connectionId: ID
+    $sortDirection: ModelSortDirection
+    $filter: ModelPinFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    GetPinsByConnectionId(
+      connectionId: $connectionId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        expDate
+        value
+        connectionId
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getMessagesByConnectionId = /* GraphQL */ `
   query GetMessagesByConnectionId(
     $messageConnectionId: ID

@@ -20,7 +20,8 @@ type Connector @model
 
 type Pin @model
   @auth(rules: [{ allow: public, operations: [read, create] }])
-  @key(name: "ByValue", fields: ["value"], queryField: "GetPinsByValue") {
+  @key(name: "ByValue", fields: ["value"], queryField: "GetPinsByValue")
+  @key(name: "ByConnectionId", fields: ["connectionId"], queryField: "GetPinsByConnectionId") {
   id: ID!
   expDate: Int! @ttl
   value: Int!
@@ -30,7 +31,6 @@ type Pin @model
 enum MessageType {
   STRING
   JSON
-  ACTION
 }
 
 type Message @model
@@ -51,4 +51,6 @@ type Subscription {
     @aws_subscribe(mutations: ["createMessage"])
   onConnectorByConnectionId(connectorConnectionId: ID!): Connector
     @aws_subscribe(mutations: ["updateConnector"])
+  onPinByConnectionId(connectionId: ID!): Pin
+    @aws_subscribe(mutations: ["createPin"])
 }
