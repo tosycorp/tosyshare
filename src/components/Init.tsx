@@ -2,6 +2,7 @@ import React from 'react';
 import { Subscription } from 'rxjs';
 import { Row, Col, Button, Spinner } from 'react-bootstrap';
 import { BsCameraVideoFill } from 'react-icons/bs';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 import generateCode from '../utils/generate-code';
 import enterCode from '../utils/enter-code';
 import listenConnection from '../utils/listen-connection';
@@ -25,9 +26,9 @@ type InitState = {
   showPinModal: boolean;
   enteredPin: number;
 };
-type InitProps = {
+interface InitProps extends RouteComponentProps {
   onConnected?: (data: Connected) => void;
-};
+}
 
 class Init extends React.Component<InitProps, InitState> {
   private listenConnectionSub: Subscription = null;
@@ -41,6 +42,9 @@ class Init extends React.Component<InitProps, InitState> {
   }
 
   async componentDidMount() {
+    const { history } = this.props;
+    history.push('/init');
+
     // Bypass code generation if code already defined.
     const { enteredCode, connector } = this.state;
     if (enteredCode) {
@@ -73,10 +77,6 @@ class Init extends React.Component<InitProps, InitState> {
     const params = new URLSearchParams(search);
     const urlCode = parseInt(params.get('code'), 10);
     const urlPin = parseInt(params.get('pin'), 10);
-    // If data is received, clean up the url.
-    if (urlCode || urlPin) {
-      window.history.replaceState(null, null, window.location.pathname);
-    }
 
     // Check if user have active session.
     const { code, pin, connectorId } = sessionManager.getSessionValues() || {};
@@ -367,14 +367,15 @@ class Init extends React.Component<InitProps, InitState> {
             </Row>
           </>
         )}
-        <Pin
-          show={showPinModal}
-          enterPin={this.enterPin}
-          onHide={() => this.setState({ showPinModal: false })}
-        />
+        {showPinModal && (
+          <Pin
+            enterPin={this.enterPin}
+            onHide={() => this.setState({ showPinModal: false })}
+          />
+        )}
       </>
     );
   }
 }
 
-export default Init;
+export default withRouter(Init);

@@ -58,6 +58,11 @@ body,
   overflow: auto;
 }
 
+.vertical-scroll {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
 .flex-full {
   flex: 1;
 }

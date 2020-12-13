@@ -1,16 +1,16 @@
 import React from 'react';
 import { Modal } from 'react-bootstrap';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 import InputBox from './InputBox';
 
 type PinState = {
   enteredPin: number;
   buttonDisabled: boolean;
 };
-type PinProps = {
-  show: boolean;
+interface PinProps extends RouteComponentProps {
   onHide: () => void;
   enterPin: (data: number) => void;
-};
+}
 
 class Pin extends React.Component<PinProps, PinState> {
   constructor(props: PinProps) {
@@ -18,6 +18,17 @@ class Pin extends React.Component<PinProps, PinState> {
     this.state = {
       enteredPin: null,
       buttonDisabled: true,
+    };
+  }
+
+  componentDidMount() {
+    const { history } = this.props;
+    history.push('/pin');
+  }
+
+  componentDidUpdate() {
+    window.onpopstate = () => {
+      this.onHide();
     };
   }
 
@@ -45,10 +56,9 @@ class Pin extends React.Component<PinProps, PinState> {
 
   render() {
     const { enteredPin, buttonDisabled } = this.state;
-    const { show } = this.props;
     return (
       <Modal
-        show={show}
+        show
         animation={false}
         onHide={this.onHide}
         size="sm"
@@ -73,4 +83,4 @@ class Pin extends React.Component<PinProps, PinState> {
   }
 }
 
-export default Pin;
+export default withRouter(Pin);
