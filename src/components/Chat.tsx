@@ -47,8 +47,10 @@ class Chat extends React.Component<ChatProps, ChatState> {
     const { pin, connectionId } = connected;
 
     if (pin) {
+      // Set pin if connector is host or entered pin on connecting
       this.setPin(pin);
     } else {
+      // Set the pin when host generates the pin, if connector is participant
       setGeneratedPin(this.setPin);
     }
 
