@@ -43,7 +43,6 @@ body,
   overflow: hidden;
   display: flex;
   flex-direction: column;
-
   border-radius: 12px;
   background-color: #2e99c8;
   background-image: linear-gradient(180deg, #daebf3, #389ecb);
@@ -61,6 +60,12 @@ body,
 .vertical-scroll {
   overflow-y: auto;
   overflow-x: hidden;
+}
+
+@media (min-height: 956px) {
+  .vertical-scroll {
+    overflow: hidden;
+  }
 }
 
 .flex-full {
@@ -88,14 +93,18 @@ body,
   }
 }
 
+
 /* Chrome, Safari, Edge, Opera */
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
+
 /* Firefox */
+
 input[type='number'] {
   -moz-appearance: textfield;
 }
@@ -104,38 +113,42 @@ input[type='number'] {
   width: 10px;
 }
 
+
 /* Track */
+
 ::-webkit-scrollbar-track {
   border-radius: 10px;
 }
 
+
 /* Handle */
+
 ::-webkit-scrollbar-thumb {
   background: #ee4037;
   border-radius: 10px;
 }
 
+
 /* Handle on hover */
+
 ::-webkit-scrollbar-thumb:hover {
   background: #ee4037;
 }
 
-.divider
-{
-	position: relative;
-	height: 1px;
+.divider {
+  position: relative;
+  height: 1px;
 }
 
-.divider:before
-{
-	content: "";
-	position: absolute;
-	top: 0;
-	left: 5%;
-	right: 5%;
-	width: 90%;
-	height: 2px;
-	background-image: linear-gradient(to right, transparent, rgb(48,49,51), transparent);
+.divider:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 5%;
+  right: 5%;
+  width: 90%;
+  height: 2px;
+  background-image: linear-gradient(to right, transparent, rgb(48, 49, 51), transparent);
 }
 
 .sketchy {
@@ -195,7 +208,7 @@ input[type='number'] {
   line-height: 1;
 }
 
-.qr-modal-backdrop{
+.qr-modal-backdrop {
   z-index: 1060;
   background-color: #f3f3f37a;
 }
