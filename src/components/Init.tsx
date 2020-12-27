@@ -188,6 +188,8 @@ class Init extends React.Component<InitProps, InitState> {
   };
 
   enterPin = (pin: number) => {
+    const { history } = this.props;
+    history.push('/');
     this.setState({ showPinModal: false, enteredPin: pin });
     window.dispatchEvent(this.onPinEnteredEvent);
   };
