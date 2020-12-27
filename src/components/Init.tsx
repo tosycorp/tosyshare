@@ -43,7 +43,7 @@ class Init extends React.Component<InitProps, InitState> {
 
   async componentDidMount() {
     const { history } = this.props;
-    history.push('/init');
+    history.push('/');
 
     // Bypass code generation if code already defined.
     const { enteredCode, connector } = this.state;
@@ -227,6 +227,12 @@ class Init extends React.Component<InitProps, InitState> {
     );
   };
 
+  onPinModalClose = () => {
+    const { history } = this.props;
+    history.push('/');
+    this.setState({ showPinModal: false });
+  };
+
   render() {
     const {
       generatedCode,
@@ -368,10 +374,7 @@ class Init extends React.Component<InitProps, InitState> {
           </>
         )}
         {showPinModal && (
-          <Pin
-            enterPin={this.enterPin}
-            onHide={() => this.setState({ showPinModal: false })}
-          />
+          <Pin enterPin={this.enterPin} onHide={this.onPinModalClose} />
         )}
       </>
     );
