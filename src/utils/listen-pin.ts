@@ -45,8 +45,10 @@ const startListenPin = (connectionId: string) => {
 
 const setGeneratedPin = (setPinCallBack: (pin: number) => void) => {
   if (pinValue) {
+    // Execute callback method if already genereated
     setPinCallBack(pinValue);
   } else {
+    // Save callback method to execute on pin generation
     setPin = setPinCallBack;
   }
 };

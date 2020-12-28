@@ -141,12 +141,13 @@ class Init extends React.Component<InitProps, InitState> {
     }
 
     let updatedConnector: Connector;
+    let pin: number;
     try {
-      updatedConnector = await enterCode(
+      ({ updatedConnector, pin } = await enterCode(
         enteredCode,
         connector.id,
         enteredPin ? () => Promise.resolve(enteredPin) : this.handlePinRequired
-      );
+      ));
     } catch (e) {
       this.handleError(
         e,
@@ -162,7 +163,6 @@ class Init extends React.Component<InitProps, InitState> {
       (updatedConnector && updatedConnector.connection.id);
 
     if (updatedConnector && (ignoreSelfConnection || !isSelfConnection)) {
-      const { enteredPin: pin } = this.state;
       this.setState({ connector: updatedConnector });
       this.onConnected(pin);
     }
