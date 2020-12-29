@@ -21,14 +21,6 @@ class Pin extends React.Component<PinProps, PinState> {
     };
   }
 
-  componentDidMount() {
-    const { history } = this.props;
-    history.push('/pin');
-    window.onpopstate = () => {
-      this.onHide();
-    };
-  }
-
   enterPin = () => {
     const { enteredPin } = this.state;
     const { enterPin } = this.props;

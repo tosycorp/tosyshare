@@ -7,7 +7,8 @@ import {
 } from 'react-router-dom';
 import Init from './Init';
 import Chat from './Chat';
-import { Connected } from '../types';
+import { Connected, Routes } from '../types';
+import pushHistory from '../utils/push-history';
 
 type LayoutState = {
   connected: Connected;
@@ -21,14 +22,12 @@ class Layout extends React.Component<RouteComponentProps, LayoutState> {
 
   onConnected = (connected: Connected) => {
     this.setState({ connected }, () => {
-      const { history } = this.props;
-      history.push('/chat');
+      pushHistory(this, Routes.CHAT);
     });
   };
 
   onOut = () => {
-    const { history } = this.props;
-    history.push('/');
+    pushHistory(this, Routes.INIT);
     this.setState({ connected: null });
   };
 
@@ -37,10 +36,10 @@ class Layout extends React.Component<RouteComponentProps, LayoutState> {
 
     return (
       <Switch>
-        <Route path="/chat" exact>
+        <Route path={Routes.CHAT}>
           <Chat connected={connected} onOut={this.onOut} />
         </Route>
-        <Route path="/">
+        <Route path={Routes.INIT}>
           <Init onConnected={this.onConnected} />
         </Route>
       </Switch>

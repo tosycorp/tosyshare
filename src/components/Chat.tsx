@@ -8,12 +8,13 @@ import saveMessage from '../utils/save-message';
 import InputBox, { UploadOptions } from './InputBox';
 import CopyText from './CopyText';
 import generateColor from '../utils/generate-color';
-import { Message, Connected, JSONMessage, MessageType } from '../types';
+import { Message, Connected, JSONMessage, MessageType, Routes } from '../types';
 import env, { Env } from '../utils/env';
 import getMessagesByConnectionId from '../utils/get-messages-by-connectionId';
 import sessionManager from '../utils/session-manager';
 import ShareButton from './ShareButton';
 import { setGeneratedPin } from '../utils/listen-pin';
+import pushHistory from '../utils/push-history';
 
 type ChatState = {
   message: string;
@@ -46,8 +47,7 @@ class Chat extends React.Component<ChatProps, ChatState> {
   async componentDidMount() {
     const { connected } = this.props;
     if (!connected) {
-      const { history } = this.props;
-      history.push('/');
+      pushHistory(this, Routes.INIT);
       return;
     }
     const { pin, connectionId } = connected;
@@ -177,8 +177,7 @@ class Chat extends React.Component<ChatProps, ChatState> {
     const { messages, message, pin } = this.state;
     const { connected, onOut } = this.props;
     if (!connected) {
-      const { history } = this.props;
-      history.push('/');
+      pushHistory(this, Routes.INIT);
       return <></>;
     }
     const { code, connectorId } = connected;

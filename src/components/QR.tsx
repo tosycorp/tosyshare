@@ -5,10 +5,12 @@ import generateQR from '../utils/generate-qr';
 type QRState = {
   dataURL: string;
   largeDataURL: string;
-  showModal: boolean;
 };
 type QRProps = {
   text: string;
+  showModal?: boolean;
+  onQRClick?: () => void;
+  onQRModalClose?: () => void;
 };
 
 const defaultImageSrc = 'default-qr.png';
@@ -16,7 +18,7 @@ const defaultImageSrc = 'default-qr.png';
 class QR extends React.Component<QRProps, QRState> {
   constructor(props: QRProps) {
     super(props);
-    this.state = { dataURL: null, largeDataURL: null, showModal: false };
+    this.state = { dataURL: null, largeDataURL: null };
   }
 
   componentDidMount() {
@@ -42,7 +44,8 @@ class QR extends React.Component<QRProps, QRState> {
   };
 
   render() {
-    const { dataURL, largeDataURL, showModal } = this.state;
+    const { dataURL, largeDataURL } = this.state;
+    const { showModal, onQRClick, onQRModalClose } = this.props;
     const opacity = dataURL ? 1 : 0.5;
     return (
       <>
@@ -51,12 +54,12 @@ class QR extends React.Component<QRProps, QRState> {
             alt="QR Code"
             src={dataURL || defaultImageSrc}
             style={{ opacity }}
-            onClick={() => this.setState({ showModal: true })}
+            onClick={onQRClick}
           />
         )}
         <Modal
           show={showModal}
-          onHide={() => this.setState({ showModal: false })}
+          onHide={onQRModalClose}
           aria-labelledby="contained-modal-title-vcenter"
           backdropClassName="qr-modal-backdrop"
           centered
