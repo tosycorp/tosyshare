@@ -1,5 +1,6 @@
 import React from 'react';
 import FileSaver from 'file-saver';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { Row, Col, Alert, Image, Button } from 'react-bootstrap';
 import { Subscription } from 'rxjs';
 import { listenMessages, stopListenMessages } from '../utils/listen-messages';
@@ -20,10 +21,10 @@ type ChatState = {
   messages: Message[];
   pin?: number;
 };
-type ChatProps = {
+interface ChatProps extends RouteComponentProps {
   connected: Connected;
   onOut: () => void;
-};
+}
 
 class Chat extends React.Component<ChatProps, ChatState> {
   private listenMessageSub: Subscription = null;
@@ -44,6 +45,11 @@ class Chat extends React.Component<ChatProps, ChatState> {
 
   async componentDidMount() {
     const { connected } = this.props;
+    if (!connected) {
+      const { history } = this.props;
+      history.push('/');
+      return;
+    }
     const { pin, connectionId } = connected;
 
     if (pin) {
@@ -170,6 +176,11 @@ class Chat extends React.Component<ChatProps, ChatState> {
   render = () => {
     const { messages, message, pin } = this.state;
     const { connected, onOut } = this.props;
+    if (!connected) {
+      const { history } = this.props;
+      history.push('/');
+      return <></>;
+    }
     const { code, connectorId } = connected;
     const { uploadHandler } = this;
 
@@ -248,4 +259,4 @@ class Chat extends React.Component<ChatProps, ChatState> {
   };
 }
 
-export default Chat;
+export default withRouter(Chat);

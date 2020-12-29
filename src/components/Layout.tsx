@@ -38,11 +38,7 @@ class Layout extends React.Component<RouteComponentProps, LayoutState> {
     return (
       <Switch>
         <Route path="/chat" exact>
-          {!connected ? (
-            <Init onConnected={this.onConnected} />
-          ) : (
-            <Chat connected={connected} onOut={this.onOut} />
-          )}
+          <Chat connected={connected} onOut={this.onOut} />
         </Route>
         <Route path="/">
           <Init onConnected={this.onConnected} />
