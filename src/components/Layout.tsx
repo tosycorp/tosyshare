@@ -4,6 +4,7 @@ import {
   Switch,
   withRouter,
   RouteComponentProps,
+  Redirect,
 } from 'react-router-dom';
 import Init from './Init';
 import Chat from './Chat';
@@ -36,8 +37,12 @@ class Layout extends React.Component<RouteComponentProps, LayoutState> {
 
     return (
       <Switch>
-        <Route path={Routes.CHAT}>
-          <Chat connected={connected} onOut={this.onOut} />
+        <Route path={Routes.CHAT} exact>
+          {!connected ? (
+            <Redirect to={Routes.INIT} />
+          ) : (
+            <Chat connected={connected} onOut={this.onOut} />
+          )}
         </Route>
         <Route path={Routes.INIT}>
           <Init onConnected={this.onConnected} />
