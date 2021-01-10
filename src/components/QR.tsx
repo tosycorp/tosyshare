@@ -1,17 +1,19 @@
 import React from 'react';
 import { Image, Modal } from 'react-bootstrap';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { Routes } from '../types';
 import generateQR from '../utils/generate-qr';
+import redirect from '../utils/redirect';
 
 type QRState = {
   dataURL: string;
   largeDataURL: string;
 };
-type QRProps = {
+interface QRProps extends RouteComponentProps {
   text: string;
   showModal?: boolean;
   onQRClick?: () => void;
-  onQRModalClose?: () => void;
-};
+}
 
 const defaultImageSrc = 'default-qr.png';
 
@@ -43,9 +45,13 @@ class QR extends React.Component<QRProps, QRState> {
     });
   };
 
+  onClose = () => {
+    redirect(this, Routes.INIT);
+  };
+
   render() {
     const { dataURL, largeDataURL } = this.state;
-    const { showModal, onQRClick, onQRModalClose } = this.props;
+    const { showModal, onQRClick } = this.props;
     const opacity = dataURL ? 1 : 0.5;
     return (
       <>
@@ -59,7 +65,7 @@ class QR extends React.Component<QRProps, QRState> {
         )}
         <Modal
           show={showModal}
-          onHide={onQRModalClose}
+          onHide={this.onClose}
           aria-labelledby="contained-modal-title-vcenter"
           backdropClassName="qr-modal-backdrop"
           centered
@@ -81,4 +87,4 @@ class QR extends React.Component<QRProps, QRState> {
   }
 }
 
-export default QR;
+export default withRouter(QR);

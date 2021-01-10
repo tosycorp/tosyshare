@@ -1,6 +1,8 @@
 import React from 'react';
 import { Modal } from 'react-bootstrap';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { Routes } from '../types';
+import redirect from '../utils/redirect';
 import InputBox from './InputBox';
 
 type PinState = {
@@ -8,7 +10,6 @@ type PinState = {
   buttonDisabled: boolean;
 };
 interface PinProps extends RouteComponentProps {
-  onHide: () => void;
   enterPin: (data: number) => void;
 }
 
@@ -29,8 +30,7 @@ class Pin extends React.Component<PinProps, PinState> {
 
   onHide = () => {
     this.setState({ enteredPin: null });
-    const { onHide } = this.props;
-    onHide();
+    redirect(this, Routes.INIT);
   };
 
   pinChange = (e: React.ChangeEvent<HTMLInputElement>) => {

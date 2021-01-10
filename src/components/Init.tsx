@@ -21,7 +21,7 @@ import ShareButton from './ShareButton';
 import getConnectionByCode from '../utils/get-connection-by-code';
 import saveConnector from '../utils/save-connector';
 import EnterDigits from './EnterDigits';
-import pushHistory from '../utils/push-history';
+import redirect from '../utils/redirect';
 
 type InitState = {
   generatedCode: number;
@@ -46,8 +46,6 @@ class Init extends React.Component<InitProps, InitState> {
   }
 
   async componentDidMount() {
-    pushHistory(this, Routes.INIT);
-
     // Bypass code generation if code already defined.
     const { enteredCode, connector } = this.state;
     if (enteredCode) {
@@ -122,7 +120,7 @@ class Init extends React.Component<InitProps, InitState> {
   handlePinRequired = async () => this.askForPin();
 
   askForPin = async () => {
-    pushHistory(this, Routes.PIN);
+    redirect(this, Routes.PIN);
 
     let listener;
     await new Promise((res) => {
@@ -189,7 +187,7 @@ class Init extends React.Component<InitProps, InitState> {
   };
 
   enterPin = (pin: number) => {
-    pushHistory(this, Routes.INIT);
+    redirect(this, Routes.INIT);
     this.setState({ enteredPin: pin });
     window.dispatchEvent(this.onPinEnteredEvent);
   };
@@ -225,24 +223,16 @@ class Init extends React.Component<InitProps, InitState> {
     );
   };
 
-  handlePinModalClose = () => {
-    pushHistory(this, Routes.INIT);
-  };
-
   handleQRCodeReadClick = () => {
-    pushHistory(this, Routes.QR);
+    redirect(this, Routes.QR);
   };
 
   handleQRReaderClose = () => {
-    pushHistory(this, Routes.INIT);
+    redirect(this, Routes.INIT);
   };
 
-  handeQRClick = () => {
-    pushHistory(this, Routes.QRMODAL);
-  };
-
-  handleQRModalClose = () => {
-    pushHistory(this, Routes.INIT);
+  handleQRClick = () => {
+    redirect(this, Routes.QRMODAL);
   };
 
   render() {
@@ -250,7 +240,7 @@ class Init extends React.Component<InitProps, InitState> {
     return (
       <Switch>
         <Route path={Routes.PIN}>
-          <Pin enterPin={this.enterPin} onHide={this.handlePinModalClose} />
+          <Pin enterPin={this.enterPin} />
         </Route>
         <Route path={Routes.QR}>
           <Row className="justify-content-center mt-3">
@@ -275,7 +265,6 @@ class Init extends React.Component<InitProps, InitState> {
           <QR
             text={generatedCode ? generatedCode.toString() : null}
             showModal
-            onQRModalClose={this.handleQRModalClose}
           />
         </Route>
         <Route path={Routes.INIT}>
@@ -293,7 +282,7 @@ class Init extends React.Component<InitProps, InitState> {
                 <Col className="text-center align-self-center" md={8}>
                   <QR
                     text={generatedCode ? generatedCode.toString() : null}
-                    onQRClick={this.handeQRClick}
+                    onQRClick={this.handleQRClick}
                   />
                 </Col>
               </Row>

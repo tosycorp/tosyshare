@@ -9,7 +9,7 @@ import {
 import Init from './Init';
 import Chat from './Chat';
 import { Connected, Routes } from '../types';
-import pushHistory from '../utils/push-history';
+import redirect from '../utils/redirect';
 
 type LayoutState = {
   connected: Connected;
@@ -23,12 +23,12 @@ class Layout extends React.Component<RouteComponentProps, LayoutState> {
 
   onConnected = (connected: Connected) => {
     this.setState({ connected }, () => {
-      pushHistory(this, Routes.CHAT);
+      redirect(this, Routes.CHAT);
     });
   };
 
   onOut = () => {
-    pushHistory(this, Routes.INIT);
+    redirect(this, Routes.INIT);
     this.setState({ connected: null });
   };
 
@@ -44,9 +44,15 @@ class Layout extends React.Component<RouteComponentProps, LayoutState> {
             <Chat connected={connected} onOut={this.onOut} />
           )}
         </Route>
-        <Route path={Routes.INIT}>
+        {/* Init and subroutes of Init */}
+        <Route
+          path={[Routes.INIT, Routes.QR, Routes.PIN, Routes.QRMODAL]}
+          exact
+        >
           <Init onConnected={this.onConnected} />
         </Route>
+        {/* if route is not exist redirect to Init */}
+        <Redirect to={Routes.INIT} />
       </Switch>
     );
   }
