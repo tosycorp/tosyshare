@@ -47,8 +47,8 @@ export enum MessageType {
 export enum Routes {
   CHAT = '/chat',
   PIN = '/pin',
+  QRREADER = '/qrreader',
   QR = '/qr',
-  QRMODAL = '/qrmodal',
   INIT = '/',
 }
 

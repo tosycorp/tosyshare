@@ -46,7 +46,7 @@ class Layout extends React.Component<RouteComponentProps, LayoutState> {
         </Route>
         {/* Init and subroutes of Init */}
         <Route
-          path={[Routes.INIT, Routes.QR, Routes.PIN, Routes.QRMODAL]}
+          path={[Routes.INIT, Routes.QRREADER, Routes.PIN, Routes.QR]}
           exact
         >
           <Init onConnected={this.onConnected} />

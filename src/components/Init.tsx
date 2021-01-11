@@ -224,7 +224,7 @@ class Init extends React.Component<InitProps, InitState> {
   };
 
   handleQRCodeReadClick = () => {
-    redirect(this, Routes.QR);
+    redirect(this, Routes.QRREADER);
   };
 
   handleQRReaderClose = () => {
@@ -232,7 +232,7 @@ class Init extends React.Component<InitProps, InitState> {
   };
 
   handleQRClick = () => {
-    redirect(this, Routes.QRMODAL);
+    redirect(this, Routes.QR);
   };
 
   render() {
@@ -242,7 +242,7 @@ class Init extends React.Component<InitProps, InitState> {
         <Route path={Routes.PIN}>
           <Pin enterPin={this.enterPin} />
         </Route>
-        <Route path={Routes.QR}>
+        <Route path={Routes.QRREADER}>
           <Row className="justify-content-center mt-3">
             <Col xl={6} md={8} sm={9} xs={10}>
               <QRReader onRead={this.onQRRead} />
@@ -261,7 +261,7 @@ class Init extends React.Component<InitProps, InitState> {
             </Col>
           </Row>
         </Route>
-        <Route path={Routes.QRMODAL}>
+        <Route path={Routes.QR}>
           <QR
             text={generatedCode ? generatedCode.toString() : null}
             showModal
