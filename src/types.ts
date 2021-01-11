@@ -44,6 +44,14 @@ export enum MessageType {
   JSON = 'JSON',
 }
 
+export enum Routes {
+  CHAT = '/chat',
+  PIN = '/pin',
+  QRREADER = '/qrreader',
+  QR = '/qr',
+  INIT = '/',
+}
+
 export interface Message extends DynamoDbTable {
   type: MessageType;
   value: string;

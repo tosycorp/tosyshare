@@ -1,33 +1,61 @@
 import React from 'react';
+import {
+  Route,
+  Switch,
+  withRouter,
+  RouteComponentProps,
+  Redirect,
+} from 'react-router-dom';
 import Init from './Init';
 import Chat from './Chat';
-import { Connected } from '../types';
+import { Connected, Routes } from '../types';
+import redirect from '../utils/redirect';
 
 type LayoutState = {
   connected: Connected;
 };
-type LayoutProps = {};
 
-class Layout extends React.Component<LayoutProps, LayoutState> {
-  constructor(props: LayoutProps) {
+class Layout extends React.Component<RouteComponentProps, LayoutState> {
+  constructor(props: RouteComponentProps) {
     super(props);
     this.state = { connected: null };
   }
 
   onConnected = (connected: Connected) => {
-    this.setState({ connected });
+    this.setState({ connected }, () => {
+      redirect(this, Routes.CHAT);
+    });
+  };
+
+  onOut = () => {
+    redirect(this, Routes.INIT);
+    this.setState({ connected: null });
   };
 
   render() {
-    const onOut = () => this.setState({ connected: null });
     const { connected } = this.state;
 
-    return !connected ? (
-      <Init onConnected={this.onConnected} />
-    ) : (
-      <Chat connected={connected} onOut={onOut} />
+    return (
+      <Switch>
+        <Route path={Routes.CHAT} exact>
+          {!connected ? (
+            <Redirect to={Routes.INIT} />
+          ) : (
+            <Chat connected={connected} onOut={this.onOut} />
+          )}
+        </Route>
+        {/* Init and subroutes of Init */}
+        <Route
+          path={[Routes.INIT, Routes.QRREADER, Routes.PIN, Routes.QR]}
+          exact
+        >
+          <Init onConnected={this.onConnected} />
+        </Route>
+        {/* if route is not exist redirect to Init */}
+        <Redirect to={Routes.INIT} />
+      </Switch>
     );
   }
 }
 
-export default Layout;
+export default withRouter(Layout);
