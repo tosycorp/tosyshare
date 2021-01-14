@@ -20,12 +20,13 @@ const onPinByConnectionIdWrapper = (connectionId: string) => {
 
 const listenPin = (connectionId: string) => {
   return new Observable<Pin>((subscriber) => {
-    onPinByConnectionIdWrapper(connectionId).subscribe({
+    const gqlSubscription = onPinByConnectionIdWrapper(connectionId).subscribe({
       next: ({ value }) => {
         subscriber.next(value.data.onPinByConnectionId);
         subscriber.complete();
         // Stop receiving data updates from the subscription
         subscriber.unsubscribe();
+        gqlSubscription.unsubscribe();
       },
     });
   });
