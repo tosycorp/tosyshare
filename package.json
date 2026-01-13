@@ -44,13 +44,13 @@
     "react-icons": "^3.11.0",
     "react-qr-reader": "^2.2.1",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "3.4.1",
+    "react-scripts": "5.0.1",
     "rxjs": "^6.6.0",
     "typescript": "^3.7.5"
   },
   "devDependencies": {
     "@types/react-router-dom": "^5.1.6",
-    "eslint": "^7.2.0",
+    "eslint": "^9.39.1",
     "eslint-config-airbnb-typescript-prettier": "^2.1.1",
     "husky": "^4.2.5",
     "lint-staged": "^10.2.10",
